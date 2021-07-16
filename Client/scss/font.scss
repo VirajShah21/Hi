@@ -1,0 +1,45 @@
+@font-face {
+    font-family: 'SF Pro';
+    src: url('../fonts/SF-Pro.ttf');
+}
+
+@font-face {
+    font-family: 'SF Pro Compact Rounded Medium';
+    src: url('../fonts/SF-Compact-Rounded-Medium.otf');
+}
+
+.font-compact-rounded-medium {
+    font-family: 'SF Pro Compact Rounded Medium';
+}
+
+.font-xxs {
+    font-size: $font-size-xxs;
+}
+
+.font-xs {
+    font-size: $font-size-xs;
+}
+
+.font-sm {
+    font-size: $font-size-sm;
+}
+
+.font-md {
+    font-size: $font-size-md;
+}
+
+.font-lg {
+    font-size: $font-size-lg;
+}
+
+.font-xl {
+    font-size: $font-size-xl;
+}
+
+.font-xxl {
+    font-size: $font-size-xxl;
+}
+
+.font-monospace {
+    font-family: 'Menlo', monospace;
+}

@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "lib": ["esnext", "dom"],
+        "rootDir": "./ts/",
+        "outFile": "./js/bundle.js",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "moduleResolution": "Node",
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "target": "ES2020"
+    }
+}
