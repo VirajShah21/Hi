@@ -1,12 +1,12 @@
-import { HColor } from '../HumanInterface/Colors';
-import { Button, Text } from '../HumanInterface/Components/Basics';
-import { Icon } from '../HumanInterface/Components/Graphics';
-import { TextField } from '../HumanInterface/Components/Inputs';
-import { AlertOverlay } from '../HumanInterface/Components/Overlays';
-import { VStack, HStack } from '../HumanInterface/Components/Stacks';
-import { Spacer } from '../HumanInterface/Components/Whitespace';
-import { ViewController } from '../HumanInterface/human';
-import View from '../HumanInterface/View';
+import { HColor } from './Hi/Colors';
+import { Button, Text } from './Hi/Components/Basics';
+import { Icon } from './Hi/Components/Graphics';
+import { TextField } from './Hi/Components/Inputs';
+import { AlertOverlay } from './Hi/Components/Overlays';
+import { VStack, HStack } from './Hi/Components/Stacks';
+import { Spacer } from './Hi/Components/Whitespace';
+import { ViewController } from './Hi/human';
+import View from './Hi/View';
 
 function SmartKeywords(keywords: string[]) {
     const results = [];

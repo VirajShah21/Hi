@@ -3,7 +3,7 @@
         "module": "amd",
         "lib": ["esnext", "dom"],
         "rootDir": "./ts/",
-        "outFile": "./js/bundle.js",
+        "outFile": "./build/hi.js",
         "sourceMap": true,
         "noImplicitAny": true,
         "moduleResolution": "Node",

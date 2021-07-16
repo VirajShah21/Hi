@@ -1,0 +1,181 @@
+@font-face {
+  font-family: "SF Pro";
+  src: url("../fonts/SF-Pro.ttf");
+}
+@font-face {
+  font-family: "SF Pro Compact Rounded Medium";
+  src: url("../fonts/SF-Compact-Rounded-Medium.otf");
+}
+.font-compact-rounded-medium {
+  font-family: "SF Pro Compact Rounded Medium";
+}
+
+.font-xxs {
+  font-size: 3pt;
+}
+
+.font-xs {
+  font-size: 6pt;
+}
+
+.font-sm {
+  font-size: 9pt;
+}
+
+.font-md {
+  font-size: 12pt;
+}
+
+.font-lg {
+  font-size: 15pt;
+}
+
+.font-xl {
+  font-size: 18pt;
+}
+
+.font-xxl {
+  font-size: 21pt;
+}
+
+.font-monospace {
+  font-family: "Menlo", monospace;
+}
+
+.hi-hstack,
+.hi-vstack,
+.hi-zstack,
+.hi-group,
+.hi-screen,
+.hi-view {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.hi-stretch {
+  width: 100%;
+  height: 100%;
+}
+
+.hi-stretch-width {
+  width: 100%;
+}
+
+.hi-stretch-height {
+  height: 100%;
+}
+
+.hi-vstack,
+.hi-hstack {
+  display: flex;
+}
+
+.hi-vstack {
+  flex-direction: column;
+}
+
+.hi-hstack {
+  flex-direction: row;
+}
+
+.hi-zstack {
+  display: grid;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.hi-zstack > * {
+  grid-area: 1/1/1/1;
+}
+
+.hi-grow {
+  flex-grow: 1;
+}
+
+.hi-button {
+  border: none;
+  color: #007aff;
+  background: none;
+  border-radius: 3pt;
+  padding-left: 9pt;
+  padding-right: 9pt;
+  padding-top: 3pt;
+  padding-bottom: 3pt;
+}
+
+.hi-inputfield {
+  border: 1pt solid silver;
+  border-radius: 3pt;
+  padding: 3pt;
+  background: white;
+  color: black;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.hi-screen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.hi-spacer {
+  flex-grow: 1;
+  width: auto;
+  height: auto;
+}
+
+.hi-overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  display: flex;
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}
+.hi-overlay .hi-button {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hi-dropdown-menu {
+  background: rgba(0, 0, 0, 0.25);
+  color: white;
+  border: 1pt solid gray;
+}
+
+.hi-textbox {
+  background: white;
+  border-radius: 3pt;
+  color: black;
+  border: 1pt solid silver;
+  text-align: left;
+  padding: 3pt;
+}
+
+.hi-inline-code {
+  font-family: monospace;
+}
+
+.hi-block-code {
+  font-family: monospace;
+}
+
+* {
+  font-family: "SF Pro";
+}
+
+body {
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0px;
+  box-sizing: border-box;
+  background-size: cover;
+}
+
+/*# sourceMappingURL=hi.css.map */

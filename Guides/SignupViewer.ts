@@ -1,11 +1,11 @@
-import { HColor } from '../HumanInterface/Colors';
-import { Button, Text } from '../HumanInterface/Components/Basics';
-import { Icon } from '../HumanInterface/Components/Graphics';
-import { TextField, PasswordField } from '../HumanInterface/Components/Inputs';
-import { AgreementOverlay, AlertOverlay } from '../HumanInterface/Components/Overlays';
-import { VStack, HStack } from '../HumanInterface/Components/Stacks';
-import { Spacer } from '../HumanInterface/Components/Whitespace';
-import { FormConnector } from '../HumanInterface/ViewConnectors';
+import { HColor } from './Hi/Colors';
+import { Button, Text } from './Hi/Components/Basics';
+import { Icon } from './Hi/Components/Graphics';
+import { TextField, PasswordField } from './Hi/Components/Inputs';
+import { AgreementOverlay, AlertOverlay } from './Hi/Components/Overlays';
+import { VStack, HStack } from './Hi/Components/Stacks';
+import { Spacer } from './Hi/Components/Whitespace';
+import { FormConnector } from './Hi/ViewConnectors';
 
 export default class SignupViewer extends VStack {
     constructor() {
