@@ -1108,7 +1108,7 @@ define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Compone
     }
     exports.AgreementOverlay = AgreementOverlay;
 });
-define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_2, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_5) {
+define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_2, Basics_2, Graphics_2, Inputs_2, Stacks_2, Whitespace_1, human_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function SmartKeywords(keywords) {
@@ -1162,26 +1162,24 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
     exports.default = Sidebar;
     Sidebar.menuItems = [
         {
-            view: MenuButton('person-circle', 'About Me', 'about'),
-            keywords: SmartKeywords(['about me', 'viraj shah', 'information']),
+            view: MenuButton('hand-right-outline', 'Getting Started', 'gettingStarted'),
+            keywords: SmartKeywords(['getting started']),
         },
         {
-            view: MenuButton('brush-outline', 'Human Interface MVC', 'himvc').whenClicked(() => {
-                new Overlays_1.AlertOverlay("Fun Fact: This entire webpage was written using the Human Interface Model View Controller framework. It is developed and maintained by Viraj Shah (that's me)!");
-            }),
-            keywords: SmartKeywords(['human interface', 'design', 'mvc', 'model view controller']),
+            view: MenuButton('cube-outline', 'Sizing Types', 'sizingTypes'),
+            keywords: SmartKeywords(['sizing types', 'type']),
         },
         {
-            view: MenuButton('chatbubbles', 'Contact Me via Chatbot', 'contact'),
-            keywords: SmartKeywords(['contact me', 'chatbot', 'chat bot']),
+            view: MenuButton('code-working-outline', 'State Types', 'stateTypes'),
+            keywords: SmartKeywords(['state types', 'type']),
         },
         {
-            view: MenuButton('log-in', 'Login', 'login'),
-            keywords: SmartKeywords(['login', 'log in', 'sign in', 'account']),
+            view: MenuButton('brush-outline', 'Style Types', 'styleTypes'),
+            keywords: SmartKeywords(['style types', 'type']),
         },
         {
-            view: MenuButton('person-add', 'Register Account', 'signup'),
-            keywords: ['register', 'account', 'sign up'],
+            view: MenuButton('text-outline', 'Basic Components', 'basicComponents'),
+            keywords: SmartKeywords(['basic components']),
         },
     ];
     function MenuButton(iconName, title, navigateTo) {
@@ -1239,7 +1237,7 @@ define("Hi/ViewConnectors", ["require", "exports"], function (require, exports) 
     }
     exports.FormConnector = FormConnector;
 });
-define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/ViewConnectors"], function (require, exports, Colors_3, Basics_3, Graphics_3, Inputs_3, Overlays_2, Stacks_3, Whitespace_2, ViewConnectors_1) {
+define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/ViewConnectors"], function (require, exports, Colors_3, Basics_3, Graphics_3, Inputs_3, Overlays_1, Stacks_3, Whitespace_2, ViewConnectors_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class SignupViewer extends Stacks_3.VStack {
@@ -1316,7 +1314,7 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
                 .padding()
                 .foreground(Colors_3.HColor('gray'))
                 .whenClicked(termsButtonEv => {
-                new Overlays_2.AgreementOverlay('Terms & Conditions', 'shield-outline', new Basics_3.Text('No Terms and Services have been provided yet.'))
+                new Overlays_1.AgreementOverlay('Terms & Conditions', 'shield-outline', new Basics_3.Text('No Terms and Services have been provided yet.'))
                     .whenConfirmed(() => {
                     termsButtonEv.view.foreground(Colors_3.HColor('green'));
                 })
@@ -1333,12 +1331,34 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
     }
     exports.default = SignupViewer;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "./AboutMeViewer", "./ChatbotViewer", "./HiMvcViewer", "./LoginViewer", "Sidebar", "SignupViewer"], function (require, exports, Colors_4, Stacks_4, human_6, Basics_4, AboutMeViewer_1, ChatbotViewer_1, HiMvcViewer_1, LoginViewer_1, Sidebar_1, SignupViewer_1) {
+define("Pages/PageComponents", ["require", "exports", "Hi/Components/Basics"], function (require, exports, Basics_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GuidesApp extends Stacks_4.HIFullScreenView {
+    exports.Title = void 0;
+    class Title extends Basics_4.Text {
+        constructor(text) {
+            super(text);
+            this.font('xl');
+        }
+    }
+    exports.Title = Title;
+});
+define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents"], function (require, exports, Stacks_4, PageComponents_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GettingStarted extends Stacks_4.VStack {
         constructor() {
-            super(new Stacks_4.HStack(new Sidebar_1.default()
+            super(new PageComponents_1.Title("Getting Started"));
+        }
+    }
+    exports.default = GettingStarted;
+});
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted"], function (require, exports, Colors_4, Stacks_5, human_6, Basics_5, Sidebar_1, SignupViewer_1, GettingStarted_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GuidesApp extends Stacks_5.HIFullScreenView {
+        constructor() {
+            super(new Stacks_5.HStack(new Sidebar_1.default()
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
@@ -1347,7 +1367,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 min: 300,
                 max: 300,
                 default: 300,
-            }), new Stacks_4.VStack(new Stacks_4.HStack(new Basics_4.Text('Title').id('title'))
+            }), new Stacks_5.VStack(new Stacks_5.HStack(new Basics_5.Text('Title').id('title'))
                 .width({
                 min: 'calc(100vw - 300px)',
                 default: 'calc(100vw - 300px)',
@@ -1366,11 +1386,8 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .stretch()
                 .alignStart()).stretch());
             this.portfolioViewerController = new human_6.ViewController({
-                about: new AboutMeViewer_1.default().stretchWidth(),
-                himvc: new HiMvcViewer_1.default().stretchWidth().padding({ top: 60 }),
-                contact: new ChatbotViewer_1.default().stretch(),
                 signup: new SignupViewer_1.default().stretch(),
-                login: new LoginViewer_1.default().stretch(),
+                gettingStarted: new GettingStarted_1.default().stretch(),
             });
             const portfolioViewer = this.getViewById('portfolio-viewer');
             if (portfolioViewer)
@@ -1378,9 +1395,9 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
     exports.default = GuidesApp;
-    class MessageViewer extends Stacks_4.ScrollView {
+    class MessageViewer extends Stacks_5.ScrollView {
         constructor() {
-            super(new Stacks_4.VStack(new Basics_4.Text('Select a menu item').foreground(Colors_4.HColor('gray'))).stretch());
+            super(new Stacks_5.VStack(new Basics_5.Text('Select a menu item').foreground(Colors_4.HColor('gray'))).stretch());
         }
     }
 });

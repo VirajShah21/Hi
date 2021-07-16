@@ -24,28 +24,24 @@ function SmartKeywords(keywords: string[]) {
 export default class Sidebar extends VStack {
     static readonly menuItems = [
         {
-            view: MenuButton('person-circle', 'About Me', 'about'),
-            keywords: SmartKeywords(['about me', 'viraj shah', 'information']),
+            view: MenuButton('hand-right-outline', 'Getting Started', 'gettingStarted'),
+            keywords: SmartKeywords(['getting started']),
         },
         {
-            view: MenuButton('brush-outline', 'Human Interface MVC', 'himvc').whenClicked(() => {
-                new AlertOverlay(
-                    "Fun Fact: This entire webpage was written using the Human Interface Model View Controller framework. It is developed and maintained by Viraj Shah (that's me)!"
-                );
-            }),
-            keywords: SmartKeywords(['human interface', 'design', 'mvc', 'model view controller']),
+            view: MenuButton('cube-outline', 'Sizing Types', 'sizingTypes'),
+            keywords: SmartKeywords(['sizing types', 'type']),
         },
         {
-            view: MenuButton('chatbubbles', 'Contact Me via Chatbot', 'contact'),
-            keywords: SmartKeywords(['contact me', 'chatbot', 'chat bot']),
+            view: MenuButton('code-working-outline', 'State Types', 'stateTypes'),
+            keywords: SmartKeywords(['state types', 'type']),
         },
         {
-            view: MenuButton('log-in', 'Login', 'login'),
-            keywords: SmartKeywords(['login', 'log in', 'sign in', 'account']),
+            view: MenuButton('brush-outline', 'Style Types', 'styleTypes'),
+            keywords: SmartKeywords(['style types', 'type']),
         },
         {
-            view: MenuButton('person-add', 'Register Account', 'signup'),
-            keywords: ['register', 'account', 'sign up'],
+            view: MenuButton('text-outline', 'Basic Components', 'basicComponents'),
+            keywords: SmartKeywords(['basic components']),
         },
     ];
 

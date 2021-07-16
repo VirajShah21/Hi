@@ -2,20 +2,14 @@ import { HColor, rgba } from './Hi/Colors';
 import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
 import { Text } from './Hi/Components/Basics';
-import AboutMeViewer from './AboutMeViewer';
-import ChatbotViewer from './ChatbotViewer';
-import HiMvcViewer from './HiMvcViewer';
-import LoginViewer from './LoginViewer';
 import Sidebar from './Sidebar';
 import SignupViewer from './SignupViewer';
+import GettingStarted from './Pages/GettingStarted';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
-        about: new AboutMeViewer().stretchWidth(),
-        himvc: new HiMvcViewer().stretchWidth().padding({ top: 60 }),
-        contact: new ChatbotViewer().stretch(),
         signup: new SignupViewer().stretch(),
-        login: new LoginViewer().stretch(),
+        gettingStarted: new GettingStarted().stretch(),
     });
 
     constructor() {

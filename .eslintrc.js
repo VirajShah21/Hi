@@ -11,5 +11,5 @@ module.exports = {
     rules: {
       // "@typescript-eslint/explicit-function-return-type": ["error"]
     },
-    ignorePatterns: ["*.js"]
+    ignorePatterns: ["*.js", "Guides/Hi/**/*"]
   };
