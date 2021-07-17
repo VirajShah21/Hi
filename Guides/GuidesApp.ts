@@ -8,8 +8,8 @@ import GettingStarted from './Pages/GettingStarted';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
-        signup: new SignupViewer().stretch(),
-        gettingStarted: new GettingStarted().stretch(),
+        signup: new SignupViewer().stretch().padding({ top: 60 }),
+        gettingStarted: new GettingStarted().stretch().padding({ top: 60 }),
     });
 
     constructor() {

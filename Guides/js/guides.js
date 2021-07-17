@@ -1331,43 +1331,97 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
     }
     exports.default = SignupViewer;
 });
-define("Pages/PageComponents", ["require", "exports", "Hi/Components/Basics"], function (require, exports, Basics_4) {
+define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Title = void 0;
-    class Title extends Basics_4.Text {
-        constructor(text) {
-            super(text);
-            this.font('xl');
+    exports.FileTreeItem = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
+    class MajorIcon extends Graphics_4.Icon {
+        constructor(name) {
+            super(name);
+            this.font(75).margin({ top: 50 });
         }
     }
-    exports.Title = Title;
+    exports.MajorIcon = MajorIcon;
+    class PrimaryHeading extends Basics_4.Text {
+        constructor(text) {
+            super(text);
+            this.margin({ top: 25 }).font('xl');
+        }
+    }
+    exports.PrimaryHeading = PrimaryHeading;
+    class SecondaryHeading extends Basics_4.Text {
+        constructor(text) {
+            super(text);
+            this.margin({ top: 50 }).font('lg');
+        }
+    }
+    exports.SecondaryHeading = SecondaryHeading;
+    class PrimaryText extends Basics_4.Text {
+        constructor(text) {
+            super(text);
+            this.padding({ left: 200, right: 200 }).margin({ top: 25 }).lineHeight('200%').font('md');
+        }
+    }
+    exports.PrimaryText = PrimaryText;
+    class SubtleText extends Basics_4.Text {
+        constructor(text) {
+            super(text);
+            this.padding({ left: 200, right: 200 })
+                .margin({ top: 25 })
+                .lineHeight('150%')
+                .font('sm')
+                .foreground(Colors_4.HColor('gray'));
+        }
+    }
+    exports.SubtleText = SubtleText;
+    class FileTreeItem extends Stacks_4.HStack {
+        constructor(iconName, itemName, depth = 0) {
+            const icon = new Graphics_4.Icon(iconName).padding(5);
+            super(icon, new Basics_4.Text(itemName));
+            this.padding({ left: 15 * depth });
+            this.icon = icon;
+        }
+        iconColor(color) {
+            this.icon.foreground(color);
+            return this;
+        }
+    }
+    exports.FileTreeItem = FileTreeItem;
 });
-define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents"], function (require, exports, Stacks_4, PageComponents_1) {
+define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Basics", "Hi/Components/Whitespace", "Hi/Colors", "Pages/PageComponents"], function (require, exports, Graphics_5, Stacks_5, Basics_5, Whitespace_3, Colors_5, PageComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GettingStarted extends Stacks_4.VStack {
+    class GettingStarted extends Stacks_5.Container {
         constructor() {
-            super(new PageComponents_1.Title("Getting Started"));
+            super(new Stacks_5.VStack(new Graphics_5.Image('https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80').stretchWidth(), new PageComponents_1.MajorIcon('accessibility-outline'), new PageComponents_1.PrimaryHeading('Human Interface?').font('xl'), new PageComponents_1.PrimaryText('If you are brand new to Hi MVC then this is where you should begin. Hi MVC (Human Interface Model View Controller) is an MVC which replicates an Apple-like experience on the web. It utilizes the human interface guidelines developed by Apple and implements them on the web while providing powerful frontend and backend tools.'), new PageComponents_1.PrimaryText('The Human Interface Design is the user interface guide defined by Apple for all of their software. The components are made to integrate with iOS/macOS devices along with porting the UI to other platforms'), new PageComponents_1.PrimaryText('The stacking system used by SwiftUI is also ported for the web for perfect alignment... always'), new PageComponents_1.SubtleText('Please note that this project is under heavy development and is due to many changes.'), new PageComponents_1.MajorIcon('cloud-download-outline'), new PageComponents_1.PrimaryHeading('Downloading HI MVC').font('xl'), new PageComponents_1.PrimaryText('Visit the github repository to download the source code. You will want to compile your entire project using the TypeScript compiler, so you should not precompile any of the HI components.'), new Basics_5.Button(new Stacks_5.HStack(new Graphics_5.Icon('logo-github').font('xl'), new Basics_5.Text('Github Repository').font('md').margin({ left: 10 }))), new PageComponents_1.MajorIcon('hammer-outline'), new PageComponents_1.PrimaryHeading('Installation').font('xl'), new PageComponents_1.SecondaryHeading('Step 1: SCSS Compilation').font('lg'), new PageComponents_1.PrimaryText('This process has been made simple for you. To compile the scss, you will need to open your terminal and navigate to the directory of the HI github repository. Then you should navigate to the "Client" folder.'), new PageComponents_1.PrimaryText('In the "Client" directory, there will be makefile. Run the command "make scss" to compile the scss files into standard CSS. It will then compile into Client/build/hi.css and Client/build/hi.css.map'), new PageComponents_1.PrimaryText('Copy the file to your static directory'), new PageComponents_1.SubtleText('This process assumes you have SASS install globally on your system.'), new PageComponents_1.SecondaryHeading('Step 2: Configure TypeScript').font('lg'), new PageComponents_1.PrimaryText('TypeScript accepts its configuration as a tsconfig.json file. You want the contents of the file to contain the following:'), new Graphics_5.Image('assets/getting-started/tsconfig.png').margin({ top: 25 }), new PageComponents_1.SecondaryHeading('Step 3: Configure Directory Structure'), new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.VStack(new PageComponents_1.FileTreeItem('folder-outline', 'css').iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('logo-css3', 'hi.css', 1).iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('map-outline', 'hi.css.map', 1).iconColor(Colors_5.HColor('green')), new PageComponents_1.FileTreeItem('text-outline', 'fonts').iconColor(Colors_5.HColor('teal')), new PageComponents_1.FileTreeItem('logo-html5', 'index.html').iconColor(Colors_5.HColor('orange')))
+                .alignStart()
+                .rounded()
+                .padding()
+                .background(Colors_5.HColor('gray6'))
+                .margin({ top: 25, right: 25 }), new Stacks_5.VStack(new PageComponents_1.PrimaryText('Take the compiled css code and put it in its own CSS directory. Make sure to also copy the *.css.map file. The copy the fonts directory for typeface support.')
+                .padding(0)
+                .textStart(), new PageComponents_1.PrimaryText('You will also want to make sure to include an index.html file. This file will should be opened in the browser and will include all the imports.')
+                .padding(0)
+                .textStart()).width('50%'), new Whitespace_3.Spacer()), new PageComponents_1.SecondaryHeading('Step 4: ')));
         }
     }
     exports.default = GettingStarted;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted"], function (require, exports, Colors_4, Stacks_5, human_6, Basics_5, Sidebar_1, SignupViewer_1, GettingStarted_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted"], function (require, exports, Colors_6, Stacks_6, human_6, Basics_6, Sidebar_1, SignupViewer_1, GettingStarted_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GuidesApp extends Stacks_5.HIFullScreenView {
+    class GuidesApp extends Stacks_6.HIFullScreenView {
         constructor() {
-            super(new Stacks_5.HStack(new Sidebar_1.default()
+            super(new Stacks_6.HStack(new Sidebar_1.default()
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
-                .borderRight({ size: 1, style: 'solid', color: Colors_4.HColor('gray6') })
+                .borderRight({ size: 1, style: 'solid', color: Colors_6.HColor('gray6') })
                 .width({
                 min: 300,
                 max: 300,
                 default: 300,
-            }), new Stacks_5.VStack(new Stacks_5.HStack(new Basics_5.Text('Title').id('title'))
+            }), new Stacks_6.VStack(new Stacks_6.HStack(new Basics_6.Text('Title').id('title'))
                 .width({
                 min: 'calc(100vw - 300px)',
                 default: 'calc(100vw - 300px)',
@@ -1377,17 +1431,17 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .borderBottom({
                 size: 1,
                 style: 'solid',
-                color: Colors_4.HColor('gray6'),
+                color: Colors_6.HColor('gray6'),
             })
                 .position('fixed')
-                .background(Colors_4.rgba(255, 255, 255, 0.5))
+                .background(Colors_6.rgba(255, 255, 255, 0.5))
                 .blur(25)
                 .zIndex(10), new MessageViewer().id('portfolio-viewer').stretch())
                 .stretch()
                 .alignStart()).stretch());
             this.portfolioViewerController = new human_6.ViewController({
-                signup: new SignupViewer_1.default().stretch(),
-                gettingStarted: new GettingStarted_1.default().stretch(),
+                signup: new SignupViewer_1.default().stretch().padding({ top: 60 }),
+                gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
             });
             const portfolioViewer = this.getViewById('portfolio-viewer');
             if (portfolioViewer)
@@ -1395,9 +1449,9 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
     exports.default = GuidesApp;
-    class MessageViewer extends Stacks_5.ScrollView {
+    class MessageViewer extends Stacks_6.ScrollView {
         constructor() {
-            super(new Stacks_5.VStack(new Basics_5.Text('Select a menu item').foreground(Colors_4.HColor('gray'))).stretch());
+            super(new Stacks_6.VStack(new Basics_6.Text('Select a menu item').foreground(Colors_6.HColor('gray'))).stretch());
         }
     }
 });
