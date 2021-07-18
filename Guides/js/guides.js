@@ -1331,10 +1331,10 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
     }
     exports.default = SignupViewer;
 });
-define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4) {
+define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/View"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4, View_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.FileTreeItem = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
+    exports.HTMLContent = exports.FileTreeItem = exports.ImageCaption = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
     class MajorIcon extends Graphics_4.Icon {
         constructor(name) {
             super(name);
@@ -1374,6 +1374,13 @@ define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Component
         }
     }
     exports.SubtleText = SubtleText;
+    class ImageCaption extends SubtleText {
+        constructor(text) {
+            super(text);
+            this.padding().margin(0).lineHeight('110%');
+        }
+    }
+    exports.ImageCaption = ImageCaption;
     class FileTreeItem extends Stacks_4.HStack {
         constructor(iconName, itemName, depth = 0) {
             const icon = new Graphics_4.Icon(iconName).padding(5);
@@ -1387,13 +1394,20 @@ define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Component
         }
     }
     exports.FileTreeItem = FileTreeItem;
+    class HTMLContent extends View_8.default {
+        constructor(wrapper, html) {
+            super(wrapper);
+            this.body.innerHTML = html;
+        }
+    }
+    exports.HTMLContent = HTMLContent;
 });
 define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Basics", "Hi/Components/Whitespace", "Hi/Colors", "Pages/PageComponents"], function (require, exports, Graphics_5, Stacks_5, Basics_5, Whitespace_3, Colors_5, PageComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GettingStarted extends Stacks_5.Container {
         constructor() {
-            super(new Stacks_5.VStack(new Graphics_5.Image('https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80').stretchWidth(), new PageComponents_1.MajorIcon('accessibility-outline'), new PageComponents_1.PrimaryHeading('Human Interface?').font('xl'), new PageComponents_1.PrimaryText('If you are brand new to Hi MVC then this is where you should begin. Hi MVC (Human Interface Model View Controller) is an MVC which replicates an Apple-like experience on the web. It utilizes the human interface guidelines developed by Apple and implements them on the web while providing powerful frontend and backend tools.'), new PageComponents_1.PrimaryText('The Human Interface Design is the user interface guide defined by Apple for all of their software. The components are made to integrate with iOS/macOS devices along with porting the UI to other platforms'), new PageComponents_1.PrimaryText('The stacking system used by SwiftUI is also ported for the web for perfect alignment... always'), new PageComponents_1.SubtleText('Please note that this project is under heavy development and is due to many changes.'), new PageComponents_1.MajorIcon('cloud-download-outline'), new PageComponents_1.PrimaryHeading('Downloading HI MVC').font('xl'), new PageComponents_1.PrimaryText('Visit the github repository to download the source code. You will want to compile your entire project using the TypeScript compiler, so you should not precompile any of the HI components.'), new Basics_5.Button(new Stacks_5.HStack(new Graphics_5.Icon('logo-github').font('xl'), new Basics_5.Text('Github Repository').font('md').margin({ left: 10 }))), new PageComponents_1.MajorIcon('hammer-outline'), new PageComponents_1.PrimaryHeading('Installation').font('xl'), new PageComponents_1.SecondaryHeading('Step 1: SCSS Compilation').font('lg'), new PageComponents_1.PrimaryText('This process has been made simple for you. To compile the scss, you will need to open your terminal and navigate to the directory of the HI github repository. Then you should navigate to the "Client" folder.'), new PageComponents_1.PrimaryText('In the "Client" directory, there will be makefile. Run the command "make scss" to compile the scss files into standard CSS. It will then compile into Client/build/hi.css and Client/build/hi.css.map'), new PageComponents_1.PrimaryText('Copy the file to your static directory'), new PageComponents_1.SubtleText('This process assumes you have SASS install globally on your system.'), new PageComponents_1.SecondaryHeading('Step 2: Configure TypeScript').font('lg'), new PageComponents_1.PrimaryText('TypeScript accepts its configuration as a tsconfig.json file. You want the contents of the file to contain the following:'), new Graphics_5.Image('assets/getting-started/tsconfig.png').margin({ top: 25 }), new PageComponents_1.SecondaryHeading('Step 3: Configure Directory Structure'), new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.VStack(new PageComponents_1.FileTreeItem('folder-outline', 'css').iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('logo-css3', 'hi.css', 1).iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('map-outline', 'hi.css.map', 1).iconColor(Colors_5.HColor('green')), new PageComponents_1.FileTreeItem('text-outline', 'fonts').iconColor(Colors_5.HColor('teal')), new PageComponents_1.FileTreeItem('logo-html5', 'index.html').iconColor(Colors_5.HColor('orange')))
+            super(new Stacks_5.VStack(new Graphics_5.Image('https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80').stretchWidth(), new PageComponents_1.ImageCaption('Photo by Belinda Fewings'), new PageComponents_1.MajorIcon('accessibility-outline'), new PageComponents_1.PrimaryHeading('Human Interface?').font('xl'), new PageComponents_1.PrimaryText('If you are brand new to Hi MVC then this is where you should begin. Hi MVC (Human Interface Model View Controller) is an MVC which replicates an Apple-like experience on the web. It utilizes the human interface guidelines developed by Apple and implements them on the web while providing powerful frontend and backend tools.'), new PageComponents_1.PrimaryText('The Human Interface Design is the user interface guide defined by Apple for all of their software. The components are made to integrate with iOS/macOS devices along with porting the UI to other platforms'), new PageComponents_1.PrimaryText('The stacking system used by SwiftUI is also ported for the web for perfect alignment... always'), new PageComponents_1.SubtleText('Please note that this project is under heavy development and is due to many changes.'), new PageComponents_1.MajorIcon('cloud-download-outline'), new PageComponents_1.PrimaryHeading('Downloading HI MVC').font('xl'), new PageComponents_1.PrimaryText('Visit the github repository to download the source code. You will want to compile your entire project using the TypeScript compiler, so you should not precompile any of the HI components.'), new Basics_5.Button(new Stacks_5.HStack(new Graphics_5.Icon('logo-github').font('xl'), new Basics_5.Text('Github Repository').font('md').margin({ left: 10 }))), new PageComponents_1.MajorIcon('hammer-outline'), new PageComponents_1.PrimaryHeading('Installation').font('xl'), new PageComponents_1.SecondaryHeading('Step 1: SCSS Compilation').font('lg'), new PageComponents_1.PrimaryText('This process has been made simple for you. To compile the scss, you will need to open your terminal and navigate to the directory of the HI github repository. Then you should navigate to the "Client" folder.'), new PageComponents_1.PrimaryText('In the "Client" directory, there will be makefile. Run the command "make scss" to compile the scss files into standard CSS. It will then compile into Client/build/hi.css and Client/build/hi.css.map'), new PageComponents_1.PrimaryText('Copy the file to your static directory'), new PageComponents_1.SubtleText('This process assumes you have SASS install globally on your system.'), new PageComponents_1.SecondaryHeading('Step 2: Configure TypeScript').font('lg'), new PageComponents_1.PrimaryText('TypeScript accepts its configuration as a tsconfig.json file. You want the contents of the file to contain the following:'), new Graphics_5.Image('assets/getting-started/tsconfig.png').margin({ top: 25 }), new PageComponents_1.SecondaryHeading('Step 3: Configure Directory Structure'), new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.VStack(new PageComponents_1.FileTreeItem('folder-outline', 'css').iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('logo-css3', 'hi.css', 1).iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('map-outline', 'hi.css.map', 1).iconColor(Colors_5.HColor('green')), new PageComponents_1.FileTreeItem('text-outline', 'fonts').iconColor(Colors_5.HColor('teal')), new PageComponents_1.FileTreeItem('logo-html5', 'index.html').iconColor(Colors_5.HColor('orange')))
                 .alignStart()
                 .rounded()
                 .padding()
@@ -1407,12 +1421,45 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
     }
     exports.default = GettingStarted;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted"], function (require, exports, Colors_6, Stacks_6, human_6, Basics_6, Sidebar_1, SignupViewer_1, GettingStarted_1) {
+define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GuidesApp extends Stacks_6.HIFullScreenView {
+    exports.TypeDefinitionDocumentation = void 0;
+    class TypeDefinitionDocumentation extends Stacks_6.VStack {
+        constructor(expansion, description, examples) {
+            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0))
+                .stretchWidth()
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('information-outline').font('lg').padding(), new Basics_6.Text('Description').padding().width(200).textStart(), new PageComponents_2.HTMLContent('span', description).textStart().margin(0).padding().width(400))
+                .stretchWidth()
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400)));
+        }
+    }
+    exports.TypeDefinitionDocumentation = TypeDefinitionDocumentation;
+    class SizingTypes extends Stacks_6.Container {
         constructor() {
-            super(new Stacks_6.HStack(new Sidebar_1.default()
+            super(new Stacks_6.VStack(new Stacks_6.VStack(new PageComponents_2.MajorIcon('cube-outline').padding().rounded().blur(), new Basics_6.Text('Sizing Type Definitions')
+                .blur()
+                .padding()
+                .rounded()
+                .font('xxl')
+                .bold()
+                .margin({ top: 25 }))
+                .backgroundImage('https://images.unsplash.com/photo-1622605831571-261139449967?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80')
+                .stretch()
+                .padding({ bottom: 50 })
+                .foreground('white'), new PageComponents_2.ImageCaption('Photo by Jeremy Zero'), new PageComponents_2.PrimaryHeading('Type Definitions Overview'), new PageComponents_2.PrimaryText('For ease of use and IntelliSense optimization, type definitions have been provided for sizing metrics. Each type allows for different kinds of input.'), new PageComponents_2.SubtleText('Type definitions are used strictly for TypeScript prior to compilation. They are not implementations of new data structures.'), new PageComponents_2.PrimaryHeading('HISizingValue'), new TypeDefinitionDocumentation('string | number', 'Any sizing value acceptable via HTML <strong>and</strong> CSS rules. If the value is a <code>string</code> then the explicitly provided value will be used. If a number is provided, then the default units are pixels.', `const imageWidth: HISizingValue = 100; // '100px'
+const imageHeight: HISizingValue = '200px';
+const divWidth: HISizingValue = 'auto'`).padding({ left: 200, right: 200 })));
+        }
+    }
+    exports.default = SizingTypes;
+});
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes"], function (require, exports, Colors_6, Stacks_7, human_6, Basics_7, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GuidesApp extends Stacks_7.HIFullScreenView {
+        constructor() {
+            super(new Stacks_7.HStack(new Sidebar_1.default()
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
@@ -1421,7 +1468,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 min: 300,
                 max: 300,
                 default: 300,
-            }), new Stacks_6.VStack(new Stacks_6.HStack(new Basics_6.Text('Title').id('title'))
+            }), new Stacks_7.VStack(new Stacks_7.HStack(new Basics_7.Text('Title').id('title'))
                 .width({
                 min: 'calc(100vw - 300px)',
                 default: 'calc(100vw - 300px)',
@@ -1442,6 +1489,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
             this.portfolioViewerController = new human_6.ViewController({
                 signup: new SignupViewer_1.default().stretch().padding({ top: 60 }),
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
+                sizingTypes: new SizingTypes_1.default().stretch().padding({ top: 60 }),
             });
             const portfolioViewer = this.getViewById('portfolio-viewer');
             if (portfolioViewer)
@@ -1449,9 +1497,9 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
     exports.default = GuidesApp;
-    class MessageViewer extends Stacks_6.ScrollView {
+    class MessageViewer extends Stacks_7.ScrollView {
         constructor() {
-            super(new Stacks_6.VStack(new Basics_6.Text('Select a menu item').foreground(Colors_6.HColor('gray'))).stretch());
+            super(new Stacks_7.VStack(new Basics_7.Text('Select a menu item').foreground(Colors_6.HColor('gray'))).stretch());
         }
     }
 });
@@ -1464,11 +1512,11 @@ define("guides", ["require", "exports", "GuidesApp", "Hi/human"], function (requ
         .bind()
         .navigateTo();
 });
-define("Hi/Components/Statuses", ["require", "exports", "Hi/View"], function (require, exports, View_8) {
+define("Hi/Components/Statuses", ["require", "exports", "Hi/View"], function (require, exports, View_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ProgressLine = void 0;
-    class ProgressLine extends View_8.default {
+    class ProgressLine extends View_9.default {
         constructor() {
             super('div');
             this.progress = 0;

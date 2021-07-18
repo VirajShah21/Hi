@@ -5,11 +5,13 @@ import { Text } from './Hi/Components/Basics';
 import Sidebar from './Sidebar';
 import SignupViewer from './SignupViewer';
 import GettingStarted from './Pages/GettingStarted';
+import SizingTypes from './Pages/SizingTypes';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
         signup: new SignupViewer().stretch().padding({ top: 60 }),
         gettingStarted: new GettingStarted().stretch().padding({ top: 60 }),
+        sizingTypes: new SizingTypes().stretch().padding({ top: 60 }),
     });
 
     constructor() {

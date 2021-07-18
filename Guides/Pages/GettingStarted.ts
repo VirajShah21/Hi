@@ -3,7 +3,15 @@ import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { Button, Text } from '../Hi/Components/Basics';
 import { Spacer } from '../Hi/Components/Whitespace';
 import { HColor } from '../Hi/Colors';
-import { FileTreeItem, MajorIcon, PrimaryHeading, PrimaryText, SecondaryHeading, SubtleText } from './PageComponents';
+import {
+    FileTreeItem,
+    ImageCaption,
+    MajorIcon,
+    PrimaryHeading,
+    PrimaryText,
+    SecondaryHeading,
+    SubtleText,
+} from './PageComponents';
 
 export default class GettingStarted extends Container {
     constructor() {
@@ -12,6 +20,7 @@ export default class GettingStarted extends Container {
                 new Image(
                     'https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80'
                 ).stretchWidth(),
+                new ImageCaption('Photo by Belinda Fewings'),
 
                 new MajorIcon('accessibility-outline'),
 

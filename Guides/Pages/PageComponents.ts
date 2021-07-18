@@ -1,7 +1,8 @@
 import { HColor } from '../Hi/Colors';
 import { Text } from '../Hi/Components/Basics';
 import { Icon } from '../Hi/Components/Graphics';
-import { HStack } from '../Hi/Components/Stacks';
+import { Container, HStack } from '../Hi/Components/Stacks';
+import View from '../Hi/View';
 
 export class MajorIcon extends Icon {
     constructor(name: string) {
@@ -42,6 +43,13 @@ export class SubtleText extends Text {
     }
 }
 
+export class ImageCaption extends SubtleText {
+    constructor(text: string) {
+        super(text);
+        this.padding().margin(0).lineHeight('110%');
+    }
+}
+
 export class FileTreeItem extends HStack {
     private readonly icon: Icon;
 
@@ -55,5 +63,12 @@ export class FileTreeItem extends HStack {
     iconColor(color: string): this {
         this.icon.foreground(color);
         return this;
+    }
+}
+
+export class HTMLContent extends View {
+    constructor(wrapper: string, html: string) {
+        super(wrapper);
+        this.body.innerHTML = html;
     }
 }
