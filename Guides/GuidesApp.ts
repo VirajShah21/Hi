@@ -1,17 +1,21 @@
 import { HColor, rgba } from './Hi/Colors';
 import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
-import { Text } from './Hi/Components/Basics';
+import { Button, Text } from './Hi/Components/Basics';
 import Sidebar from './Sidebar';
 import SignupViewer from './SignupViewer';
 import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
+import BasicComponents from './Pages/BasicComponents';
+import { Icon } from './Hi/Components/Graphics';
+import { Spacer } from './Hi/Components/Whitespace';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
         signup: new SignupViewer().stretch().padding({ top: 60 }),
         gettingStarted: new GettingStarted().stretch().padding({ top: 60 }),
         sizingTypes: new SizingTypes().stretch().padding({ top: 60 }),
+        basicComponents: new BasicComponents().stretch().padding({ top: 60 }),
     });
 
     constructor() {
@@ -46,7 +50,12 @@ export default class GuidesApp extends HIFullScreenView {
                         .zIndex(10),
                     new MessageViewer().id('portfolio-viewer').stretch()
                 )
-                    .stretch()
+                    .stretchHeight()
+                    .width({
+                        min: 'calc(100vw - 300px)',
+                        default: 'calc(100vw - 300px)',
+                        max: 'calc(100vw - 300px)',
+                    })
                     .alignStart()
             ).stretch()
         );

@@ -1334,7 +1334,7 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
 define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/View"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4, View_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.HTMLContent = exports.FileTreeItem = exports.ImageCaption = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
+    exports.ExampleViewer = exports.HTMLContent = exports.FileTreeItem = exports.ImageCaption = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
     class MajorIcon extends Graphics_4.Icon {
         constructor(name) {
             super(name);
@@ -1401,6 +1401,13 @@ define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Component
         }
     }
     exports.HTMLContent = HTMLContent;
+    class ExampleViewer extends Stacks_4.HStack {
+        constructor(...children) {
+            super(new Stacks_4.VStack(...children), new Stacks_4.VStack());
+            this.border({ size: 4, style: 'dashed', color: Colors_4.HColor('green') });
+        }
+    }
+    exports.ExampleViewer = ExampleViewer;
 });
 define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Basics", "Hi/Components/Whitespace", "Hi/Colors", "Pages/PageComponents"], function (require, exports, Graphics_5, Stacks_5, Basics_5, Whitespace_3, Colors_5, PageComponents_1) {
     "use strict";
@@ -1421,17 +1428,19 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
     }
     exports.default = GettingStarted;
 });
-define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents", "Hi/Colors"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2, Colors_6) {
+define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents", "Hi/Colors", "Hi/Components/Whitespace"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2, Colors_6, Whitespace_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TypeDefinitionDocumentation = void 0;
     class TypeDefinitionDocumentation extends Stacks_6.VStack {
         constructor(expansion, description, examples) {
-            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0).textStart())
+            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0).textStart(), new Whitespace_4.Spacer())
                 .stretchWidth()
-                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('information-outline').font('lg').padding(), new Basics_6.Text('Description').padding().width(200).textStart(), new PageComponents_2.HTMLContent('span', description).textStart().margin(0).padding().width(400))
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('information-outline').font('lg').padding(), new Basics_6.Text('Description').padding().width(200).textStart(), new PageComponents_2.HTMLContent('span', description).textStart().margin(0).padding().width(400), new Whitespace_4.Spacer())
                 .stretchWidth()
-                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400)).alignStart());
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400), new Whitespace_4.Spacer())
+                .stretchWidth()
+                .alignStart());
         }
     }
     exports.TypeDefinitionDocumentation = TypeDefinitionDocumentation;
@@ -1523,21 +1532,44 @@ new Button(
     }
     exports.default = SizingTypes;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes"], function (require, exports, Colors_7, Stacks_7, human_6, Basics_7, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1) {
+define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics", "Hi/Colors"], function (require, exports, Stacks_7, PageComponents_3, Basics_7, Colors_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GuidesApp extends Stacks_7.HIFullScreenView {
+    class BasicComponents extends Stacks_7.Container {
         constructor() {
-            super(new Stacks_7.HStack(new Sidebar_1.default()
+            super(new Stacks_7.VStack(new Stacks_7.VStack(new PageComponents_3.MajorIcon('text').padding().rounded(), new Basics_7.Text('Basic Components')
+                .padding()
+                .rounded()
+                .font('xxl')
+                .bold()
+                .margin({ top: 25 })
+                .foreground('black'))
+                .backgroundImage('assets/BasicComponents.png')
+                .stretch()
+                .padding({ bottom: 50 })
+                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new Stacks_7.HStack(new Basics_7.Text('Hello World'))
+                .border({ size: 4, style: 'dotted', color: Colors_7.HColor('green') })
+                .width(200)
+                .height(200)));
+        }
+    }
+    exports.default = BasicComponents;
+});
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents"], function (require, exports, Colors_8, Stacks_8, human_6, Basics_8, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1, BasicComponents_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GuidesApp extends Stacks_8.HIFullScreenView {
+        constructor() {
+            super(new Stacks_8.HStack(new Sidebar_1.default()
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
-                .borderRight({ size: 1, style: 'solid', color: Colors_7.HColor('gray6') })
+                .borderRight({ size: 1, style: 'solid', color: Colors_8.HColor('gray6') })
                 .width({
                 min: 300,
                 max: 300,
                 default: 300,
-            }), new Stacks_7.VStack(new Stacks_7.HStack(new Basics_7.Text('Title').id('title'))
+            }), new Stacks_8.VStack(new Stacks_8.HStack(new Basics_8.Text('Title').id('title'))
                 .width({
                 min: 'calc(100vw - 300px)',
                 default: 'calc(100vw - 300px)',
@@ -1547,18 +1579,24 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .borderBottom({
                 size: 1,
                 style: 'solid',
-                color: Colors_7.HColor('gray6'),
+                color: Colors_8.HColor('gray6'),
             })
                 .position('fixed')
-                .background(Colors_7.rgba(255, 255, 255, 0.5))
+                .background(Colors_8.rgba(255, 255, 255, 0.5))
                 .blur(25)
                 .zIndex(10), new MessageViewer().id('portfolio-viewer').stretch())
-                .stretch()
+                .stretchHeight()
+                .width({
+                min: 'calc(100vw - 300px)',
+                default: 'calc(100vw - 300px)',
+                max: 'calc(100vw - 300px)',
+            })
                 .alignStart()).stretch());
             this.portfolioViewerController = new human_6.ViewController({
                 signup: new SignupViewer_1.default().stretch().padding({ top: 60 }),
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
                 sizingTypes: new SizingTypes_1.default().stretch().padding({ top: 60 }),
+                basicComponents: new BasicComponents_1.default().stretch().padding({ top: 60 }),
             });
             const portfolioViewer = this.getViewById('portfolio-viewer');
             if (portfolioViewer)
@@ -1566,9 +1604,9 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
     exports.default = GuidesApp;
-    class MessageViewer extends Stacks_7.ScrollView {
+    class MessageViewer extends Stacks_8.ScrollView {
         constructor() {
-            super(new Stacks_7.VStack(new Basics_7.Text('Select a menu item').foreground(Colors_7.HColor('gray'))).stretch());
+            super(new Stacks_8.VStack(new Basics_8.Text('Select a menu item').foreground(Colors_8.HColor('gray'))).stretch());
         }
     }
 });

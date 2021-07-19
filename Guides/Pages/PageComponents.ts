@@ -1,7 +1,7 @@
 import { HColor } from '../Hi/Colors';
-import { Text } from '../Hi/Components/Basics';
+import { BlockCode, Text } from '../Hi/Components/Basics';
 import { Icon } from '../Hi/Components/Graphics';
-import { HStack } from '../Hi/Components/Stacks';
+import { HStack, VStack } from '../Hi/Components/Stacks';
 import View from '../Hi/View';
 
 export class MajorIcon extends Icon {
@@ -70,5 +70,12 @@ export class HTMLContent extends View {
     constructor(wrapper: string, html: string) {
         super(wrapper);
         this.body.innerHTML = html;
+    }
+}
+
+export class ExampleViewer extends HStack {
+    constructor(...children: View[]) {
+        super(new VStack(...children), new VStack());
+        this.border({ size: 4, style: 'dashed', color: HColor('green') });
     }
 }
