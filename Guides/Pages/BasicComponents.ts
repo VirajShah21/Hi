@@ -1,5 +1,5 @@
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { MajorIcon, PrimaryHeading, PrimaryText } from './PageComponents';
+import { ExampleViewer, MajorIcon, PrimaryHeading, PrimaryText } from './PageComponents';
 import { Text } from '../Hi/Components/Basics';
 import { HColor } from '../Hi/Colors';
 
@@ -34,10 +34,7 @@ export default class BasicComponents extends Container {
                     'The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'
                 ),
 
-                new HStack(new Text('Hello World'))
-                    .border({ size: 4, style: 'dotted', color: HColor('green') })
-                    .width(200)
-                    .height(200)
+                new ExampleViewer(new Text('Hello World')).width(200).height(200)
             )
         );
     }

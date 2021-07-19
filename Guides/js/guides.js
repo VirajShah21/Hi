@@ -287,6 +287,10 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
         }
         getModelData() {
             return {
+                viewName: this.constructor.name,
+                name: `${this.constructor.name}${this.body.id.trim().length > 0 ? `#${this.body.id.trim()}` : ''}.${this.getClassList().join('.')}`,
+                id: this.body.id,
+                classList: this.getClassList(),
                 children: this.$children.map(child => child.getModelData()),
             };
         }
@@ -1336,7 +1340,7 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
     }
     exports.default = SignupViewer;
 });
-define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/View"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4, View_8) {
+define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/human", "Hi/View"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4, human_6, View_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ExampleViewer = exports.HTMLContent = exports.FileTreeItem = exports.ImageCaption = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
@@ -1406,10 +1410,44 @@ define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Component
         }
     }
     exports.HTMLContent = HTMLContent;
-    class ExampleViewer extends Stacks_4.HStack {
-        constructor(...children) {
-            super(new Stacks_4.VStack(...children), new Stacks_4.VStack());
-            this.border({ size: 4, style: 'dashed', color: Colors_4.HColor('green') });
+    function dimension(axis) {
+        return new Stacks_4.VStack(new Basics_4.Text('•').id(`component-${axis}`).font('lg'), new Basics_4.Text(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(Colors_4.HColor('gray')));
+    }
+    class ExampleViewer extends Stacks_4.VStack {
+        constructor(content) {
+            super(new Stacks_4.VStack(content).border({ size: 4, style: 'dashed', color: Colors_4.HColor('green') }), new Stacks_4.VStack(new Stacks_4.HStack(dimension('width').padding(), new Basics_4.Text(' by '), dimension('height').padding()), new Stacks_4.HStack(new Stacks_4.VStack(new Basics_4.Text('•').id('component-name').font('lg'), new Basics_4.Text('Component').font('sm').foreground(Colors_4.HColor('gray'))).padding(), new Stacks_4.VStack(new Basics_4.Text('•').id('component-id').font('lg'), new Basics_4.Text('ID').font('sm').foreground(Colors_4.HColor('gray'))).padding())).padding());
+            this.dimensions = human_6.StateObject({
+                width: 0,
+                height: 0,
+            }, property => {
+                this.getViewById(`component-${property}`).text.value =
+                    (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
+            });
+            this.componentInfo = human_6.StateObject({
+                name: '',
+                id: '',
+            }, property => {
+                switch (property) {
+                    case 'name':
+                        this.getViewById('component-name').text.value = this.componentInfo.name;
+                        break;
+                    case 'id':
+                        this.getViewById('component-id').text.value = this.componentInfo.id;
+                        break;
+                }
+            });
+            function enableHover(view, exampleViewer) {
+                view.whenMouseOver(ev => {
+                    exampleViewer.dimensions.width = ev.view.body.clientWidth || '•';
+                    exampleViewer.dimensions.height = ev.view.body.clientHeight || '•';
+                    exampleViewer.componentInfo.name = ev.view.constructor.name || '•';
+                    exampleViewer.componentInfo.id = ev.view.body.id || '•';
+                });
+                view.forChild(child => {
+                    enableHover(child, exampleViewer);
+                });
+            }
+            enableHover(content, this);
         }
     }
     exports.ExampleViewer = ExampleViewer;
@@ -1537,7 +1575,7 @@ new Button(
     }
     exports.default = SizingTypes;
 });
-define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics", "Hi/Colors"], function (require, exports, Stacks_7, PageComponents_3, Basics_7, Colors_7) {
+define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics"], function (require, exports, Stacks_7, PageComponents_3, Basics_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class BasicComponents extends Stacks_7.Container {
@@ -1552,15 +1590,12 @@ define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "
                 .backgroundImage('assets/BasicComponents.png')
                 .stretch()
                 .padding({ bottom: 50 })
-                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new Stacks_7.HStack(new Basics_7.Text('Hello World'))
-                .border({ size: 4, style: 'dotted', color: Colors_7.HColor('green') })
-                .width(200)
-                .height(200)));
+                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new PageComponents_3.ExampleViewer(new Basics_7.Text('Hello World')).width(200).height(200)));
         }
     }
     exports.default = BasicComponents;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents"], function (require, exports, Colors_8, Stacks_8, human_6, Basics_8, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1, BasicComponents_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents"], function (require, exports, Colors_7, Stacks_8, human_7, Basics_8, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1, BasicComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_8.HIFullScreenView {
@@ -1569,7 +1604,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
-                .borderRight({ size: 1, style: 'solid', color: Colors_8.HColor('gray6') })
+                .borderRight({ size: 1, style: 'solid', color: Colors_7.HColor('gray6') })
                 .width({
                 min: 300,
                 max: 300,
@@ -1584,10 +1619,10 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .borderBottom({
                 size: 1,
                 style: 'solid',
-                color: Colors_8.HColor('gray6'),
+                color: Colors_7.HColor('gray6'),
             })
                 .position('fixed')
-                .background(Colors_8.rgba(255, 255, 255, 0.5))
+                .background(Colors_7.rgba(255, 255, 255, 0.5))
                 .blur(25)
                 .zIndex(10), new MessageViewer().id('portfolio-viewer').stretch())
                 .stretchHeight()
@@ -1597,7 +1632,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 max: 'calc(100vw - 300px)',
             })
                 .alignStart()).stretch());
-            this.portfolioViewerController = new human_6.ViewController({
+            this.portfolioViewerController = new human_7.ViewController({
                 signup: new SignupViewer_1.default().stretch().padding({ top: 60 }),
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
                 sizingTypes: new SizingTypes_1.default().stretch().padding({ top: 60 }),
@@ -1611,14 +1646,14 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
     exports.default = GuidesApp;
     class MessageViewer extends Stacks_8.ScrollView {
         constructor() {
-            super(new Stacks_8.VStack(new Basics_8.Text('Select a menu item').foreground(Colors_8.HColor('gray'))).stretch());
+            super(new Stacks_8.VStack(new Basics_8.Text('Select a menu item').foreground(Colors_7.HColor('gray'))).stretch());
         }
     }
 });
-define("guides", ["require", "exports", "GuidesApp", "Hi/human"], function (require, exports, GuidesApp_1, human_7) {
+define("guides", ["require", "exports", "GuidesApp", "Hi/human"], function (require, exports, GuidesApp_1, human_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    new human_7.ViewController({
+    new human_8.ViewController({
         main: new GuidesApp_1.default(),
     })
         .bind()

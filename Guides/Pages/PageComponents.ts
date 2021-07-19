@@ -2,6 +2,7 @@ import { HColor } from '../Hi/Colors';
 import { BlockCode, Text } from '../Hi/Components/Basics';
 import { Icon } from '../Hi/Components/Graphics';
 import { HStack, VStack } from '../Hi/Components/Stacks';
+import { StateObject } from '../Hi/human';
 import View from '../Hi/View';
 
 export class MajorIcon extends Icon {
@@ -73,9 +74,71 @@ export class HTMLContent extends View {
     }
 }
 
-export class ExampleViewer extends HStack {
-    constructor(...children: View[]) {
-        super(new VStack(...children), new VStack());
-        this.border({ size: 4, style: 'dashed', color: HColor('green') });
+function dimension(axis: 'width' | 'height') {
+    return new VStack(
+        new Text('•').id(`component-${axis}`).font('lg'),
+        new Text(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
+    );
+}
+export class ExampleViewer extends VStack {
+    public readonly dimensions = StateObject(
+        {
+            width: 0,
+            height: 0,
+        },
+        property => {
+            (this.getViewById(`component-${property}`) as Text).text.value =
+                (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
+        }
+    );
+
+    public readonly componentInfo = StateObject(
+        {
+            name: '',
+            id: '',
+        },
+        property => {
+            switch (property) {
+                case 'name':
+                    (this.getViewById('component-name') as Text).text.value = this.componentInfo.name;
+                    break;
+                case 'id':
+                    (this.getViewById('component-id') as Text).text.value = this.componentInfo.id;
+                    break;
+            }
+        }
+    );
+
+    constructor(content: View) {
+        super(
+            new VStack(content).border({ size: 4, style: 'dashed', color: HColor('green') }),
+            new VStack(
+                new HStack(dimension('width').padding(), new Text(' by '), dimension('height').padding()),
+                new HStack(
+                    new VStack(
+                        new Text('•').id('component-name').font('lg'),
+                        new Text('Component').font('sm').foreground(HColor('gray'))
+                    ).padding(),
+                    new VStack(
+                        new Text('•').id('component-id').font('lg'),
+                        new Text('ID').font('sm').foreground(HColor('gray'))
+                    ).padding()
+                )
+            ).padding()
+        );
+
+        function enableHover(view: View, exampleViewer: ExampleViewer) {
+            view.whenMouseOver(ev => {
+                exampleViewer.dimensions.width = ev.view.body.clientWidth || '•';
+                exampleViewer.dimensions.height = ev.view.body.clientHeight || '•';
+                exampleViewer.componentInfo.name = ev.view.constructor.name || '•';
+                exampleViewer.componentInfo.id = ev.view.body.id || '•';
+            });
+            view.forChild(child => {
+                enableHover(child, exampleViewer);
+            });
+        }
+
+        enableHover(content, this);
     }
 }
