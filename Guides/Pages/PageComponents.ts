@@ -1,7 +1,7 @@
 import { HColor } from '../Hi/Colors';
 import { Text } from '../Hi/Components/Basics';
 import { Icon } from '../Hi/Components/Graphics';
-import { Container, HStack } from '../Hi/Components/Stacks';
+import { HStack } from '../Hi/Components/Stacks';
 import View from '../Hi/View';
 
 export class MajorIcon extends Icon {

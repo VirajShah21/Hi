@@ -3,7 +3,6 @@ import { Button, Text } from './Basics';
 import InputField, { TextField } from './Inputs';
 import { VStack, HStack, ScrollView } from './Stacks';
 import View from '../View';
-import { LineBreak } from './Whitespace';
 import { Icon } from './Graphics';
 
 export abstract class Overlay extends View {

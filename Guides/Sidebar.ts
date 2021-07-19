@@ -2,7 +2,6 @@ import { HColor } from './Hi/Colors';
 import { Button, Text } from './Hi/Components/Basics';
 import { Icon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
-import { AlertOverlay } from './Hi/Components/Overlays';
 import { VStack, HStack } from './Hi/Components/Stacks';
 import { Spacer } from './Hi/Components/Whitespace';
 import { ViewController } from './Hi/human';
