@@ -3,6 +3,7 @@ import { Icon, Image } from '../Hi/Components/Graphics';
 import { BlockCode, Button, Text } from '../Hi/Components/Basics';
 import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
 import { HColor } from '../Hi/Colors';
+import { Spacer } from '../Hi/Components/Whitespace';
 
 export class TypeDefinitionDocumentation extends VStack {
     constructor(expansion: string, description: string, examples: string) {
@@ -10,22 +11,27 @@ export class TypeDefinitionDocumentation extends VStack {
             new HStack(
                 new Icon('code-working-outline').font('lg').padding(),
                 new Text('Type Definition').padding().width(200).textStart(),
-                new BlockCode(expansion).padding().margin(0).textStart()
+                new BlockCode(expansion).padding().margin(0).textStart(),
+                new Spacer()
             )
                 .stretchWidth()
                 .alignStart(),
             new HStack(
                 new Icon('information-outline').font('lg').padding(),
                 new Text('Description').padding().width(200).textStart(),
-                new HTMLContent('span', description).textStart().margin(0).padding().width(400)
+                new HTMLContent('span', description).textStart().margin(0).padding().width(400),
+                new Spacer()
             )
                 .stretchWidth()
                 .alignStart(),
             new HStack(
                 new Icon('code-slash-outline').font('lg').padding(),
                 new Text('Example').padding().width(200).textStart(),
-                new BlockCode(examples).textStart().margin(0).padding().width(400)
-            ).alignStart()
+                new BlockCode(examples).textStart().margin(0).padding().width(400),
+                new Spacer()
+            )
+                .stretchWidth()
+                .alignStart()
         );
     }
 }
