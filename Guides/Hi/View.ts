@@ -3,8 +3,12 @@ import { HIEdgeSizingValue, HICornerSizingValue, HISizeBounds, HISizingValue } f
 import { StateProxy } from './Types/states';
 import { HIFont, HIBorderProperties } from './Types/styles';
 
-interface IView {
-    children: IView[];
+interface ModelData {
+    viewName: string;
+    name: string;
+    id: string;
+    classList: string[];
+    children: ModelData[];
 }
 
 /**
@@ -14,7 +18,7 @@ interface IView {
  * @abstract
  * @class View
  */
-export default abstract class View implements IView {
+export default abstract class View {
     public body: HTMLElement;
     public parent?: View;
 
@@ -54,8 +58,14 @@ export default abstract class View implements IView {
         }
     }
 
-    getModelData(): IView {
+    getModelData(): ModelData {
         return {
+            viewName: this.constructor.name,
+            name: `${this.constructor.name}${
+                this.body.id.trim().length > 0 ? `#${this.body.id.trim()}` : ''
+            }.${this.getClassList().join('.')}`,
+            id: this.body.id,
+            classList: this.getClassList(),
             children: this.$children.map(child => child.getModelData()),
         };
     }
