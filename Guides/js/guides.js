@@ -1024,91 +1024,7 @@ define("Hi/Components/Whitespace", ["require", "exports", "Hi/View"], function (
     }
     exports.LineBreak = LineBreak;
 });
-define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/View", "Hi/Components/Graphics"], function (require, exports, Colors_1, Basics_1, Inputs_1, Stacks_1, View_7, Graphics_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AgreementOverlay = exports.PromptOverlay = exports.AlertOverlay = exports.Overlay = void 0;
-    class Overlay extends View_7.default {
-        constructor(...children) {
-            super('div', ...children);
-            this.addClass('hi-overlay');
-            this.background(Colors_1.rgba(255, 255, 255, 0.25));
-            document.body.appendChild(this.body);
-        }
-    }
-    exports.Overlay = Overlay;
-    class AlertOverlay extends Overlay {
-        constructor(message) {
-            super(new Stacks_1.VStack(new Basics_1.Text(message).padding().font('small').lineHeight('200%'), new Stacks_1.HStack(new Basics_1.Button(new Basics_1.Text('Cancel'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-alert-overlay-cancel-button'), new Basics_1.Button(new Basics_1.Text('Ok'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-alert-overlay-confirm-button')).padding())
-                .stretchHeight()
-                .width('50%'));
-        }
-        whenConfirmed(callback) {
-            this.getViewsByClass('hi-alert-overlay-confirm-button')[0].whenClicked(callback);
-            return this;
-        }
-        whenCancelled(callback) {
-            this.getViewsByClass('hi-alert-overlay-cancel-button')[0].whenClicked(callback);
-            return this;
-        }
-    }
-    exports.AlertOverlay = AlertOverlay;
-    class PromptOverlay extends Overlay {
-        constructor(prompt) {
-            super(new Stacks_1.VStack(new Basics_1.Text(prompt).padding().font('small'), new Inputs_1.TextField().addClass('hi-prompt-input'), new Stacks_1.HStack(new Basics_1.Button(new Basics_1.Text('Cancel'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-prompt-overlay-cancel-button'), new Basics_1.Button(new Basics_1.Text('Ok'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-prompt-overlay-confirm-button')).padding()));
-        }
-        whenConfirmed(callback) {
-            this.getViewsByClass('hi-prompt-overlay-confirm-button')[0].whenClicked(() => {
-                callback(this.getViewsByClass('hi-prompt-input')[0].attributes.value);
-            });
-            return this;
-        }
-        whenCancelled(callback) {
-            this.getViewsByClass('hi-prompt-overlay-cancel-button')[0].whenClicked(callback);
-            return this;
-        }
-    }
-    exports.PromptOverlay = PromptOverlay;
-    class AgreementOverlay extends Overlay {
-        constructor(title, icon, ...agreementContents) {
-            super(new Stacks_1.VStack(new Graphics_1.Icon(icon).font('lg'), new Basics_1.Text(title).padding().font('xl'), new Stacks_1.ScrollView(...agreementContents).height(100), new Stacks_1.HStack(new Basics_1.Button(new Basics_1.Text('Decline'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-agreement-overlay-cancel-button'), new Basics_1.Button(new Basics_1.Text('Agree'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-agreement-overlay-confirm-button'))));
-        }
-        whenConfirmed(callback) {
-            this.getViewsByClass('hi-agreement-overlay-confirm-button')[0].whenClicked(callback);
-            return this;
-        }
-        whenCancelled(callback) {
-            this.getViewsByClass('hi-agreement-overlay-cancel-button')[0].whenClicked(callback);
-            return this;
-        }
-    }
-    exports.AgreementOverlay = AgreementOverlay;
-});
-define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_2, Basics_2, Graphics_2, Inputs_2, Stacks_2, Whitespace_1, human_5) {
+define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_1, Basics_1, Graphics_1, Inputs_1, Stacks_1, Whitespace_1, human_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function SmartKeywords(keywords) {
@@ -1124,11 +1040,11 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
         }
         return keywords;
     }
-    class Sidebar extends Stacks_2.VStack {
+    class Sidebar extends Stacks_1.VStack {
         constructor() {
-            super(new Inputs_2.TextField('Search')
+            super(new Inputs_1.TextField('Search')
                 .stretchWidth()
-                .border({ color: Colors_2.HColor('gray6') })
+                .border({ color: Colors_1.HColor('gray6') })
                 .margin({ bottom: 20 })
                 .whenChanged(ev => {
                 const target = ev.view.parent?.getViewById('menu-items-list');
@@ -1142,7 +1058,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
                     .sort((a, b) => Sidebar.menuSearchScore(query, a.keywords) -
                     Sidebar.menuSearchScore(query, b.keywords))
                     .map(item => item.view));
-            }), new Stacks_2.VStack(...Sidebar.menuItems.map(item => item.view)).stretchWidth().id('menu-items-list'));
+            }), new Stacks_1.VStack(...Sidebar.menuItems.map(item => item.view)).stretchWidth().id('menu-items-list'));
         }
         static menuSearchScore(query, keywords) {
             const queryWords = query.split(' ');
@@ -1183,13 +1099,13 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
         },
     ];
     function MenuButton(iconName, title, navigateTo) {
-        const btn = new Basics_2.Button(new Stacks_2.HStack(new Graphics_2.Icon(iconName).font({ size: 25 }), new Basics_2.Text(title).padding(), new Whitespace_1.Spacer()))
+        const btn = new Basics_1.Button(new Stacks_1.HStack(new Graphics_1.Icon(iconName).font({ size: 25 }), new Basics_1.Text(title).padding(), new Whitespace_1.Spacer()))
             .stretchWidth()
             .padding(5)
             .rounded()
             .font('sm');
         btn.whenMouseOver(() => {
-            btn.background(Colors_2.HColor('gray6'));
+            btn.background(Colors_1.HColor('gray6'));
         })
             .whenMouseOut(() => {
             btn.background('none');
@@ -1200,6 +1116,90 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
         });
         return btn;
     }
+});
+define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/View", "Hi/Components/Graphics"], function (require, exports, Colors_2, Basics_2, Inputs_2, Stacks_2, View_7, Graphics_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AgreementOverlay = exports.PromptOverlay = exports.AlertOverlay = exports.Overlay = void 0;
+    class Overlay extends View_7.default {
+        constructor(...children) {
+            super('div', ...children);
+            this.addClass('hi-overlay');
+            this.background(Colors_2.rgba(255, 255, 255, 0.25));
+            document.body.appendChild(this.body);
+        }
+    }
+    exports.Overlay = Overlay;
+    class AlertOverlay extends Overlay {
+        constructor(message) {
+            super(new Stacks_2.VStack(new Basics_2.Text(message).padding().font('small').lineHeight('200%'), new Stacks_2.HStack(new Basics_2.Button(new Basics_2.Text('Cancel'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-alert-overlay-cancel-button'), new Basics_2.Button(new Basics_2.Text('Ok'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-alert-overlay-confirm-button')).padding())
+                .stretchHeight()
+                .width('50%'));
+        }
+        whenConfirmed(callback) {
+            this.getViewsByClass('hi-alert-overlay-confirm-button')[0].whenClicked(callback);
+            return this;
+        }
+        whenCancelled(callback) {
+            this.getViewsByClass('hi-alert-overlay-cancel-button')[0].whenClicked(callback);
+            return this;
+        }
+    }
+    exports.AlertOverlay = AlertOverlay;
+    class PromptOverlay extends Overlay {
+        constructor(prompt) {
+            super(new Stacks_2.VStack(new Basics_2.Text(prompt).padding().font('small'), new Inputs_2.TextField().addClass('hi-prompt-input'), new Stacks_2.HStack(new Basics_2.Button(new Basics_2.Text('Cancel'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-prompt-overlay-cancel-button'), new Basics_2.Button(new Basics_2.Text('Ok'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-prompt-overlay-confirm-button')).padding()));
+        }
+        whenConfirmed(callback) {
+            this.getViewsByClass('hi-prompt-overlay-confirm-button')[0].whenClicked(() => {
+                callback(this.getViewsByClass('hi-prompt-input')[0].attributes.value);
+            });
+            return this;
+        }
+        whenCancelled(callback) {
+            this.getViewsByClass('hi-prompt-overlay-cancel-button')[0].whenClicked(callback);
+            return this;
+        }
+    }
+    exports.PromptOverlay = PromptOverlay;
+    class AgreementOverlay extends Overlay {
+        constructor(title, icon, ...agreementContents) {
+            super(new Stacks_2.VStack(new Graphics_2.Icon(icon).font('lg'), new Basics_2.Text(title).padding().font('xl'), new Stacks_2.ScrollView(...agreementContents).height(100), new Stacks_2.HStack(new Basics_2.Button(new Basics_2.Text('Decline'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-agreement-overlay-cancel-button'), new Basics_2.Button(new Basics_2.Text('Agree'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-agreement-overlay-confirm-button'))));
+        }
+        whenConfirmed(callback) {
+            this.getViewsByClass('hi-agreement-overlay-confirm-button')[0].whenClicked(callback);
+            return this;
+        }
+        whenCancelled(callback) {
+            this.getViewsByClass('hi-agreement-overlay-cancel-button')[0].whenClicked(callback);
+            return this;
+        }
+    }
+    exports.AgreementOverlay = AgreementOverlay;
 });
 define("Hi/ViewConnectors", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -1421,17 +1421,17 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
     }
     exports.default = GettingStarted;
 });
-define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2) {
+define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents", "Hi/Colors"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2, Colors_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TypeDefinitionDocumentation = void 0;
     class TypeDefinitionDocumentation extends Stacks_6.VStack {
         constructor(expansion, description, examples) {
-            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0))
+            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0).textStart())
                 .stretchWidth()
                 .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('information-outline').font('lg').padding(), new Basics_6.Text('Description').padding().width(200).textStart(), new PageComponents_2.HTMLContent('span', description).textStart().margin(0).padding().width(400))
                 .stretchWidth()
-                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400)));
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400)).alignStart());
         }
     }
     exports.TypeDefinitionDocumentation = TypeDefinitionDocumentation;
@@ -1447,14 +1447,83 @@ define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/C
                 .backgroundImage('https://images.unsplash.com/photo-1622605831571-261139449967?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80')
                 .stretch()
                 .padding({ bottom: 50 })
-                .foreground('white'), new PageComponents_2.ImageCaption('Photo by Jeremy Zero'), new PageComponents_2.PrimaryHeading('Type Definitions Overview'), new PageComponents_2.PrimaryText('For ease of use and IntelliSense optimization, type definitions have been provided for sizing metrics. Each type allows for different kinds of input.'), new PageComponents_2.SubtleText('Type definitions are used strictly for TypeScript prior to compilation. They are not implementations of new data structures.'), new PageComponents_2.PrimaryHeading('HISizingValue'), new TypeDefinitionDocumentation('string | number', 'Any sizing value acceptable via HTML <strong>and</strong> CSS rules. If the value is a <code>string</code> then the explicitly provided value will be used. If a number is provided, then the default units are pixels.', `const imageWidth: HISizingValue = 100; // '100px'
-const imageHeight: HISizingValue = '200px';
-const divWidth: HISizingValue = 'auto'`).padding({ left: 200, right: 200 })));
+                .foreground('white'), new PageComponents_2.ImageCaption('Photo by Jeremy Zero'), new PageComponents_2.PrimaryHeading('Type Definitions Overview'), new PageComponents_2.PrimaryText('For ease of use and IntelliSense optimization, type definitions have been provided for sizing metrics. Each type allows for different kinds of input.'), new PageComponents_2.SubtleText('Type definitions are used strictly for TypeScript prior to compilation. They are not implementations of new data structures.'), new Stacks_6.HStack(new Graphics_6.Image('https://image.flaticon.com/icons/png/512/4053/4053768.png').height(50), new PageComponents_2.PrimaryHeading('HISizingValue').margin(0).padding({ left: 10 })).margin({ top: 25 }), new TypeDefinitionDocumentation('string | number', 'Any sizing value acceptable via HTML <strong>and</strong> CSS rules. If the value is a <code>string</code> then the explicitly provided value will be used. If a number is provided, then the default units are pixels.', `const imageWidth: HISizingValue = 100; // '100px'
+const imageHeight: HISizingValue = '7em';
+const buttonWidth: HISizingValue = 'calc(50vw - 10px)'
+
+new Button(
+    new Image('assets/bird.png')
+        .width(imageWidth)
+        .height(imageHeight)
+).width(buttonWidth);
+`)
+                .margin({ top: 25 })
+                .padding()
+                .padding({ left: 200, right: 200 })
+                .rounded(), new Stacks_6.Container(new Basics_6.Button(new Graphics_6.Image('https://images.unsplash.com/photo-1579723985163-28f30af7093b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80', 'Image of an African Gray Parrot')
+                .width(100)
+                .height('7em')).width('calc(50vw - 10px)')), new Stacks_6.HStack(new Graphics_6.Image('https://image.flaticon.com/icons/png/512/2000/2000792.png').height(50), new PageComponents_2.PrimaryHeading('HISizeBounds').margin(0).padding({ left: 10 })).margin({ top: 25 }), new TypeDefinitionDocumentation(`HISizingValue | {
+    min?: HISizingValue;
+    max?: HISizingValue;
+    default?: HISizingValue;
+}`, 'Used to determine the sizing bounds of a View. This includes the minimum size, maxmimum size and default size (ex: min-width, max-height, etc).', `new HStack(
+    new VStack(
+        new Text('Left Panel')
+    )
+        .width({
+            min: 400,
+            default: 550,
+            max: 700
+        })
+        .background(HColor('red')),
+
+    new VStack(
+        new Text('Right Panel')
+    )
+        .width({
+            min: 200,
+            max: 1000
+        })
+        .background(HColor('blue'))
+)`)
+                .margin({ top: 25 })
+                .padding()
+                .padding({ left: 200, right: 200 })
+                .rounded(), new Stacks_6.Container(new Stacks_6.HStack(new Stacks_6.VStack(new Basics_6.Text('Left Panel'))
+                .width({
+                min: 400,
+                default: 550,
+                max: 700,
+            })
+                .background(Colors_6.HColor('red')), new Stacks_6.VStack(new Basics_6.Text('Right Panel')).width({ min: 200, max: 1000 }).background(Colors_6.HColor('blue')))), new Stacks_6.HStack(new Graphics_6.Image('https://image.flaticon.com/icons/png/512/204/204599.png').height(50), new PageComponents_2.PrimaryHeading('HIEdgeSizingValue').margin(0).padding({ left: 10 })).margin({ top: 25 }), new TypeDefinitionDocumentation(`HISizingValue | {
+    top?: HISizingValue;
+    right?: HISizingValue;
+    bottom?: HISizingValue;
+    left?: HISizingValue;
+}`, 'Used to determine the sizing of styles pertaining to the edges of a View. This can be used for padding, margin, and the like.', `new HStack(
+    new Text('Hello World').background('white').padding(5)
+)
+    .background('black')
+    .padding({
+        top: 10,
+        right: '5vw',
+        bottom: '15pt',
+        left: '10vw'
+    })`)
+                .margin({ top: 25 })
+                .padding()
+                .padding({ left: 200, right: 200 })
+                .rounded(), new Stacks_6.HStack(new Basics_6.Text('Hello World').background('white').padding(5)).background('black').padding({
+                top: 10,
+                right: '5vw',
+                bottom: '15pt',
+                left: '10vw',
+            })));
         }
     }
     exports.default = SizingTypes;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes"], function (require, exports, Colors_6, Stacks_7, human_6, Basics_7, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes"], function (require, exports, Colors_7, Stacks_7, human_6, Basics_7, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_7.HIFullScreenView {
@@ -1463,7 +1532,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
-                .borderRight({ size: 1, style: 'solid', color: Colors_6.HColor('gray6') })
+                .borderRight({ size: 1, style: 'solid', color: Colors_7.HColor('gray6') })
                 .width({
                 min: 300,
                 max: 300,
@@ -1478,10 +1547,10 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .borderBottom({
                 size: 1,
                 style: 'solid',
-                color: Colors_6.HColor('gray6'),
+                color: Colors_7.HColor('gray6'),
             })
                 .position('fixed')
-                .background(Colors_6.rgba(255, 255, 255, 0.5))
+                .background(Colors_7.rgba(255, 255, 255, 0.5))
                 .blur(25)
                 .zIndex(10), new MessageViewer().id('portfolio-viewer').stretch())
                 .stretch()
@@ -1499,7 +1568,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
     exports.default = GuidesApp;
     class MessageViewer extends Stacks_7.ScrollView {
         constructor() {
-            super(new Stacks_7.VStack(new Basics_7.Text('Select a menu item').foreground(Colors_6.HColor('gray'))).stretch());
+            super(new Stacks_7.VStack(new Basics_7.Text('Select a menu item').foreground(Colors_7.HColor('gray'))).stretch());
         }
     }
 });

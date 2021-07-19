@@ -162,19 +162,27 @@ new Button(
 }`,
                     'Used to determine the sizing of styles pertaining to the edges of a View. This can be used for padding, margin, and the like.',
                     `new HStack(
-    new Text('Hello World')
-        .padding({
-            top: 10,
-            right: '5vw',
-            bottom: '15pt',
-            left: '10vw'
-        })
-)`
+    new Text('Hello World').background('white').padding(5)
+)
+    .background('black')
+    .padding({
+        top: 10,
+        right: '5vw',
+        bottom: '15pt',
+        left: '10vw'
+    })`
                 )
                     .margin({ top: 25 })
                     .padding()
                     .padding({ left: 200, right: 200 })
-                    .rounded()
+                    .rounded(),
+
+                new HStack(new Text('Hello World').background('white').padding(5)).background('black').padding({
+                    top: 10,
+                    right: '5vw',
+                    bottom: '15pt',
+                    left: '10vw',
+                })
             )
         );
     }
