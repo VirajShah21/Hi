@@ -3,6 +3,10 @@ import { HIEdgeSizingValue, HICornerSizingValue, HISizeBounds, HISizingValue } f
 import { StateProxy } from './Types/states';
 import { HIFont, HIBorderProperties } from './Types/styles';
 
+interface IView {
+    children: IView[];
+}
+
 /**
  * The base class for all Human Interface views.
  *
@@ -10,7 +14,7 @@ import { HIFont, HIBorderProperties } from './Types/styles';
  * @abstract
  * @class View
  */
-export default abstract class View {
+export default abstract class View implements IView {
     public body: HTMLElement;
     public parent?: View;
 
@@ -48,6 +52,12 @@ export default abstract class View {
             const childResult = child.getViewById(id);
             if (childResult) return childResult;
         }
+    }
+
+    getModelData(): IView {
+        return {
+            children: this.$children.map(child => child.getModelData()),
+        };
     }
 
     destroy(): void {

@@ -285,6 +285,11 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
                     return childResult;
             }
         }
+        getModelData() {
+            return {
+                children: this.$children.map(child => child.getModelData()),
+            };
+        }
         destroy() {
             // Remove from parent
             if (this.parent && this.parent.$children)
