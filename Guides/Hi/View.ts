@@ -22,6 +22,7 @@ export default abstract class View {
     public body: HTMLElement;
     public parent?: View;
     public description?: string;
+    public identifier: string;
 
     public readonly children: StateProxy<View[]>;
     private readonly $children: View[] = [];
@@ -220,7 +221,7 @@ export default abstract class View {
     }
 
     id(idName: string): this {
-        this.body.id = idName;
+        this.identifier = idName;
         return this;
     }
 
