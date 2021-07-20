@@ -3,7 +3,6 @@ import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/St
 import { ViewController } from './Hi/human';
 import { Button, Text } from './Hi/Components/Basics';
 import Sidebar from './Sidebar';
-import SignupViewer from './SignupViewer';
 import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
 import BasicComponents from './Pages/BasicComponents';
@@ -13,7 +12,6 @@ import GraphicsComponent from './Pages/GraphicsComponents';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
-        signup: new SignupViewer().stretch().padding({ top: 60 }),
         gettingStarted: new GettingStarted().stretch().padding({ top: 60 }),
         sizingTypes: new SizingTypes().stretch().padding({ top: 60 }),
         basicComponents: new BasicComponents().stretch().padding({ top: 60 }),
