@@ -1,6 +1,7 @@
-import { HColor } from '../Hi/Colors';
-import { BlockCode, Text } from '../Hi/Components/Basics';
+import { HColor, rgba } from '../Hi/Colors';
+import { BlockCode, Button, Text } from '../Hi/Components/Basics';
 import { Icon } from '../Hi/Components/Graphics';
+import { TextField } from '../Hi/Components/Inputs';
 import { HStack, VStack } from '../Hi/Components/Stacks';
 import { Spacer } from '../Hi/Components/Whitespace';
 import { StateObject } from '../Hi/human';
@@ -121,9 +122,44 @@ export class ExampleViewer extends VStack {
         }
     );
 
+    public readonly viewerSettings = StateObject(
+        {
+            contrastToggle: false,
+        },
+        () => {
+            this.getViewById('enable-contrast-button')?.foreground(
+                HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray')
+            );
+        }
+    );
+
     constructor(content: View) {
         super(
-            new VStack(content).border({ size: 4, style: 'dashed', color: HColor('gray6') }),
+            new HStack(
+                new Button(
+                    new Icon('contrast-outline').font('lg').foreground(HColor('gray')).id('enable-contrast-button')
+                )
+                    .padding({
+                        top: 0,
+                        bottom: 0,
+                        left: 5,
+                        right: 5,
+                    })
+                    .whenMouseOver(ev => {
+                        ev.view.background(rgba(0, 0, 0, 0.1));
+                    })
+                    .whenMouseOut(ev => {
+                        ev.view.background('none');
+                    })
+                    .whenClicked(ev => {
+                        this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
+                    })
+            )
+                .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
+                .background(HColor('gray6')),
+            new VStack(content)
+                .border({ size: 4, style: 'dashed', color: HColor('gray6') })
+                .borderTop({ style: 'solid' }),
             new VStack(
                 new HStack(
                     new Spacer(),
@@ -154,12 +190,12 @@ export class ExampleViewer extends VStack {
 
         function enableHover(view: View, exampleViewer: ExampleViewer) {
             view.whenMouseOver(ev => {
-                exampleViewer.dimensions.width = ev.view.body.clientWidth;
-                exampleViewer.dimensions.height = ev.view.body.clientHeight;
-                exampleViewer.componentInfo.name = ev.view.constructor.name;
-                exampleViewer.componentInfo.id = ev.view.body.id;
-                exampleViewer.componentInfo.description = ev.view.description;
-                let computedStyles = window.getComputedStyle(ev.view.body);
+                exampleViewer.dimensions.width = view.body.clientWidth;
+                exampleViewer.dimensions.height = view.body.clientHeight;
+                exampleViewer.componentInfo.name = view.constructor.name;
+                exampleViewer.componentInfo.id = view.body.id;
+                exampleViewer.componentInfo.description = view.description;
+                let computedStyles = window.getComputedStyle(view.body);
 
                 let paddings = [
                     computedStyles.paddingTop,
@@ -168,16 +204,19 @@ export class ExampleViewer extends VStack {
                     computedStyles.paddingLeft,
                 ];
 
-                if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3]) {
+                if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
                     exampleViewer.dimensions.padding = paddings[0];
-                } else if (paddings[0] == paddings[2] && paddings[1] == paddings[3]) {
+                else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
                     exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
-                } else {
-                    exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
-                }
+                else exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
+
+                if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(50%)';
 
                 ev.browserEvent.stopPropagation();
+            }).whenMouseOut(() => {
+                if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(100%)';
             });
+
             view.forChild(child => {
                 enableHover(child, exampleViewer);
             });
