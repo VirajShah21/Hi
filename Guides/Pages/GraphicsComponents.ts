@@ -56,7 +56,9 @@ export default class GraphicsComponent extends Container {
                                     .font('xl')
                                     .foreground(HColor('red'))
                                     .id('like-button')
-                            ).whenClicked(ev => ev.view.getViewById('like-button').body.setAttribute('name', 'heart')),
+                            ).whenClicked(ev =>
+                                (ev.view.getViewById('like-button') as Icon).body.setAttribute('name', 'heart')
+                            ),
                             new Button(
                                 new Icon('chatbubble-outline')
                                     .describe('Icon Name: chatbubble-outline')
