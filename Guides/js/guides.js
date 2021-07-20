@@ -294,6 +294,10 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
                 children: this.$children.map(child => child.getModelData()),
             };
         }
+        describe(description) {
+            this.description = description;
+            return this;
+        }
         destroy() {
             // Remove from parent
             if (this.parent && this.parent.$children)
@@ -1104,7 +1108,11 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
         },
         {
             view: MenuButton('text-outline', 'Basic Components', 'basicComponents'),
-            keywords: SmartKeywords(['basic components']),
+            keywords: SmartKeywords(['basic components', 'text', 'button', 'padding', 'round', 'rounded', 'margin']),
+        },
+        {
+            view: MenuButton('images-outline', 'Graphics Components', 'graphicsComponents'),
+            keywords: SmartKeywords(['graphics', 'graphic', 'images', 'icons']),
         },
     ];
     function MenuButton(iconName, title, navigateTo) {
@@ -1340,7 +1348,7 @@ define("SignupViewer", ["require", "exports", "Hi/Colors", "Hi/Components/Basics
     }
     exports.default = SignupViewer;
 });
-define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/human", "Hi/View"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4, human_6, View_8) {
+define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human", "Hi/View"], function (require, exports, Colors_4, Basics_4, Graphics_4, Stacks_4, Whitespace_3, human_6, View_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ExampleViewer = exports.HTMLContent = exports.FileTreeItem = exports.ImageCaption = exports.SubtleText = exports.PrimaryText = exports.SecondaryHeading = exports.PrimaryHeading = exports.MajorIcon = void 0;
@@ -1415,33 +1423,62 @@ define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Component
     }
     class ExampleViewer extends Stacks_4.VStack {
         constructor(content) {
-            super(new Stacks_4.VStack(content).border({ size: 4, style: 'dashed', color: Colors_4.HColor('green') }), new Stacks_4.VStack(new Stacks_4.HStack(dimension('width').padding(), new Basics_4.Text(' by '), dimension('height').padding()), new Stacks_4.HStack(new Stacks_4.VStack(new Basics_4.Text('•').id('component-name').font('lg'), new Basics_4.Text('Component').font('sm').foreground(Colors_4.HColor('gray'))).padding(), new Stacks_4.VStack(new Basics_4.Text('•').id('component-id').font('lg'), new Basics_4.Text('ID').font('sm').foreground(Colors_4.HColor('gray'))).padding())).padding());
+            super(new Stacks_4.VStack(content).border({ size: 4, style: 'dashed', color: Colors_4.HColor('gray6') }), new Stacks_4.VStack(new Stacks_4.HStack(new Whitespace_3.Spacer(), dimension('width').padding(), new Basics_4.Text(' by '), dimension('height').padding(), new Whitespace_3.Spacer(), new Stacks_4.VStack(new Basics_4.Text('•').id('component-padding').font('lg'), new Basics_4.Text('Padding').font('sm').foreground(Colors_4.HColor('gray'))).padding(), new Whitespace_3.Spacer()), new Stacks_4.HStack(new Stacks_4.VStack(new Basics_4.Text('•').id('component-name').font('lg'), new Basics_4.Text('Component').font('sm').foreground(Colors_4.HColor('gray'))).padding(), new Stacks_4.VStack(new Basics_4.Text('•').id('component-id').font('lg'), new Basics_4.Text('ID').font('sm').foreground(Colors_4.HColor('gray'))).padding()), new Basics_4.Text('Description').font('sm').foreground(Colors_4.HColor('gray')), new Basics_4.Text('•').id('component-description')).padding());
             this.dimensions = human_6.StateObject({
                 width: 0,
                 height: 0,
+                padding: '',
             }, property => {
-                this.getViewById(`component-${property}`).text.value =
-                    (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
+                if (property == 'width' || property == 'height')
+                    this.getViewById(`component-${property}`).text.value =
+                        (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
+                else if (property == 'padding')
+                    this.getViewById('component-padding').text.value = this.dimensions.padding || '•';
             });
             this.componentInfo = human_6.StateObject({
                 name: '',
                 id: '',
+                description: '',
+                padding: '',
+                margin: '',
             }, property => {
                 switch (property) {
                     case 'name':
-                        this.getViewById('component-name').text.value = this.componentInfo.name;
+                        this.getViewById('component-name').text.value = this.componentInfo.name || '•';
                         break;
                     case 'id':
-                        this.getViewById('component-id').text.value = this.componentInfo.id;
+                        this.getViewById('component-id').text.value = this.componentInfo.id || '•';
+                        break;
+                    case 'description':
+                        this.getViewById('component-description').text.value =
+                            this.componentInfo.description || '•';
                         break;
                 }
             });
             function enableHover(view, exampleViewer) {
                 view.whenMouseOver(ev => {
-                    exampleViewer.dimensions.width = ev.view.body.clientWidth || '•';
-                    exampleViewer.dimensions.height = ev.view.body.clientHeight || '•';
-                    exampleViewer.componentInfo.name = ev.view.constructor.name || '•';
-                    exampleViewer.componentInfo.id = ev.view.body.id || '•';
+                    exampleViewer.dimensions.width = ev.view.body.clientWidth;
+                    exampleViewer.dimensions.height = ev.view.body.clientHeight;
+                    exampleViewer.componentInfo.name = ev.view.constructor.name;
+                    exampleViewer.componentInfo.id = ev.view.body.id;
+                    exampleViewer.componentInfo.description = ev.view.description;
+                    let computedStyles = window.getComputedStyle(ev.view.body);
+                    let paddings = [
+                        computedStyles.paddingTop,
+                        computedStyles.paddingRight,
+                        computedStyles.paddingBottom,
+                        computedStyles.paddingLeft,
+                    ];
+                    if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3]) {
+                        exampleViewer.dimensions.padding = paddings[0];
+                    }
+                    else if (paddings[0] == paddings[2] && paddings[1] == paddings[3]) {
+                        exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
+                    }
+                    else {
+                        exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
+                    }
+                    ev.browserEvent.stopPropagation();
                 });
                 view.forChild(child => {
                     enableHover(child, exampleViewer);
@@ -1452,12 +1489,12 @@ define("Pages/PageComponents", ["require", "exports", "Hi/Colors", "Hi/Component
     }
     exports.ExampleViewer = ExampleViewer;
 });
-define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Basics", "Hi/Components/Whitespace", "Hi/Colors", "Pages/PageComponents"], function (require, exports, Graphics_5, Stacks_5, Basics_5, Whitespace_3, Colors_5, PageComponents_1) {
+define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Basics", "Hi/Components/Whitespace", "Hi/Colors", "Pages/PageComponents"], function (require, exports, Graphics_5, Stacks_5, Basics_5, Whitespace_4, Colors_5, PageComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GettingStarted extends Stacks_5.Container {
         constructor() {
-            super(new Stacks_5.VStack(new Graphics_5.Image('https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80').stretchWidth(), new PageComponents_1.ImageCaption('Photo by Belinda Fewings'), new PageComponents_1.MajorIcon('accessibility-outline'), new PageComponents_1.PrimaryHeading('Human Interface?').font('xl'), new PageComponents_1.PrimaryText('If you are brand new to Hi MVC then this is where you should begin. Hi MVC (Human Interface Model View Controller) is an MVC which replicates an Apple-like experience on the web. It utilizes the human interface guidelines developed by Apple and implements them on the web while providing powerful frontend and backend tools.'), new PageComponents_1.PrimaryText('The Human Interface Design is the user interface guide defined by Apple for all of their software. The components are made to integrate with iOS/macOS devices along with porting the UI to other platforms'), new PageComponents_1.PrimaryText('The stacking system used by SwiftUI is also ported for the web for perfect alignment... always'), new PageComponents_1.SubtleText('Please note that this project is under heavy development and is due to many changes.'), new PageComponents_1.MajorIcon('cloud-download-outline'), new PageComponents_1.PrimaryHeading('Downloading HI MVC').font('xl'), new PageComponents_1.PrimaryText('Visit the github repository to download the source code. You will want to compile your entire project using the TypeScript compiler, so you should not precompile any of the HI components.'), new Basics_5.Button(new Stacks_5.HStack(new Graphics_5.Icon('logo-github').font('xl'), new Basics_5.Text('Github Repository').font('md').margin({ left: 10 }))), new PageComponents_1.MajorIcon('hammer-outline'), new PageComponents_1.PrimaryHeading('Installation').font('xl'), new PageComponents_1.SecondaryHeading('Step 1: SCSS Compilation').font('lg'), new PageComponents_1.PrimaryText('This process has been made simple for you. To compile the scss, you will need to open your terminal and navigate to the directory of the HI github repository. Then you should navigate to the "Client" folder.'), new PageComponents_1.PrimaryText('In the "Client" directory, there will be makefile. Run the command "make scss" to compile the scss files into standard CSS. It will then compile into Client/build/hi.css and Client/build/hi.css.map'), new PageComponents_1.PrimaryText('Copy the file to your static directory'), new PageComponents_1.SubtleText('This process assumes you have SASS install globally on your system.'), new PageComponents_1.SecondaryHeading('Step 2: Configure TypeScript').font('lg'), new PageComponents_1.PrimaryText('TypeScript accepts its configuration as a tsconfig.json file. You want the contents of the file to contain the following:'), new Graphics_5.Image('assets/getting-started/tsconfig.png').margin({ top: 25 }), new PageComponents_1.SecondaryHeading('Step 3: Configure Directory Structure'), new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.VStack(new PageComponents_1.FileTreeItem('folder-outline', 'css').iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('logo-css3', 'hi.css', 1).iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('map-outline', 'hi.css.map', 1).iconColor(Colors_5.HColor('green')), new PageComponents_1.FileTreeItem('text-outline', 'fonts').iconColor(Colors_5.HColor('teal')), new PageComponents_1.FileTreeItem('logo-html5', 'index.html').iconColor(Colors_5.HColor('orange')))
+            super(new Stacks_5.VStack(new Graphics_5.Image('https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80').stretchWidth(), new PageComponents_1.ImageCaption('Photo by Belinda Fewings'), new PageComponents_1.MajorIcon('accessibility-outline'), new PageComponents_1.PrimaryHeading('Human Interface?').font('xl'), new PageComponents_1.PrimaryText('If you are brand new to Hi MVC then this is where you should begin. Hi MVC (Human Interface Model View Controller) is an MVC which replicates an Apple-like experience on the web. It utilizes the human interface guidelines developed by Apple and implements them on the web while providing powerful frontend and backend tools.'), new PageComponents_1.PrimaryText('The Human Interface Design is the user interface guide defined by Apple for all of their software. The components are made to integrate with iOS/macOS devices along with porting the UI to other platforms'), new PageComponents_1.PrimaryText('The stacking system used by SwiftUI is also ported for the web for perfect alignment... always'), new PageComponents_1.SubtleText('Please note that this project is under heavy development and is due to many changes.'), new PageComponents_1.MajorIcon('cloud-download-outline'), new PageComponents_1.PrimaryHeading('Downloading HI MVC').font('xl'), new PageComponents_1.PrimaryText('Visit the github repository to download the source code. You will want to compile your entire project using the TypeScript compiler, so you should not precompile any of the HI components.'), new Basics_5.Button(new Stacks_5.HStack(new Graphics_5.Icon('logo-github').font('xl'), new Basics_5.Text('Github Repository').font('md').margin({ left: 10 }))), new PageComponents_1.MajorIcon('hammer-outline'), new PageComponents_1.PrimaryHeading('Installation').font('xl'), new PageComponents_1.SecondaryHeading('Step 1: SCSS Compilation').font('lg'), new PageComponents_1.PrimaryText('This process has been made simple for you. To compile the scss, you will need to open your terminal and navigate to the directory of the HI github repository. Then you should navigate to the "Client" folder.'), new PageComponents_1.PrimaryText('In the "Client" directory, there will be makefile. Run the command "make scss" to compile the scss files into standard CSS. It will then compile into Client/build/hi.css and Client/build/hi.css.map'), new PageComponents_1.PrimaryText('Copy the file to your static directory'), new PageComponents_1.SubtleText('This process assumes you have SASS install globally on your system.'), new PageComponents_1.SecondaryHeading('Step 2: Configure TypeScript').font('lg'), new PageComponents_1.PrimaryText('TypeScript accepts its configuration as a tsconfig.json file. You want the contents of the file to contain the following:'), new Graphics_5.Image('assets/getting-started/tsconfig.png').margin({ top: 25 }), new PageComponents_1.SecondaryHeading('Step 3: Configure Directory Structure'), new Stacks_5.HStack(new Whitespace_4.Spacer(), new Stacks_5.VStack(new PageComponents_1.FileTreeItem('folder-outline', 'css').iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('logo-css3', 'hi.css', 1).iconColor(Colors_5.HColor('blue')), new PageComponents_1.FileTreeItem('map-outline', 'hi.css.map', 1).iconColor(Colors_5.HColor('green')), new PageComponents_1.FileTreeItem('text-outline', 'fonts').iconColor(Colors_5.HColor('teal')), new PageComponents_1.FileTreeItem('logo-html5', 'index.html').iconColor(Colors_5.HColor('orange')))
                 .alignStart()
                 .rounded()
                 .padding()
@@ -1466,22 +1503,22 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
                 .padding(0)
                 .textStart(), new PageComponents_1.PrimaryText('You will also want to make sure to include an index.html file. This file will should be opened in the browser and will include all the imports.')
                 .padding(0)
-                .textStart()).width('50%'), new Whitespace_3.Spacer()), new PageComponents_1.SecondaryHeading('Step 4: ')));
+                .textStart()).width('50%'), new Whitespace_4.Spacer()), new PageComponents_1.SecondaryHeading('Step 4: ')));
         }
     }
     exports.default = GettingStarted;
 });
-define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents", "Hi/Colors", "Hi/Components/Whitespace"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2, Colors_6, Whitespace_4) {
+define("Pages/SizingTypes", ["require", "exports", "Hi/Components/Stacks", "Hi/Components/Graphics", "Hi/Components/Basics", "Pages/PageComponents", "Hi/Colors", "Hi/Components/Whitespace"], function (require, exports, Stacks_6, Graphics_6, Basics_6, PageComponents_2, Colors_6, Whitespace_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TypeDefinitionDocumentation = void 0;
     class TypeDefinitionDocumentation extends Stacks_6.VStack {
         constructor(expansion, description, examples) {
-            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0).textStart(), new Whitespace_4.Spacer())
+            super(new Stacks_6.HStack(new Graphics_6.Icon('code-working-outline').font('lg').padding(), new Basics_6.Text('Type Definition').padding().width(200).textStart(), new Basics_6.BlockCode(expansion).padding().margin(0).textStart(), new Whitespace_5.Spacer())
                 .stretchWidth()
-                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('information-outline').font('lg').padding(), new Basics_6.Text('Description').padding().width(200).textStart(), new PageComponents_2.HTMLContent('span', description).textStart().margin(0).padding().width(400), new Whitespace_4.Spacer())
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('information-outline').font('lg').padding(), new Basics_6.Text('Description').padding().width(200).textStart(), new PageComponents_2.HTMLContent('span', description).textStart().margin(0).padding().width(400), new Whitespace_5.Spacer())
                 .stretchWidth()
-                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400), new Whitespace_4.Spacer())
+                .alignStart(), new Stacks_6.HStack(new Graphics_6.Icon('code-slash-outline').font('lg').padding(), new Basics_6.Text('Example').padding().width(200).textStart(), new Basics_6.BlockCode(examples).textStart().margin(0).padding().width(400), new Whitespace_5.Spacer())
                 .stretchWidth()
                 .alignStart());
         }
@@ -1575,7 +1612,7 @@ new Button(
     }
     exports.default = SizingTypes;
 });
-define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics"], function (require, exports, Stacks_7, PageComponents_3, Basics_7) {
+define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics", "Hi/Colors"], function (require, exports, Stacks_7, PageComponents_3, Basics_7, Colors_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class BasicComponents extends Stacks_7.Container {
@@ -1590,26 +1627,58 @@ define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "
                 .backgroundImage('assets/BasicComponents.png')
                 .stretch()
                 .padding({ bottom: 50 })
-                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new PageComponents_3.ExampleViewer(new Basics_7.Text('Hello World')).width(200).height(200)));
+                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new PageComponents_3.ExampleViewer(new Basics_7.Text('Designed in Philadelphia.')).margin({ top: 25 }), new PageComponents_3.PrimaryHeading('Button Components'), new PageComponents_3.PrimaryText('Buttons allow for interactivity.'), new PageComponents_3.ExampleViewer(new Basics_7.Button(new Basics_7.Text('Designed in Philadelphia.'))).margin({ top: 25 }), new PageComponents_3.PrimaryText('Common Modifiers'), new PageComponents_3.SecondaryHeading('Padding'), new PageComponents_3.ExampleViewer(new Stacks_7.HStack(new Basics_7.Text('1').padding().background(Colors_7.HColor('orange')).describe('Default padding'), new Basics_7.Text('2').padding(20).background(Colors_7.HColor('green')).describe('20px padding'), new Basics_7.Text('3')
+                .padding({ top: 10, right: 10, bottom: 25, left: 25 })
+                .background(Colors_7.HColor('indigo'))
+                .describe('10px 10px 25px 25px')).padding(50)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Background/Foreground'), new PageComponents_3.ExampleViewer(new Stacks_7.VStack(new Basics_7.Text('Designed').background('black').foreground(Colors_7.HColor('blue')), new Basics_7.Text('in').foreground(Colors_7.HColor('orange')), new Basics_7.Text('Philadelphia').background(Colors_7.HColor('green')).foreground(Colors_7.HColor('gray6'))).padding(20)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Roundedness'), new PageComponents_3.ExampleViewer(new Stacks_7.VStack(new Basics_7.Text('Barely Round').background(Colors_7.HColor('blue')).rounded(5).padding().margin(), new Basics_7.Text('Just Round Enough').background(Colors_7.HColor('blue')).rounded().padding().margin(), new Basics_7.Text('Very Round').background(Colors_7.HColor('blue')).rounded(20).padding().margin(), new Basics_7.Text('Too Round').background(Colors_7.HColor('blue')).rounded('100%').padding().margin()))));
         }
     }
     exports.default = BasicComponents;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents"], function (require, exports, Colors_7, Stacks_8, human_7, Basics_8, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1, BasicComponents_1) {
+define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Pages/PageComponents"], function (require, exports, Colors_8, Basics_8, Graphics_7, Overlays_2, Stacks_8, Whitespace_6, PageComponents_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GuidesApp extends Stacks_8.HIFullScreenView {
+    class GraphicsComponent extends Stacks_8.Container {
         constructor() {
-            super(new Stacks_8.HStack(new Sidebar_1.default()
+            super(new Stacks_8.VStack(new Stacks_8.VStack(new PageComponents_4.MajorIcon('images-outline').blur().rounded(), new Basics_8.Text('Graphics Components').font('xxl').bold().margin({ top: 25 }).blur().rounded())
+                .stretchWidth()
+                .backgroundImage('assets/GraphicsComponents.png')
+                .foreground('white')
+                .padding(), new PageComponents_4.PrimaryHeading('Icons'), new PageComponents_4.ExampleViewer(new Stacks_8.VStack(new Stacks_8.HStack(new Graphics_7.Icon('battery-full').padding().foreground(Colors_8.HColor('green')), new Graphics_7.Icon('battery-half').padding().foreground(Colors_8.HColor('yellow')), new Graphics_7.Icon('battery-dead').padding().foreground(Colors_8.HColor('red')), new Graphics_7.Icon('battery-charging').padding()), new Stacks_8.HStack(new Graphics_7.Icon('battery-full-sharp').padding().foreground(Colors_8.HColor('green')), new Graphics_7.Icon('battery-half-sharp').padding().foreground(Colors_8.HColor('yellow')), new Graphics_7.Icon('battery-half-sharp').padding().foreground(Colors_8.HColor('red')), new Graphics_7.Icon('battery-charging-sharp').padding()))
+                .font('xxl')
+                .padding(25)).margin({ top: 25 }), new PageComponents_4.PrimaryHeading('Instagram Component?'), new PageComponents_4.ExampleViewer(new Stacks_8.VStack(new Graphics_7.Image('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80')
+                .width({ max: '100%' })
+                .margin({ bottom: 10 }), new Stacks_8.HStack(new Basics_8.Button(new Graphics_7.Icon('heart-outline')
+                .describe('Icon Name: heart-outline')
+                .font('xl')
+                .foreground(Colors_8.HColor('red'))
+                .id('like-button')).whenClicked(ev => ev.view.getViewById('like-button').body.setAttribute('name', 'heart')), new Basics_8.Button(new Graphics_7.Icon('chatbubble-outline')
+                .describe('Icon Name: chatbubble-outline')
+                .font('xl')
+                .id('comment-button')).whenClicked(_ => new Overlays_2.AlertOverlay('Messages are disabled for this post.')), new Graphics_7.Icon('bookmark-outline').describe('Icon Name: bookmark-outline'), new Graphics_7.Icon('share-outline').describe('Icon Name: share-outline'), new Whitespace_6.Spacer(), new Basics_8.Text('@jimmyferminphotography').font('md').foreground('gray')).stretch())
+                .margin()
+                .padding()
+                .background(Colors_8.HColor('gray6'))
+                .rounded()).width({ max: '80%' })));
+        }
+    }
+    exports.default = GraphicsComponent;
+});
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "SignupViewer", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_9, Stacks_9, human_7, Basics_9, Sidebar_1, SignupViewer_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GuidesApp extends Stacks_9.HIFullScreenView {
+        constructor() {
+            super(new Stacks_9.HStack(new Sidebar_1.default()
                 .alignStart()
                 .stretchHeight()
                 .padding(20)
-                .borderRight({ size: 1, style: 'solid', color: Colors_7.HColor('gray6') })
+                .borderRight({ size: 1, style: 'solid', color: Colors_9.HColor('gray6') })
                 .width({
                 min: 300,
                 max: 300,
                 default: 300,
-            }), new Stacks_8.VStack(new Stacks_8.HStack(new Basics_8.Text('Title').id('title'))
+            }), new Stacks_9.VStack(new Stacks_9.HStack(new Basics_9.Text('Title').id('title'))
                 .width({
                 min: 'calc(100vw - 300px)',
                 default: 'calc(100vw - 300px)',
@@ -1619,10 +1688,10 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .borderBottom({
                 size: 1,
                 style: 'solid',
-                color: Colors_7.HColor('gray6'),
+                color: Colors_9.HColor('gray6'),
             })
                 .position('fixed')
-                .background(Colors_7.rgba(255, 255, 255, 0.5))
+                .background(Colors_9.rgba(255, 255, 255, 0.5))
                 .blur(25)
                 .zIndex(10), new MessageViewer().id('portfolio-viewer').stretch())
                 .stretchHeight()
@@ -1637,6 +1706,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
                 sizingTypes: new SizingTypes_1.default().stretch().padding({ top: 60 }),
                 basicComponents: new BasicComponents_1.default().stretch().padding({ top: 60 }),
+                graphicsComponents: new GraphicsComponents_1.default().stretch().padding({ top: 60 }),
             });
             const portfolioViewer = this.getViewById('portfolio-viewer');
             if (portfolioViewer)
@@ -1644,9 +1714,9 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
     exports.default = GuidesApp;
-    class MessageViewer extends Stacks_8.ScrollView {
+    class MessageViewer extends Stacks_9.ScrollView {
         constructor() {
-            super(new Stacks_8.VStack(new Basics_8.Text('Select a menu item').foreground(Colors_7.HColor('gray'))).stretch());
+            super(new Stacks_9.VStack(new Basics_9.Text('Select a menu item').foreground(Colors_9.HColor('gray'))).stretch());
         }
     }
 });

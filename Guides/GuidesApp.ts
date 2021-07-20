@@ -9,6 +9,7 @@ import SizingTypes from './Pages/SizingTypes';
 import BasicComponents from './Pages/BasicComponents';
 import { Icon } from './Hi/Components/Graphics';
 import { Spacer } from './Hi/Components/Whitespace';
+import GraphicsComponent from './Pages/GraphicsComponents';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
@@ -16,6 +17,7 @@ export default class GuidesApp extends HIFullScreenView {
         gettingStarted: new GettingStarted().stretch().padding({ top: 60 }),
         sizingTypes: new SizingTypes().stretch().padding({ top: 60 }),
         basicComponents: new BasicComponents().stretch().padding({ top: 60 }),
+        graphicsComponents: new GraphicsComponent().stretch().padding({ top: 60 }),
     });
 
     constructor() {

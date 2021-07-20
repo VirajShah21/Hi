@@ -40,7 +40,11 @@ export default class Sidebar extends VStack {
         },
         {
             view: MenuButton('text-outline', 'Basic Components', 'basicComponents'),
-            keywords: SmartKeywords(['basic components']),
+            keywords: SmartKeywords(['basic components', 'text', 'button', 'padding', 'round', 'rounded', 'margin']),
+        },
+        {
+            view: MenuButton('images-outline', 'Graphics Components', 'graphicsComponents'),
+            keywords: SmartKeywords(['graphics', 'graphic', 'images', 'icons']),
         },
     ];
 

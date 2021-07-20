@@ -160,7 +160,7 @@ export class ExampleViewer extends VStack {
                 exampleViewer.componentInfo.id = ev.view.body.id;
                 exampleViewer.componentInfo.description = ev.view.description;
                 let computedStyles = window.getComputedStyle(ev.view.body);
-                console.log(computedStyles.paddingTop);
+
                 let paddings = [
                     computedStyles.paddingTop,
                     computedStyles.paddingRight,
