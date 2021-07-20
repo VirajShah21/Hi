@@ -3,8 +3,12 @@ import { HIEdgeSizingValue, HICornerSizingValue, HISizeBounds, HISizingValue } f
 import { StateProxy } from './Types/states';
 import { HIFont, HIBorderProperties } from './Types/styles';
 
-interface IView {
-    children: IView[];
+interface ModelData {
+    viewName: string;
+    name: string;
+    id: string;
+    classList: string[];
+    children: ModelData[];
 }
 
 /**
@@ -14,9 +18,11 @@ interface IView {
  * @abstract
  * @class View
  */
-export default abstract class View implements IView {
+export default abstract class View {
     public body: HTMLElement;
     public parent?: View;
+    public description?: string;
+    public identifier: string;
 
     public readonly children: StateProxy<View[]>;
     private readonly $children: View[] = [];
@@ -46,18 +52,30 @@ export default abstract class View implements IView {
         return results;
     }
 
-    getViewById(id: string): View | void {
+    getViewById(id: string): View | null {
         for (const child of this.$children) {
-            if (child.body.id == id) return child;
+            if (child.identifier == id) return child;
             const childResult = child.getViewById(id);
             if (childResult) return childResult;
         }
+        return null;
     }
 
-    getModelData(): IView {
+    getModelData(): ModelData {
         return {
+            viewName: this.constructor.name,
+            name: `${this.constructor.name}${
+                this.body.id.trim().length > 0 ? `#${this.body.id.trim()}` : ''
+            }.${this.getClassList().join('.')}`,
+            id: this.body.id,
+            classList: this.getClassList(),
             children: this.$children.map(child => child.getModelData()),
         };
+    }
+
+    describe(description: string): this {
+        this.description = description;
+        return this;
     }
 
     destroy(): void {
@@ -80,24 +98,6 @@ export default abstract class View implements IView {
     backgroundImage(url: string): this {
         this.body.style.background = `url(${url})`;
         this.body.style.backgroundSize = 'cover';
-        return this;
-    }
-
-    animate(configuration: {
-        from?: number;
-        to?: number;
-        interval: number;
-        adapter: (view: View, parameter: number) => void;
-    }): this {
-        const from = configuration.from || 0;
-        const to = configuration.to || from + 100;
-        const interval = configuration.interval || 50;
-        let curr = from;
-        const intervalPointer = setInterval(() => {
-            if (curr >= to) clearInterval(intervalPointer);
-            else configuration.adapter(this, curr);
-            curr++;
-        }, interval);
         return this;
     }
 
@@ -221,7 +221,7 @@ export default abstract class View implements IView {
     }
 
     id(idName: string): this {
-        this.body.id = idName;
+        this.identifier = idName;
         return this;
     }
 
