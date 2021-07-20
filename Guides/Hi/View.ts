@@ -51,12 +51,13 @@ export default abstract class View {
         return results;
     }
 
-    getViewById(id: string): View | void {
+    getViewById(id: string): View | null {
         for (const child of this.$children) {
             if (child.body.id == id) return child;
             const childResult = child.getViewById(id);
             if (childResult) return childResult;
         }
+        return null;
     }
 
     getModelData(): ModelData {
@@ -96,24 +97,6 @@ export default abstract class View {
     backgroundImage(url: string): this {
         this.body.style.background = `url(${url})`;
         this.body.style.backgroundSize = 'cover';
-        return this;
-    }
-
-    animate(configuration: {
-        from?: number;
-        to?: number;
-        interval: number;
-        adapter: (view: View, parameter: number) => void;
-    }): this {
-        const from = configuration.from || 0;
-        const to = configuration.to || from + 100;
-        const interval = configuration.interval || 50;
-        let curr = from;
-        const intervalPointer = setInterval(() => {
-            if (curr >= to) clearInterval(intervalPointer);
-            else configuration.adapter(this, curr);
-            curr++;
-        }, interval);
         return this;
     }
 
