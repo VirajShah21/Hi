@@ -54,7 +54,7 @@ export default abstract class View {
 
     getViewById(id: string): View | null {
         for (const child of this.$children) {
-            if (child.body.id == id) return child;
+            if (child.identifier == id) return child;
             const childResult = child.getViewById(id);
             if (childResult) return childResult;
         }
