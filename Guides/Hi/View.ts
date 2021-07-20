@@ -21,6 +21,7 @@ interface ModelData {
 export default abstract class View {
     public body: HTMLElement;
     public parent?: View;
+    public description?: string;
 
     public readonly children: StateProxy<View[]>;
     private readonly $children: View[] = [];
@@ -68,6 +69,11 @@ export default abstract class View {
             classList: this.getClassList(),
             children: this.$children.map(child => child.getModelData()),
         };
+    }
+
+    describe(description: string): this {
+        this.description = description;
+        return this;
     }
 
     destroy(): void {
