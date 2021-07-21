@@ -56,17 +56,42 @@ export default class GraphicsComponent extends Container {
                                     .font('xl')
                                     .foreground(HColor('red'))
                                     .id('like-button')
-                            ).whenClicked(ev =>
-                                (ev.view.getViewById('like-button') as Icon).body.setAttribute('name', 'heart')
-                            ),
+                            ).whenClicked(ev => {
+                                const likeButton = ev.view.getViewById('like-button');
+                                likeButton.body.setAttribute(
+                                    'name',
+                                    likeButton.body.getAttribute('name').indexOf('outline') > 0
+                                        ? 'heart'
+                                        : 'heart-outline'
+                                );
+                            }),
                             new Button(
                                 new Icon('chatbubble-outline')
                                     .describe('Icon Name: chatbubble-outline')
                                     .font('xl')
                                     .id('comment-button')
                             ).whenClicked(_ => new AlertOverlay('Messages are disabled for this post.')),
-                            new Icon('bookmark-outline').describe('Icon Name: bookmark-outline'),
-                            new Icon('share-outline').describe('Icon Name: share-outline'),
+                            new Button(
+                                new Icon('bookmark-outline')
+                                    .describe('Icon Name: bookmark-outline')
+                                    .font('xl')
+                                    .foreground(HColor('orange'))
+                                    .id('bookmark-button')
+                            ).whenClicked(ev => {
+                                const bookmarkButton = ev.view.getViewById('bookmark-button');
+                                bookmarkButton.body.setAttribute(
+                                    'name',
+                                    bookmarkButton.body.getAttribute('name').indexOf('outline') > 0
+                                        ? 'bookmark'
+                                        : 'bookmark-outline'
+                                );
+                            }),
+                            new Button(
+                                new Icon('share-outline')
+                                    .describe('Icon Name: share-outline')
+                                    .font('xl')
+                                    .id('share-button')
+                            ),
                             new Spacer(),
                             new Text('@jimmyferminphotography').font('md').foreground('gray')
                         ).stretch()
