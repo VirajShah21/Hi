@@ -56,10 +56,15 @@ export class Preview extends VStack {
                 description: true,
             },
         },
-        () => {
-            this.getViewById('toggle-contrast-button')?.foreground(
-                HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray')
-            );
+        property => {
+            if (property == 'contrastToggle')
+                this.getViewById('toggle-contrast-button')?.foreground(
+                    HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray')
+                );
+
+            if (property == 'dimensions')
+                if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions').unhide();
+                else this.getViewById('component-dimensions').hide();
         }
     );
 
@@ -98,19 +103,31 @@ export class Preview extends VStack {
                         ev.view.background('none');
                     })
                     .whenClicked(ev => {
-                        new Overlay(
+                        const overlay: Overlay = new Overlay(
                             new VStack(
+                                new VStack(
+                                    new HStack(
+                                        new Checkbox()
+                                            .padding(5)
+                                            .setChecked(this.viewerSettings.propertyFilters.dimensions)
+                                            .whenClicked(ev => {
+                                                this.viewerSettings.propertyFilters.dimensions =
+                                                    !this.viewerSettings.propertyFilters.dimensions;
+                                            }),
+                                        new TextContent('Dimensions')
+                                    ),
+                                    new HStack(new Checkbox().padding(5), new TextContent('Padding')),
+                                    new HStack(new Checkbox().padding(5), new TextContent('Description'))
+                                )
+                                    .alignStart()
+                                    .textStart(),
+
                                 new HStack(
-                                    new Checkbox()
-                                        .padding(5)
-                                        .setChecked(this.viewerSettings.propertyFilters.dimensions),
-                                    new TextContent('Dimensions')
-                                ),
-                                new HStack(new Checkbox().padding(5), new TextContent('Padding')),
-                                new HStack(new Checkbox().padding(5), new TextContent('Description'))
+                                    new ClickButton(new IonIcon('close-circle-outline').font('lg'))
+                                        .margin({ top: 50 })
+                                        .whenClicked(ev => overlay.destroy())
+                                )
                             )
-                                .alignStart()
-                                .textStart()
                         );
                     })
             )
@@ -122,9 +139,9 @@ export class Preview extends VStack {
             new VStack(
                 new HStack(
                     new Spacer(),
-                    dimension('width').padding(),
-                    new TextContent(' by '),
-                    dimension('height').padding(),
+                    new HStack(dimension('width').padding(), new TextContent(' by '), dimension('height').padding()).id(
+                        'component-dimensions'
+                    ),
                     new Spacer(),
                     new VStack(
                         new TextContent('•').id('component-padding').font('lg'),
