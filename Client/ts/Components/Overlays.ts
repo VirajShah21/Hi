@@ -3,9 +3,9 @@ import { ClickButton, TextContent } from './Basics';
 import InputField, { TextField } from './Inputs';
 import { VStack, HStack, ScrollView } from './Stacks';
 import View from '../View';
-import { Icon } from './Graphics';
+import { IonIcon } from './Graphics';
 
-export abstract class Overlay extends View {
+export class Overlay extends View {
     constructor(...children: View[]) {
         super('div', ...children);
         this.addClass('hi-overlay');
@@ -87,7 +87,7 @@ export class AgreementOverlay extends Overlay {
     constructor(title: string, icon: string, ...agreementContents: View[]) {
         super(
             new VStack(
-                new Icon(icon).font('lg'),
+                new IonIcon(icon).font('lg'),
                 new TextContent(title).padding().font('xl'),
                 new ScrollView(...agreementContents).height(100),
                 new HStack(

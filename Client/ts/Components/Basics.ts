@@ -10,7 +10,7 @@ export class TextContent extends View {
             value: '',
         },
         () => {
-            this.body.innerText = this.text.value;
+            this.body.textContent = this.text.value;
         }
     );
 
@@ -22,6 +22,72 @@ export class TextContent extends View {
     lineHeight(height: HISizingValue): this {
         this.body.style.lineHeight = sizing(height);
         return this;
+    }
+}
+
+export class Hyperlink extends View {
+    public readonly text = StateObject(
+        {
+            value: '',
+        },
+        () => {
+            this.body.textContent = this.text.value;
+        }
+    );
+
+    constructor(text: string) {
+        super('a');
+        this.text.value = text;
+    }
+}
+
+export class Checkbox extends View {
+    public readonly state = StateObject({ checked: false }, () => {
+        this.body.setAttribute('name', this.state.checked ? 'checkbox' : 'square-outline');
+    });
+
+    constructor() {
+        super('ion-icon');
+        this.body.setAttribute('name', 'square-outline');
+        this.body.addEventListener('click', _ => {
+            this.state.checked = !this.state.checked;
+        });
+    }
+
+    setChecked(value: boolean): this {
+        this.state.checked = value;
+        return this;
+    }
+
+    isChecked(): boolean {
+        return this.state.checked;
+    }
+
+    toggle(): boolean {
+        this.state.checked = !this.state.checked;
+        return this.state.checked;
+    }
+
+    whenClicked(callback: (ev: HumanEvent) => void): this {
+        this.body.addEventListener('click', (browserEvent: Event) => {
+            callback({
+                type: 'Click',
+                view: this,
+                browserEvent,
+            });
+        });
+        return this;
+    }
+}
+
+export class RadioButton extends View {
+    public readonly state = StateObject({ selected: false }, () => {
+        this.body.setAttribute('name', this.state.selected ? 'radio-button-on' : 'radio-button-off');
+    });
+
+    constructor() {
+        super('ion-icon');
+        this.body.setAttribute('name', 'radio-button-off');
     }
 }
 

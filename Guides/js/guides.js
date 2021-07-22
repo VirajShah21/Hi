@@ -1463,40 +1463,22 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
     exports.Preview = void 0;
     class Preview extends Stacks_6.VStack {
         constructor(content) {
-            super(new Stacks_6.HStack(new Basics_6.ClickButton(new Graphics_6.IonIcon('contrast-outline').font('lg').foreground(Colors_6.HColor('gray')).id('toggle-contrast-button'))
-                .padding({
-                top: 0,
-                bottom: 0,
-                left: 5,
-                right: 5,
-            })
-                .whenMouseOver(ev => {
-                ev.view.background(Colors_6.rgba(0, 0, 0, 0.1));
-            })
-                .whenMouseOut(ev => {
-                ev.view.background('none');
-            })
-                .whenClicked(ev => {
+            super(new Stacks_6.HStack(Preview.OptionButton('toggle-contrast-button', 'contrast-outline').whenClicked(ev => {
                 this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
-            }), new Basics_6.ClickButton(new Graphics_6.IonIcon('filter-circle-outline')
-                .font('lg')
-                .foreground(Colors_6.HColor('gray'))
-                .id('filter-properties-button'))
-                .padding({ top: 0, bottom: 0, left: 5, right: 5 })
-                .whenMouseOver(ev => {
-                ev.view.background(Colors_6.rgba(0, 0, 0, 0.1));
-            })
-                .whenMouseOut(ev => {
-                ev.view.background('none');
-            })
-                .whenClicked(ev => {
+            }), Preview.OptionButton('filter-properties-button', 'filter-circle-outline').whenClicked(ev => {
                 const overlay = new Overlays_1.Overlay(new Stacks_6.VStack(new Stacks_6.VStack(new Stacks_6.HStack(new Basics_6.Checkbox()
                     .padding(5)
                     .setChecked(this.viewerSettings.propertyFilters.dimensions)
-                    .whenClicked(ev => {
+                    .whenClicked(_ => {
                     this.viewerSettings.propertyFilters.dimensions =
                         !this.viewerSettings.propertyFilters.dimensions;
-                }), new Basics_6.TextContent('Dimensions')), new Stacks_6.HStack(new Basics_6.Checkbox().padding(5), new Basics_6.TextContent('Padding')), new Stacks_6.HStack(new Basics_6.Checkbox().padding(5), new Basics_6.TextContent('Description')))
+                }), new Basics_6.TextContent('Dimensions')), new Stacks_6.HStack(new Basics_6.Checkbox()
+                    .padding(5)
+                    .setChecked(this.viewerSettings.propertyFilters.padding)
+                    .whenClicked(_ => {
+                    this.viewerSettings.propertyFilters.padding =
+                        !this.viewerSettings.propertyFilters.padding;
+                }), new Basics_6.TextContent('Padding')), new Stacks_6.HStack(new Basics_6.Checkbox().padding(5), new Basics_6.TextContent('Description')))
                     .alignStart()
                     .textStart(), new Stacks_6.HStack(new Basics_6.ClickButton(new Graphics_6.IonIcon('close-circle-outline').font('lg'))
                     .margin({ top: 50 })
@@ -1505,7 +1487,9 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
                 .background(Colors_6.HColor('gray6')), new Stacks_6.VStack(content)
                 .border({ size: 4, style: 'dashed', color: Colors_6.HColor('gray6') })
-                .borderTop({ style: 'solid' }), new Stacks_6.VStack(new Stacks_6.HStack(new Whitespace_4.Spacer(), new Stacks_6.HStack(Preview.dimensionSub('width').padding(), new Basics_6.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_4.Spacer(), new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-padding').font('lg'), new Basics_6.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Whitespace_4.Spacer()), new Stacks_6.HStack(new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-name').font('lg'), new Basics_6.TextContent('Component').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-id').font('lg'), new Basics_6.TextContent('ID').font('sm').foreground(Colors_6.HColor('gray'))).padding()), new Basics_6.TextContent('Description').font('sm').foreground(Colors_6.HColor('gray')), new Basics_6.TextContent('•').id('component-description')).padding());
+                .borderTop({ style: 'solid' }), new Stacks_6.VStack(new Stacks_6.HStack(new Whitespace_4.Spacer(), new Stacks_6.HStack(Preview.dimensionSub('width').padding(), new Basics_6.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_4.Spacer(), new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-padding').font('lg'), new Basics_6.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray')))
+                .padding()
+                .id('component-padding-wrapper'), new Whitespace_4.Spacer()), new Stacks_6.HStack(new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-name').font('lg'), new Basics_6.TextContent('Component').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-id').font('lg'), new Basics_6.TextContent('ID').font('sm').foreground(Colors_6.HColor('gray'))).padding()), new Basics_6.TextContent('Description').font('sm').foreground(Colors_6.HColor('gray')), new Basics_6.TextContent('•').id('component-description')).padding());
             this.dimensions = human_6.StateObject({
                 width: 0,
                 height: 0,
@@ -1552,42 +1536,62 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                         this.getViewById('component-dimensions').unhide();
                     else
                         this.getViewById('component-dimensions').hide();
-            });
-            function enableHover(view, exampleViewer) {
-                view.whenMouseOver(ev => {
-                    exampleViewer.dimensions.width = view.body.clientWidth;
-                    exampleViewer.dimensions.height = view.body.clientHeight;
-                    exampleViewer.componentInfo.name = view.constructor.name;
-                    exampleViewer.componentInfo.id = view.body.id;
-                    exampleViewer.componentInfo.description = view.description;
-                    let computedStyles = window.getComputedStyle(view.body);
-                    let paddings = [
-                        computedStyles.paddingTop,
-                        computedStyles.paddingRight,
-                        computedStyles.paddingBottom,
-                        computedStyles.paddingLeft,
-                    ];
-                    if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
-                        exampleViewer.dimensions.padding = paddings[0];
-                    else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
-                        exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
+                if (property == 'padding')
+                    if (this.viewerSettings.propertyFilters.padding)
+                        this.getViewById('component-padding-wrapper').unhide();
                     else
-                        exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
-                    if (exampleViewer.viewerSettings.contrastToggle)
-                        view.body.style.filter = 'brightness(50%)';
-                    ev.browserEvent.stopPropagation();
-                }).whenMouseOut(() => {
-                    if (exampleViewer.viewerSettings.contrastToggle)
-                        view.body.style.filter = 'brightness(100%)';
-                });
-                view.forChild(child => {
-                    enableHover(child, exampleViewer);
-                });
-            }
-            enableHover(content, this);
+                        this.getViewById('component-padding-wrapper').hide();
+            });
+            Preview.enableHover(content, this);
+        }
+        static enableHover(view, exampleViewer) {
+            view.whenMouseOver(ev => {
+                exampleViewer.dimensions.width = view.body.clientWidth;
+                exampleViewer.dimensions.height = view.body.clientHeight;
+                exampleViewer.componentInfo.name = view.constructor.name;
+                exampleViewer.componentInfo.id = view.body.id;
+                exampleViewer.componentInfo.description = view.description;
+                let computedStyles = window.getComputedStyle(view.body);
+                let paddings = [
+                    computedStyles.paddingTop,
+                    computedStyles.paddingRight,
+                    computedStyles.paddingBottom,
+                    computedStyles.paddingLeft,
+                ];
+                if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
+                    exampleViewer.dimensions.padding = paddings[0];
+                else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
+                    exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
+                else
+                    exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
+                if (exampleViewer.viewerSettings.contrastToggle)
+                    view.body.style.filter = 'brightness(50%)';
+                ev.browserEvent.stopPropagation();
+            }).whenMouseOut(() => {
+                if (exampleViewer.viewerSettings.contrastToggle)
+                    view.body.style.filter = 'brightness(100%)';
+            });
+            view.forChild(child => {
+                this.enableHover(child, exampleViewer);
+            });
         }
         static dimensionSub(axis) {
             return new Stacks_6.VStack(new Basics_6.TextContent('•').id(`component-${axis}`).font('lg'), new Basics_6.TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(Colors_6.HColor('gray')));
+        }
+        static OptionButton(id, icon) {
+            return new Basics_6.ClickButton(new Graphics_6.IonIcon(icon).font('lg').foreground(Colors_6.HColor('gray')).id(id))
+                .padding({
+                top: 0,
+                bottom: 0,
+                left: 5,
+                right: 5,
+            })
+                .whenMouseOver(ev => {
+                ev.view.background(Colors_6.rgba(0, 0, 0, 0.1));
+            })
+                .whenMouseOut(ev => {
+                ev.view.background('none');
+            });
         }
     }
     exports.Preview = Preview;
