@@ -5,7 +5,7 @@ import { VStack, HStack, ScrollView } from './Stacks';
 import View from '../View';
 import { IonIcon } from './Graphics';
 
-export abstract class Overlay extends View {
+export class Overlay extends View {
     constructor(...children: View[]) {
         super('div', ...children);
         this.addClass('hi-overlay');
