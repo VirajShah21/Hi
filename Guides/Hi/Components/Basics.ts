@@ -53,6 +53,20 @@ export class Checkbox extends View {
             this.state.checked = !this.state.checked;
         });
     }
+
+    setChecked(value: boolean): this {
+        this.state.checked = value;
+        return this;
+    }
+
+    isChecked(): boolean {
+        return this.state.checked;
+    }
+
+    toggle(): boolean {
+        this.state.checked = !this.state.checked;
+        return this.state.checked;
+    }
 }
 
 export class RadioButton extends View {
