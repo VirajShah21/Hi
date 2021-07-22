@@ -767,6 +767,30 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View"], fu
                 this.body.setAttribute('name', this.state.checked ? 'checkbox' : 'square-outline');
             });
             this.body.setAttribute('name', 'square-outline');
+            this.body.addEventListener('click', _ => {
+                this.state.checked = !this.state.checked;
+            });
+        }
+        setChecked(value) {
+            this.state.checked = value;
+            return this;
+        }
+        isChecked() {
+            return this.state.checked;
+        }
+        toggle() {
+            this.state.checked = !this.state.checked;
+            return this.state.checked;
+        }
+        whenClicked(callback) {
+            this.body.addEventListener('click', (browserEvent) => {
+                callback({
+                    type: 'Click',
+                    view: this,
+                    browserEvent,
+                });
+            });
+            return this;
         }
     }
     exports.Checkbox = Checkbox;
@@ -1349,13 +1373,97 @@ new Button(
     }
     exports.default = SizingTypes;
 });
-define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_5, human_6, Basics_5, Graphics_5, Stacks_5, Whitespace_4) {
+define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/View", "Hi/Components/Graphics"], function (require, exports, Colors_5, Basics_5, Inputs_2, Stacks_5, View_8, Graphics_5) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AgreementOverlay = exports.PromptOverlay = exports.AlertOverlay = exports.Overlay = void 0;
+    class Overlay extends View_8.default {
+        constructor(...children) {
+            super('div', ...children);
+            this.addClass('hi-overlay');
+            this.background(Colors_5.rgba(255, 255, 255, 0.25));
+            document.body.appendChild(this.body);
+        }
+    }
+    exports.Overlay = Overlay;
+    class AlertOverlay extends Overlay {
+        constructor(message) {
+            super(new Stacks_5.VStack(new Basics_5.TextContent(message).padding().font('small').lineHeight('200%'), new Stacks_5.HStack(new Basics_5.ClickButton(new Basics_5.TextContent('Cancel'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-alert-overlay-cancel-button'), new Basics_5.ClickButton(new Basics_5.TextContent('Ok'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-alert-overlay-confirm-button')).padding())
+                .stretchHeight()
+                .width('50%'));
+        }
+        whenConfirmed(callback) {
+            this.getViewsByClass('hi-alert-overlay-confirm-button')[0].whenClicked(callback);
+            return this;
+        }
+        whenCancelled(callback) {
+            this.getViewsByClass('hi-alert-overlay-cancel-button')[0].whenClicked(callback);
+            return this;
+        }
+    }
+    exports.AlertOverlay = AlertOverlay;
+    class PromptOverlay extends Overlay {
+        constructor(prompt) {
+            super(new Stacks_5.VStack(new Basics_5.TextContent(prompt).padding().font('small'), new Inputs_2.TextField().addClass('hi-prompt-input'), new Stacks_5.HStack(new Basics_5.ClickButton(new Basics_5.TextContent('Cancel'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-prompt-overlay-cancel-button'), new Basics_5.ClickButton(new Basics_5.TextContent('Ok'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-prompt-overlay-confirm-button')).padding()));
+        }
+        whenConfirmed(callback) {
+            this.getViewsByClass('hi-prompt-overlay-confirm-button')[0].whenClicked(() => {
+                callback(this.getViewsByClass('hi-prompt-input')[0].attributes.value);
+            });
+            return this;
+        }
+        whenCancelled(callback) {
+            this.getViewsByClass('hi-prompt-overlay-cancel-button')[0].whenClicked(callback);
+            return this;
+        }
+    }
+    exports.PromptOverlay = PromptOverlay;
+    class AgreementOverlay extends Overlay {
+        constructor(title, icon, ...agreementContents) {
+            super(new Stacks_5.VStack(new Graphics_5.IonIcon(icon).font('lg'), new Basics_5.TextContent(title).padding().font('xl'), new Stacks_5.ScrollView(...agreementContents).height(100), new Stacks_5.HStack(new Basics_5.ClickButton(new Basics_5.TextContent('Decline'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-agreement-overlay-cancel-button'), new Basics_5.ClickButton(new Basics_5.TextContent('Agree'))
+                .whenClicked(() => {
+                this.destroy();
+            })
+                .addClass('hi-agreement-overlay-confirm-button'))));
+        }
+        whenConfirmed(callback) {
+            this.getViewsByClass('hi-agreement-overlay-confirm-button')[0].whenClicked(callback);
+            return this;
+        }
+        whenCancelled(callback) {
+            this.getViewsByClass('hi-agreement-overlay-cancel-button')[0].whenClicked(callback);
+            return this;
+        }
+    }
+    exports.AgreementOverlay = AgreementOverlay;
+});
+define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_6, human_6, Basics_6, Graphics_6, Overlays_1, Stacks_6, Whitespace_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Preview = void 0;
-    class Preview extends Stacks_5.VStack {
+    class Preview extends Stacks_6.VStack {
         constructor(content) {
-            super(new Stacks_5.HStack(new Basics_5.ClickButton(new Graphics_5.IonIcon('contrast-outline').font('lg').foreground(Colors_5.HColor('gray')).id('enable-contrast-button'))
+            super(new Stacks_6.HStack(new Basics_6.ClickButton(new Graphics_6.IonIcon('contrast-outline').font('lg').foreground(Colors_6.HColor('gray')).id('toggle-contrast-button'))
                 .padding({
                 top: 0,
                 bottom: 0,
@@ -1363,18 +1471,41 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                 right: 5,
             })
                 .whenMouseOver(ev => {
-                ev.view.background(Colors_5.rgba(0, 0, 0, 0.1));
+                ev.view.background(Colors_6.rgba(0, 0, 0, 0.1));
             })
                 .whenMouseOut(ev => {
                 ev.view.background('none');
             })
                 .whenClicked(ev => {
                 this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
+            }), new Basics_6.ClickButton(new Graphics_6.IonIcon('filter-circle-outline')
+                .font('lg')
+                .foreground(Colors_6.HColor('gray'))
+                .id('filter-properties-button'))
+                .padding({ top: 0, bottom: 0, left: 5, right: 5 })
+                .whenMouseOver(ev => {
+                ev.view.background(Colors_6.rgba(0, 0, 0, 0.1));
+            })
+                .whenMouseOut(ev => {
+                ev.view.background('none');
+            })
+                .whenClicked(ev => {
+                const overlay = new Overlays_1.Overlay(new Stacks_6.VStack(new Stacks_6.VStack(new Stacks_6.HStack(new Basics_6.Checkbox()
+                    .padding(5)
+                    .setChecked(this.viewerSettings.propertyFilters.dimensions)
+                    .whenClicked(ev => {
+                    this.viewerSettings.propertyFilters.dimensions =
+                        !this.viewerSettings.propertyFilters.dimensions;
+                }), new Basics_6.TextContent('Dimensions')), new Stacks_6.HStack(new Basics_6.Checkbox().padding(5), new Basics_6.TextContent('Padding')), new Stacks_6.HStack(new Basics_6.Checkbox().padding(5), new Basics_6.TextContent('Description')))
+                    .alignStart()
+                    .textStart(), new Stacks_6.HStack(new Basics_6.ClickButton(new Graphics_6.IonIcon('close-circle-outline').font('lg'))
+                    .margin({ top: 50 })
+                    .whenClicked(ev => overlay.destroy()))));
             }))
                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
-                .background(Colors_5.HColor('gray6')), new Stacks_5.VStack(content)
-                .border({ size: 4, style: 'dashed', color: Colors_5.HColor('gray6') })
-                .borderTop({ style: 'solid' }), new Stacks_5.VStack(new Stacks_5.HStack(new Whitespace_4.Spacer(), dimension('width').padding(), new Basics_5.TextContent(' by '), dimension('height').padding(), new Whitespace_4.Spacer(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-padding').font('lg'), new Basics_5.TextContent('Padding').font('sm').foreground(Colors_5.HColor('gray'))).padding(), new Whitespace_4.Spacer()), new Stacks_5.HStack(new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-name').font('lg'), new Basics_5.TextContent('Component').font('sm').foreground(Colors_5.HColor('gray'))).padding(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-id').font('lg'), new Basics_5.TextContent('ID').font('sm').foreground(Colors_5.HColor('gray'))).padding()), new Basics_5.TextContent('Description').font('sm').foreground(Colors_5.HColor('gray')), new Basics_5.TextContent('•').id('component-description')).padding());
+                .background(Colors_6.HColor('gray6')), new Stacks_6.VStack(content)
+                .border({ size: 4, style: 'dashed', color: Colors_6.HColor('gray6') })
+                .borderTop({ style: 'solid' }), new Stacks_6.VStack(new Stacks_6.HStack(new Whitespace_4.Spacer(), new Stacks_6.HStack(Preview.dimensionSub('width').padding(), new Basics_6.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_4.Spacer(), new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-padding').font('lg'), new Basics_6.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Whitespace_4.Spacer()), new Stacks_6.HStack(new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-name').font('lg'), new Basics_6.TextContent('Component').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Stacks_6.VStack(new Basics_6.TextContent('•').id('component-id').font('lg'), new Basics_6.TextContent('ID').font('sm').foreground(Colors_6.HColor('gray'))).padding()), new Basics_6.TextContent('Description').font('sm').foreground(Colors_6.HColor('gray')), new Basics_6.TextContent('•').id('component-description')).padding());
             this.dimensions = human_6.StateObject({
                 width: 0,
                 height: 0,
@@ -1408,8 +1539,19 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
             });
             this.viewerSettings = human_6.StateObject({
                 contrastToggle: false,
-            }, () => {
-                this.getViewById('enable-contrast-button')?.foreground(Colors_5.HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray'));
+                propertyFilters: {
+                    dimensions: true,
+                    padding: true,
+                    description: true,
+                },
+            }, property => {
+                if (property == 'contrastToggle')
+                    this.getViewById('toggle-contrast-button')?.foreground(Colors_6.HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray'));
+                if (property == 'dimensions')
+                    if (this.viewerSettings.propertyFilters.dimensions)
+                        this.getViewById('component-dimensions').unhide();
+                    else
+                        this.getViewById('component-dimensions').hide();
             });
             function enableHover(view, exampleViewer) {
                 view.whenMouseOver(ev => {
@@ -1444,18 +1586,18 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
             }
             enableHover(content, this);
         }
+        static dimensionSub(axis) {
+            return new Stacks_6.VStack(new Basics_6.TextContent('•').id(`component-${axis}`).font('lg'), new Basics_6.TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(Colors_6.HColor('gray')));
+        }
     }
     exports.Preview = Preview;
-    function dimension(axis) {
-        return new Stacks_5.VStack(new Basics_5.TextContent('•').id(`component-${axis}`).font('lg'), new Basics_5.TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(Colors_5.HColor('gray')));
-    }
 });
-define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics", "Hi/Colors", "Hi/Components/DevKit"], function (require, exports, Stacks_6, PageComponents_3, Basics_6, Colors_6, DevKit_1) {
+define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "Pages/PageComponents", "Hi/Components/Basics", "Hi/Colors", "Hi/Components/DevKit"], function (require, exports, Stacks_7, PageComponents_3, Basics_7, Colors_7, DevKit_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class BasicComponents extends Stacks_6.Container {
+    class BasicComponents extends Stacks_7.Container {
         constructor() {
-            super(new Stacks_6.VStack(new Stacks_6.VStack(new PageComponents_3.MajorIcon('text').padding().rounded(), new Basics_6.TextContent('Basic Components')
+            super(new Stacks_7.VStack(new Stacks_7.VStack(new PageComponents_3.MajorIcon('text').padding().rounded(), new Basics_7.TextContent('Basic Components')
                 .padding()
                 .rounded()
                 .font('xxl')
@@ -1465,99 +1607,15 @@ define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "
                 .backgroundImage('assets/BasicComponents.png')
                 .stretch()
                 .padding({ bottom: 50 })
-                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new DevKit_1.Preview(new Basics_6.TextContent('Designed in Philadelphia.')).margin({ top: 25 }), new PageComponents_3.PrimaryHeading('Button Components'), new PageComponents_3.PrimaryText('Buttons allow for interactivity.'), new DevKit_1.Preview(new Basics_6.ClickButton(new Basics_6.TextContent('Designed in Philadelphia.'))).margin({ top: 25 }), new PageComponents_3.PrimaryText('Common Modifiers'), new PageComponents_3.SecondaryHeading('Padding'), new DevKit_1.Preview(new Stacks_6.HStack(new Basics_6.TextContent('1').padding().background(Colors_6.HColor('orange')).describe('Default padding'), new Basics_6.TextContent('2').padding(20).background(Colors_6.HColor('green')).describe('20px padding'), new Basics_6.TextContent('3')
+                .foreground('white'), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new DevKit_1.Preview(new Basics_7.TextContent('Designed in Philadelphia.')).margin({ top: 25 }), new PageComponents_3.PrimaryHeading('Button Components'), new PageComponents_3.PrimaryText('Buttons allow for interactivity.'), new DevKit_1.Preview(new Basics_7.ClickButton(new Basics_7.TextContent('Designed in Philadelphia.'))).margin({ top: 25 }), new PageComponents_3.PrimaryText('Common Modifiers'), new PageComponents_3.SecondaryHeading('Padding'), new DevKit_1.Preview(new Stacks_7.HStack(new Basics_7.TextContent('1').padding().background(Colors_7.HColor('orange')).describe('Default padding'), new Basics_7.TextContent('2').padding(20).background(Colors_7.HColor('green')).describe('20px padding'), new Basics_7.TextContent('3')
                 .padding({ top: 10, right: 10, bottom: 25, left: 25 })
-                .background(Colors_6.HColor('indigo'))
-                .describe('10px 10px 25px 25px')).padding(50)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Background/Foreground'), new DevKit_1.Preview(new Stacks_6.VStack(new Basics_6.TextContent('Designed').background('black').foreground(Colors_6.HColor('blue')), new Basics_6.TextContent('in').foreground(Colors_6.HColor('orange')), new Basics_6.TextContent('Philadelphia').background(Colors_6.HColor('green')).foreground(Colors_6.HColor('gray6'))).padding(20)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Roundedness'), new DevKit_1.Preview(new Stacks_6.VStack(new Basics_6.TextContent('Barely Round').background(Colors_6.HColor('blue')).rounded(5).padding().margin(), new Basics_6.TextContent('Just Round Enough').background(Colors_6.HColor('blue')).rounded().padding().margin(), new Basics_6.TextContent('Very Round').background(Colors_6.HColor('blue')).rounded(20).padding().margin(), new Basics_6.TextContent('Too Round').background(Colors_6.HColor('blue')).rounded('100%').padding().margin()))));
+                .background(Colors_7.HColor('indigo'))
+                .describe('10px 10px 25px 25px')).padding(50)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Background/Foreground'), new DevKit_1.Preview(new Stacks_7.VStack(new Basics_7.TextContent('Designed').background('black').foreground(Colors_7.HColor('blue')), new Basics_7.TextContent('in').foreground(Colors_7.HColor('orange')), new Basics_7.TextContent('Philadelphia').background(Colors_7.HColor('green')).foreground(Colors_7.HColor('gray6'))).padding(20)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Roundedness'), new DevKit_1.Preview(new Stacks_7.VStack(new Basics_7.TextContent('Barely Round').background(Colors_7.HColor('blue')).rounded(5).padding().margin(), new Basics_7.TextContent('Just Round Enough').background(Colors_7.HColor('blue')).rounded().padding().margin(), new Basics_7.TextContent('Very Round').background(Colors_7.HColor('blue')).rounded(20).padding().margin(), new Basics_7.TextContent('Too Round').background(Colors_7.HColor('blue')).rounded('100%').padding().margin()))));
         }
     }
     exports.default = BasicComponents;
 });
-define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Inputs", "Hi/Components/Stacks", "Hi/View", "Hi/Components/Graphics"], function (require, exports, Colors_7, Basics_7, Inputs_2, Stacks_7, View_8, Graphics_6) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AgreementOverlay = exports.PromptOverlay = exports.AlertOverlay = exports.Overlay = void 0;
-    class Overlay extends View_8.default {
-        constructor(...children) {
-            super('div', ...children);
-            this.addClass('hi-overlay');
-            this.background(Colors_7.rgba(255, 255, 255, 0.25));
-            document.body.appendChild(this.body);
-        }
-    }
-    exports.Overlay = Overlay;
-    class AlertOverlay extends Overlay {
-        constructor(message) {
-            super(new Stacks_7.VStack(new Basics_7.TextContent(message).padding().font('small').lineHeight('200%'), new Stacks_7.HStack(new Basics_7.ClickButton(new Basics_7.TextContent('Cancel'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-alert-overlay-cancel-button'), new Basics_7.ClickButton(new Basics_7.TextContent('Ok'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-alert-overlay-confirm-button')).padding())
-                .stretchHeight()
-                .width('50%'));
-        }
-        whenConfirmed(callback) {
-            this.getViewsByClass('hi-alert-overlay-confirm-button')[0].whenClicked(callback);
-            return this;
-        }
-        whenCancelled(callback) {
-            this.getViewsByClass('hi-alert-overlay-cancel-button')[0].whenClicked(callback);
-            return this;
-        }
-    }
-    exports.AlertOverlay = AlertOverlay;
-    class PromptOverlay extends Overlay {
-        constructor(prompt) {
-            super(new Stacks_7.VStack(new Basics_7.TextContent(prompt).padding().font('small'), new Inputs_2.TextField().addClass('hi-prompt-input'), new Stacks_7.HStack(new Basics_7.ClickButton(new Basics_7.TextContent('Cancel'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-prompt-overlay-cancel-button'), new Basics_7.ClickButton(new Basics_7.TextContent('Ok'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-prompt-overlay-confirm-button')).padding()));
-        }
-        whenConfirmed(callback) {
-            this.getViewsByClass('hi-prompt-overlay-confirm-button')[0].whenClicked(() => {
-                callback(this.getViewsByClass('hi-prompt-input')[0].attributes.value);
-            });
-            return this;
-        }
-        whenCancelled(callback) {
-            this.getViewsByClass('hi-prompt-overlay-cancel-button')[0].whenClicked(callback);
-            return this;
-        }
-    }
-    exports.PromptOverlay = PromptOverlay;
-    class AgreementOverlay extends Overlay {
-        constructor(title, icon, ...agreementContents) {
-            super(new Stacks_7.VStack(new Graphics_6.IonIcon(icon).font('lg'), new Basics_7.TextContent(title).padding().font('xl'), new Stacks_7.ScrollView(...agreementContents).height(100), new Stacks_7.HStack(new Basics_7.ClickButton(new Basics_7.TextContent('Decline'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-agreement-overlay-cancel-button'), new Basics_7.ClickButton(new Basics_7.TextContent('Agree'))
-                .whenClicked(() => {
-                this.destroy();
-            })
-                .addClass('hi-agreement-overlay-confirm-button'))));
-        }
-        whenConfirmed(callback) {
-            this.getViewsByClass('hi-agreement-overlay-confirm-button')[0].whenClicked(callback);
-            return this;
-        }
-        whenCancelled(callback) {
-            this.getViewsByClass('hi-agreement-overlay-cancel-button')[0].whenClicked(callback);
-            return this;
-        }
-    }
-    exports.AgreementOverlay = AgreementOverlay;
-});
-define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/DevKit", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Pages/PageComponents"], function (require, exports, Colors_8, Basics_8, DevKit_2, Graphics_7, Overlays_1, Stacks_8, Whitespace_5, PageComponents_4) {
+define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/DevKit", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Pages/PageComponents"], function (require, exports, Colors_8, Basics_8, DevKit_2, Graphics_7, Overlays_2, Stacks_8, Whitespace_5, PageComponents_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GraphicsComponent extends Stacks_8.Container {
@@ -1582,7 +1640,7 @@ define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Compo
             }), new Basics_8.ClickButton(new Graphics_7.IonIcon('chatbubble-outline')
                 .describe('Icon Name: chatbubble-outline')
                 .font('xl')
-                .id('comment-button')).whenClicked(_ => new Overlays_1.AlertOverlay('Messages are disabled for this post.')), new Basics_8.ClickButton(new Graphics_7.IonIcon('bookmark-outline')
+                .id('comment-button')).whenClicked(_ => new Overlays_2.AlertOverlay('Messages are disabled for this post.')), new Basics_8.ClickButton(new Graphics_7.IonIcon('bookmark-outline')
                 .describe('Icon Name: bookmark-outline')
                 .font('xl')
                 .foreground(Colors_8.HColor('orange'))
@@ -1603,7 +1661,7 @@ define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Compo
     }
     exports.default = GraphicsComponent;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_9, Stacks_9, human_7, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Hi/Components/Whitespace", "Pages/GraphicsComponents", "Hi/Components/DevKit"], function (require, exports, Colors_9, Stacks_9, human_7, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, Whitespace_6, GraphicsComponents_1, DevKit_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_9.HIFullScreenView {
@@ -1654,7 +1712,13 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
     exports.default = GuidesApp;
     class MessageViewer extends Stacks_9.ScrollView {
         constructor() {
-            super(new Stacks_9.VStack(new Basics_9.TextContent('Select a menu item').foreground(Colors_9.HColor('gray'))).stretch());
+            // super(new VStack(new TextContent('Select a menu item').foreground(HColor('gray'))).stretch());
+            super(new DevKit_3.Preview(new Stacks_9.VStack(new Stacks_9.HStack(new Stacks_9.Container().width(50).height(50).background('black'), new Whitespace_6.Spacer(), new Stacks_9.Container().width(50).height(50).background('black')).stretchWidth(), new Whitespace_6.Spacer(), new Stacks_9.HStack(new Stacks_9.Container().width(50).height(50).background('black'), new Whitespace_6.Spacer(), new Stacks_9.Container().width(50).height(50).background('black')).stretchWidth())
+                .background(Colors_9.HColor('gray'))
+                .width(220)
+                .height(220)
+                .padding()));
+            this.margin({ top: 60 }).padding();
         }
     }
 });

@@ -139,9 +139,11 @@ export class Preview extends VStack {
             new VStack(
                 new HStack(
                     new Spacer(),
-                    new HStack(dimension('width').padding(), new TextContent(' by '), dimension('height').padding()).id(
-                        'component-dimensions'
-                    ),
+                    new HStack(
+                        Preview.dimensionSub('width').padding(),
+                        new TextContent(' by '),
+                        Preview.dimensionSub('height').padding()
+                    ).id('component-dimensions'),
                     new Spacer(),
                     new VStack(
                         new TextContent('•').id('component-padding').font('lg'),
@@ -200,11 +202,11 @@ export class Preview extends VStack {
 
         enableHover(content, this);
     }
-}
 
-function dimension(axis: 'width' | 'height') {
-    return new VStack(
-        new TextContent('•').id(`component-${axis}`).font('lg'),
-        new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
-    );
+    static dimensionSub(axis: 'width' | 'height') {
+        return new VStack(
+            new TextContent('•').id(`component-${axis}`).font('lg'),
+            new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
+        );
+    }
 }
