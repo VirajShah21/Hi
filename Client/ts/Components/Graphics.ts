@@ -1,7 +1,7 @@
 import { StateObject } from '../human';
 import View from '../View';
 
-export class Icon extends View {
+export class IonIcon extends View {
     constructor(name: string) {
         super('ion-icon');
         this.body.setAttribute('name', name);
@@ -68,7 +68,7 @@ export class Canvas extends View {
     }
 }
 
-export class Image extends View {
+export class ImageContent extends View {
     public override body: HTMLImageElement;
     public data = StateObject(
         {

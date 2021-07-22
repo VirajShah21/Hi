@@ -1,4 +1,4 @@
-import { Button } from './Components/Basics';
+import { ClickButton } from './Components/Basics';
 import InputField from './Components/Inputs';
 
 export class FormConnector {
@@ -31,7 +31,7 @@ export class FormConnector {
         return this;
     }
 
-    connectSubmitButton(button: Button, callback: (response: Record<string, unknown>) => void): this {
+    connectSubmitButton(button: ClickButton, callback: (response: Record<string, unknown>) => void): this {
         button.whenClicked(() => {
             this.post(callback);
         });

@@ -2,7 +2,7 @@ import { StateObject, sizing, HumanEvent } from '../human';
 import View from '../View';
 import { HISizingValue } from '../Types/sizing';
 
-export class Text extends View {
+export class TextContent extends View {
     public override body: HTMLSpanElement;
 
     public readonly text = StateObject(
@@ -25,7 +25,7 @@ export class Text extends View {
     }
 }
 
-export class Button extends View {
+export class ClickButton extends View {
     public override body: HTMLButtonElement;
 
     constructor(...children: View[]) {
