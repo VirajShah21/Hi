@@ -65,6 +65,10 @@ export class Preview extends VStack {
             if (property == 'dimensions')
                 if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions').unhide();
                 else this.getViewById('component-dimensions').hide();
+
+            if (property == 'padding')
+                if (this.viewerSettings.propertyFilters.padding) this.getViewById('component-padding-wrapper').unhide();
+                else this.getViewById('component-padding-wrapper').hide();
         }
     );
 
@@ -82,13 +86,22 @@ export class Preview extends VStack {
                                     new Checkbox()
                                         .padding(5)
                                         .setChecked(this.viewerSettings.propertyFilters.dimensions)
-                                        .whenClicked(ev => {
+                                        .whenClicked(_ => {
                                             this.viewerSettings.propertyFilters.dimensions =
                                                 !this.viewerSettings.propertyFilters.dimensions;
                                         }),
                                     new TextContent('Dimensions')
                                 ),
-                                new HStack(new Checkbox().padding(5), new TextContent('Padding')),
+                                new HStack(
+                                    new Checkbox()
+                                        .padding(5)
+                                        .setChecked(this.viewerSettings.propertyFilters.padding)
+                                        .whenClicked(_ => {
+                                            this.viewerSettings.propertyFilters.padding =
+                                                !this.viewerSettings.propertyFilters.padding;
+                                        }),
+                                    new TextContent('Padding')
+                                ),
                                 new HStack(new Checkbox().padding(5), new TextContent('Description'))
                             )
                                 .alignStart()
@@ -122,7 +135,9 @@ export class Preview extends VStack {
                     new VStack(
                         new TextContent('•').id('component-padding').font('lg'),
                         new TextContent('Padding').font('sm').foreground(HColor('gray'))
-                    ).padding(),
+                    )
+                        .padding()
+                        .id('component-padding-wrapper'),
                     new Spacer()
                 ),
                 new HStack(
