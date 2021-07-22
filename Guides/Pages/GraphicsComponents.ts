@@ -1,6 +1,6 @@
 import { HColor } from '../Hi/Colors';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
-import { Icon, Image } from '../Hi/Components/Graphics';
+import { Icon, ImageContent } from '../Hi/Components/Graphics';
 import { AlertOverlay } from '../Hi/Components/Overlays';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { Spacer } from '../Hi/Components/Whitespace';
@@ -44,7 +44,7 @@ export default class GraphicsComponent extends Container {
 
                 new ExampleViewer(
                     new VStack(
-                        new Image(
+                        new ImageContent(
                             'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80'
                         )
                             .width({ max: '100%' })

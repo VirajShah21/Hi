@@ -1,4 +1,4 @@
-import { Icon, Image } from '../Hi/Components/Graphics';
+import { Icon, ImageContent } from '../Hi/Components/Graphics';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
 import { Spacer } from '../Hi/Components/Whitespace';
@@ -17,7 +17,7 @@ export default class GettingStarted extends Container {
     constructor() {
         super(
             new VStack(
-                new Image(
+                new ImageContent(
                     'https://images.unsplash.com/photo-1533745848184-3db07256e163?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80'
                 ).stretchWidth(),
                 new ImageCaption('Photo by Belinda Fewings'),
@@ -66,7 +66,7 @@ export default class GettingStarted extends Container {
                     'TypeScript accepts its configuration as a tsconfig.json file. You want the contents of the file to contain the following:'
                 ),
 
-                new Image('assets/getting-started/tsconfig.png').margin({ top: 25 }),
+                new ImageContent('assets/getting-started/tsconfig.png').margin({ top: 25 }),
 
                 new SecondaryHeading('Step 3: Configure Directory Structure'),
 

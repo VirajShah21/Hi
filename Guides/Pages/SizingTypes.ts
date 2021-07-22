@@ -1,5 +1,5 @@
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { Icon, Image } from '../Hi/Components/Graphics';
+import { Icon, ImageContent } from '../Hi/Components/Graphics';
 import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
 import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
 import { HColor } from '../Hi/Colors';
@@ -68,7 +68,7 @@ export default class SizingTypes extends Container {
                 ),
 
                 new HStack(
-                    new Image('https://image.flaticon.com/icons/png/512/4053/4053768.png').height(50),
+                    new ImageContent('https://image.flaticon.com/icons/png/512/4053/4053768.png').height(50),
                     new PrimaryHeading('HISizingValue').margin(0).padding({ left: 10 })
                 ).margin({ top: 25 }),
 
@@ -93,7 +93,7 @@ new Button(
 
                 new Container(
                     new ClickButton(
-                        new Image(
+                        new ImageContent(
                             'https://images.unsplash.com/photo-1579723985163-28f30af7093b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
                             'Image of an African Gray Parrot'
                         )
@@ -103,7 +103,7 @@ new Button(
                 ),
 
                 new HStack(
-                    new Image('https://image.flaticon.com/icons/png/512/2000/2000792.png').height(50),
+                    new ImageContent('https://image.flaticon.com/icons/png/512/2000/2000792.png').height(50),
                     new PrimaryHeading('HISizeBounds').margin(0).padding({ left: 10 })
                 ).margin({ top: 25 }),
 
@@ -157,7 +157,7 @@ new Button(
                 ),
 
                 new HStack(
-                    new Image('https://image.flaticon.com/icons/png/512/204/204599.png').height(50),
+                    new ImageContent('https://image.flaticon.com/icons/png/512/204/204599.png').height(50),
                     new PrimaryHeading('HIEdgeSizingValue').margin(0).padding({ left: 10 })
                 ).margin({ top: 25 }),
 
