@@ -50,6 +50,11 @@ export class Preview extends VStack {
     public readonly viewerSettings = StateObject(
         {
             contrastToggle: false,
+            propertyFilters: {
+                dimensions: true,
+                padding: true,
+                description: true,
+            },
         },
         () => {
             this.getViewById('toggle-contrast-button')?.foreground(
@@ -95,7 +100,12 @@ export class Preview extends VStack {
                     .whenClicked(ev => {
                         new Overlay(
                             new VStack(
-                                new HStack(new Checkbox().padding(5), new TextContent('Dimensions')),
+                                new HStack(
+                                    new Checkbox()
+                                        .padding(5)
+                                        .setChecked(this.viewerSettings.propertyFilters.dimensions),
+                                    new TextContent('Dimensions')
+                                ),
                                 new HStack(new Checkbox().padding(5), new TextContent('Padding')),
                                 new HStack(new Checkbox().padding(5), new TextContent('Description'))
                             )
