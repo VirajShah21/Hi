@@ -75,10 +75,10 @@ export class Preview extends VStack {
     constructor(content: View) {
         super(
             new HStack(
-                Preview.OptionButton('toggle-contrast-button', 'contrast-outline').whenClicked(ev => {
+                Preview.OptionButton('toggle-contrast-button', 'contrast-outline').whenClicked(() => {
                     this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
                 }),
-                Preview.OptionButton('filter-properties-button', 'filter-circle-outline').whenClicked(ev => {
+                Preview.OptionButton('filter-properties-button', 'filter-circle-outline').whenClicked(() => {
                     const overlay: Overlay = new Overlay(
                         new VStack(
                             new VStack(
@@ -86,7 +86,7 @@ export class Preview extends VStack {
                                     new Checkbox()
                                         .padding(5)
                                         .setChecked(this.viewerSettings.propertyFilters.dimensions)
-                                        .whenClicked(_ => {
+                                        .whenClicked(() => {
                                             this.viewerSettings.propertyFilters.dimensions =
                                                 !this.viewerSettings.propertyFilters.dimensions;
                                         }),
@@ -96,7 +96,7 @@ export class Preview extends VStack {
                                     new Checkbox()
                                         .padding(5)
                                         .setChecked(this.viewerSettings.propertyFilters.padding)
-                                        .whenClicked(_ => {
+                                        .whenClicked(() => {
                                             this.viewerSettings.propertyFilters.padding =
                                                 !this.viewerSettings.propertyFilters.padding;
                                         }),
@@ -110,7 +110,7 @@ export class Preview extends VStack {
                             new HStack(
                                 new ClickButton(new IonIcon('close-circle-outline').font('lg'))
                                     .margin({ top: 50 })
-                                    .whenClicked(ev => overlay.destroy())
+                                    .whenClicked(() => overlay.destroy())
                             )
                         )
                     );
@@ -158,16 +158,16 @@ export class Preview extends VStack {
         Preview.enableHover(content, this);
     }
 
-    static enableHover(view: View, exampleViewer: Preview) {
+    static enableHover(view: View, exampleViewer: Preview): void {
         view.whenMouseOver(ev => {
             exampleViewer.dimensions.width = view.body.clientWidth;
             exampleViewer.dimensions.height = view.body.clientHeight;
             exampleViewer.componentInfo.name = view.constructor.name;
             exampleViewer.componentInfo.id = view.body.id;
             exampleViewer.componentInfo.description = view.description;
-            let computedStyles = window.getComputedStyle(view.body);
+            const computedStyles = window.getComputedStyle(view.body);
 
-            let paddings = [
+            const paddings = [
                 computedStyles.paddingTop,
                 computedStyles.paddingRight,
                 computedStyles.paddingBottom,
@@ -192,14 +192,14 @@ export class Preview extends VStack {
         });
     }
 
-    static dimensionSub(axis: 'width' | 'height') {
+    static dimensionSub(axis: 'width' | 'height'): VStack {
         return new VStack(
             new TextContent('•').id(`component-${axis}`).font('lg'),
             new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
         );
     }
 
-    static OptionButton(id: string, icon: string) {
+    static OptionButton(id: string, icon: string): ClickButton {
         return new ClickButton(new IonIcon(icon).font('lg').foreground(HColor('gray')).id(id))
             .padding({
                 top: 0,

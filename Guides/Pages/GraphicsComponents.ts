@@ -5,7 +5,7 @@ import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
 import { AlertOverlay } from '../Hi/Components/Overlays';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { Spacer } from '../Hi/Components/Whitespace';
-import { MajorIcon, PrimaryHeading, SecondaryHeading } from './PageComponents';
+import { MajorIcon, PrimaryHeading } from './PageComponents';
 
 export default class GraphicsComponent extends Container {
     constructor() {
@@ -71,7 +71,7 @@ export default class GraphicsComponent extends Container {
                                     .describe('Icon Name: chatbubble-outline')
                                     .font('xl')
                                     .id('comment-button')
-                            ).whenClicked(_ => new AlertOverlay('Messages are disabled for this post.')),
+                            ).whenClicked(() => new AlertOverlay('Messages are disabled for this post.')),
                             new ClickButton(
                                 new IonIcon('bookmark-outline')
                                     .describe('Icon Name: bookmark-outline')

@@ -1,16 +1,12 @@
 import { HColor, rgba } from './Hi/Colors';
-import { HIFullScreenView, HStack, VStack, ScrollView, Container } from './Hi/Components/Stacks';
+import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
-import { ClickButton, TextContent } from './Hi/Components/Basics';
+import { TextContent } from './Hi/Components/Basics';
 import Sidebar from './Sidebar';
 import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
 import BasicComponents from './Pages/BasicComponents';
-import { ImageContent, IonIcon } from './Hi/Components/Graphics';
-import { Spacer } from './Hi/Components/Whitespace';
 import GraphicsComponent from './Pages/GraphicsComponents';
-import { Preview } from './Hi/Components/DevKit';
-import { Overlay } from './Hi/Components/Overlays';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({

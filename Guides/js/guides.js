@@ -1665,7 +1665,7 @@ define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Compo
     }
     exports.default = GraphicsComponent;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Hi/Components/Whitespace", "Pages/GraphicsComponents", "Hi/Components/DevKit"], function (require, exports, Colors_9, Stacks_9, human_7, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, Whitespace_6, GraphicsComponents_1, DevKit_3) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_9, Stacks_9, human_7, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_9.HIFullScreenView {
@@ -1716,13 +1716,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
     exports.default = GuidesApp;
     class MessageViewer extends Stacks_9.ScrollView {
         constructor() {
-            // super(new VStack(new TextContent('Select a menu item').foreground(HColor('gray'))).stretch());
-            super(new DevKit_3.Preview(new Stacks_9.VStack(new Stacks_9.HStack(new Stacks_9.Container().width(50).height(50).background('black'), new Whitespace_6.Spacer(), new Stacks_9.Container().width(50).height(50).background('black')).stretchWidth(), new Whitespace_6.Spacer(), new Stacks_9.HStack(new Stacks_9.Container().width(50).height(50).background('black'), new Whitespace_6.Spacer(), new Stacks_9.Container().width(50).height(50).background('black')).stretchWidth())
-                .background(Colors_9.HColor('gray'))
-                .width(220)
-                .height(220)
-                .padding()));
-            this.margin({ top: 60 }).padding();
+            super(new Stacks_9.VStack(new Basics_9.TextContent('Select a menu item').foreground(Colors_9.HColor('gray'))).stretch());
         }
     }
 });

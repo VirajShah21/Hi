@@ -1,10 +1,7 @@
-import { HColor, rgba } from '../Hi/Colors';
-import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
+import { HColor } from '../Hi/Colors';
+import { TextContent } from '../Hi/Components/Basics';
 import { IonIcon } from '../Hi/Components/Graphics';
-import { TextField } from '../Hi/Components/Inputs';
-import { HStack, VStack } from '../Hi/Components/Stacks';
-import { Spacer } from '../Hi/Components/Whitespace';
-import { StateObject } from '../Hi/human';
+import { HStack } from '../Hi/Components/Stacks';
 import View from '../Hi/View';
 
 export class MajorIcon extends IonIcon {
