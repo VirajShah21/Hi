@@ -1,6 +1,6 @@
 import { Icon, Image } from '../Hi/Components/Graphics';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { Button, Text } from '../Hi/Components/Basics';
+import { ClickButton, TextContent } from '../Hi/Components/Basics';
 import { Spacer } from '../Hi/Components/Whitespace';
 import { HColor } from '../Hi/Colors';
 import {
@@ -41,10 +41,10 @@ export default class GettingStarted extends Container {
                 new PrimaryText(
                     'Visit the github repository to download the source code. You will want to compile your entire project using the TypeScript compiler, so you should not precompile any of the HI components.'
                 ),
-                new Button(
+                new ClickButton(
                     new HStack(
                         new Icon('logo-github').font('xl'),
-                        new Text('Github Repository').font('md').margin({ left: 10 })
+                        new TextContent('Github Repository').font('md').margin({ left: 10 })
                     )
                 ),
 

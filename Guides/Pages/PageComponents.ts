@@ -1,5 +1,5 @@
 import { HColor, rgba } from '../Hi/Colors';
-import { BlockCode, Button, Text } from '../Hi/Components/Basics';
+import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
 import { Icon } from '../Hi/Components/Graphics';
 import { TextField } from '../Hi/Components/Inputs';
 import { HStack, VStack } from '../Hi/Components/Stacks';
@@ -14,28 +14,28 @@ export class MajorIcon extends Icon {
     }
 }
 
-export class PrimaryHeading extends Text {
+export class PrimaryHeading extends TextContent {
     constructor(text: string) {
         super(text);
         this.margin({ top: 25 }).font('xl');
     }
 }
 
-export class SecondaryHeading extends Text {
+export class SecondaryHeading extends TextContent {
     constructor(text: string) {
         super(text);
         this.margin({ top: 50 }).font('lg');
     }
 }
 
-export class PrimaryText extends Text {
+export class PrimaryText extends TextContent {
     constructor(text: string) {
         super(text);
         this.padding({ left: 200, right: 200 }).margin({ top: 25 }).lineHeight('200%').font('md');
     }
 }
 
-export class SubtleText extends Text {
+export class SubtleText extends TextContent {
     constructor(text: string) {
         super(text);
         this.padding({ left: 200, right: 200 })
@@ -58,7 +58,7 @@ export class FileTreeItem extends HStack {
 
     constructor(iconName: string, itemName: string, depth = 0) {
         const icon = new Icon(iconName).padding(5);
-        super(icon, new Text(itemName));
+        super(icon, new TextContent(itemName));
         this.padding({ left: 15 * depth });
         this.icon = icon;
     }
@@ -78,8 +78,8 @@ export class HTMLContent extends View {
 
 function dimension(axis: 'width' | 'height') {
     return new VStack(
-        new Text('•').id(`component-${axis}`).font('lg'),
-        new Text(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
+        new TextContent('•').id(`component-${axis}`).font('lg'),
+        new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
     );
 }
 export class ExampleViewer extends VStack {
@@ -91,10 +91,10 @@ export class ExampleViewer extends VStack {
         },
         property => {
             if (property == 'width' || property == 'height')
-                (this.getViewById(`component-${property}`) as Text).text.value =
+                (this.getViewById(`component-${property}`) as TextContent).text.value =
                     (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
             else if (property == 'padding')
-                (this.getViewById('component-padding') as Text).text.value = this.dimensions.padding || '•';
+                (this.getViewById('component-padding') as TextContent).text.value = this.dimensions.padding || '•';
         }
     );
 
@@ -109,13 +109,13 @@ export class ExampleViewer extends VStack {
         property => {
             switch (property) {
                 case 'name':
-                    (this.getViewById('component-name') as Text).text.value = this.componentInfo.name || '•';
+                    (this.getViewById('component-name') as TextContent).text.value = this.componentInfo.name || '•';
                     break;
                 case 'id':
-                    (this.getViewById('component-id') as Text).text.value = this.componentInfo.id || '•';
+                    (this.getViewById('component-id') as TextContent).text.value = this.componentInfo.id || '•';
                     break;
                 case 'description':
-                    (this.getViewById('component-description') as Text).text.value =
+                    (this.getViewById('component-description') as TextContent).text.value =
                         this.componentInfo.description || '•';
                     break;
             }
@@ -136,7 +136,7 @@ export class ExampleViewer extends VStack {
     constructor(content: View) {
         super(
             new HStack(
-                new Button(
+                new ClickButton(
                     new Icon('contrast-outline').font('lg').foreground(HColor('gray')).id('enable-contrast-button')
                 )
                     .padding({
@@ -164,27 +164,27 @@ export class ExampleViewer extends VStack {
                 new HStack(
                     new Spacer(),
                     dimension('width').padding(),
-                    new Text(' by '),
+                    new TextContent(' by '),
                     dimension('height').padding(),
                     new Spacer(),
                     new VStack(
-                        new Text('•').id('component-padding').font('lg'),
-                        new Text('Padding').font('sm').foreground(HColor('gray'))
+                        new TextContent('•').id('component-padding').font('lg'),
+                        new TextContent('Padding').font('sm').foreground(HColor('gray'))
                     ).padding(),
                     new Spacer()
                 ),
                 new HStack(
                     new VStack(
-                        new Text('•').id('component-name').font('lg'),
-                        new Text('Component').font('sm').foreground(HColor('gray'))
+                        new TextContent('•').id('component-name').font('lg'),
+                        new TextContent('Component').font('sm').foreground(HColor('gray'))
                     ).padding(),
                     new VStack(
-                        new Text('•').id('component-id').font('lg'),
-                        new Text('ID').font('sm').foreground(HColor('gray'))
+                        new TextContent('•').id('component-id').font('lg'),
+                        new TextContent('ID').font('sm').foreground(HColor('gray'))
                     ).padding()
                 ),
-                new Text('Description').font('sm').foreground(HColor('gray')),
-                new Text('•').id('component-description')
+                new TextContent('Description').font('sm').foreground(HColor('gray')),
+                new TextContent('•').id('component-description')
             ).padding()
         );
 

@@ -1,5 +1,5 @@
 import { HColor } from '../Hi/Colors';
-import { Button, Text } from '../Hi/Components/Basics';
+import { ClickButton, TextContent } from '../Hi/Components/Basics';
 import { Icon, Image } from '../Hi/Components/Graphics';
 import { AlertOverlay } from '../Hi/Components/Overlays';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
@@ -12,7 +12,7 @@ export default class GraphicsComponent extends Container {
             new VStack(
                 new VStack(
                     new MajorIcon('images-outline').blur().rounded(),
-                    new Text('Graphics Components').font('xxl').bold().margin({ top: 25 }).blur().rounded()
+                    new TextContent('Graphics Components').font('xxl').bold().margin({ top: 25 }).blur().rounded()
                 )
                     .stretchWidth()
                     .backgroundImage('assets/GraphicsComponents.png')
@@ -50,7 +50,7 @@ export default class GraphicsComponent extends Container {
                             .width({ max: '100%' })
                             .margin({ bottom: 10 }),
                         new HStack(
-                            new Button(
+                            new ClickButton(
                                 new Icon('heart-outline')
                                     .describe('Icon Name: heart-outline')
                                     .font('xl')
@@ -65,13 +65,13 @@ export default class GraphicsComponent extends Container {
                                         : 'heart-outline'
                                 );
                             }),
-                            new Button(
+                            new ClickButton(
                                 new Icon('chatbubble-outline')
                                     .describe('Icon Name: chatbubble-outline')
                                     .font('xl')
                                     .id('comment-button')
                             ).whenClicked(_ => new AlertOverlay('Messages are disabled for this post.')),
-                            new Button(
+                            new ClickButton(
                                 new Icon('bookmark-outline')
                                     .describe('Icon Name: bookmark-outline')
                                     .font('xl')
@@ -86,14 +86,14 @@ export default class GraphicsComponent extends Container {
                                         : 'bookmark-outline'
                                 );
                             }),
-                            new Button(
+                            new ClickButton(
                                 new Icon('share-outline')
                                     .describe('Icon Name: share-outline')
                                     .font('xl')
                                     .id('share-button')
                             ),
                             new Spacer(),
-                            new Text('@jimmyferminphotography').font('md').foreground('gray')
+                            new TextContent('@jimmyferminphotography').font('md').foreground('gray')
                         ).stretch()
                     )
                         .margin()

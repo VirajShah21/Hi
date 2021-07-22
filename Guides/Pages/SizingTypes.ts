@@ -1,6 +1,6 @@
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { Icon, Image } from '../Hi/Components/Graphics';
-import { BlockCode, Button, Text } from '../Hi/Components/Basics';
+import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
 import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
 import { HColor } from '../Hi/Colors';
 import { Spacer } from '../Hi/Components/Whitespace';
@@ -10,7 +10,7 @@ export class TypeDefinitionDocumentation extends VStack {
         super(
             new HStack(
                 new Icon('code-working-outline').font('lg').padding(),
-                new Text('Type Definition').padding().width(200).textStart(),
+                new TextContent('Type Definition').padding().width(200).textStart(),
                 new BlockCode(expansion).padding().margin(0).textStart(),
                 new Spacer()
             )
@@ -18,7 +18,7 @@ export class TypeDefinitionDocumentation extends VStack {
                 .alignStart(),
             new HStack(
                 new Icon('information-outline').font('lg').padding(),
-                new Text('Description').padding().width(200).textStart(),
+                new TextContent('Description').padding().width(200).textStart(),
                 new HTMLContent('span', description).textStart().margin(0).padding().width(400),
                 new Spacer()
             )
@@ -26,7 +26,7 @@ export class TypeDefinitionDocumentation extends VStack {
                 .alignStart(),
             new HStack(
                 new Icon('code-slash-outline').font('lg').padding(),
-                new Text('Example').padding().width(200).textStart(),
+                new TextContent('Example').padding().width(200).textStart(),
                 new BlockCode(examples).textStart().margin(0).padding().width(400),
                 new Spacer()
             )
@@ -42,7 +42,7 @@ export default class SizingTypes extends Container {
             new VStack(
                 new VStack(
                     new MajorIcon('cube-outline').padding().rounded().blur(),
-                    new Text('Sizing Type Definitions')
+                    new TextContent('Sizing Type Definitions')
                         .blur()
                         .padding()
                         .rounded()
@@ -92,7 +92,7 @@ new Button(
                     .rounded(),
 
                 new Container(
-                    new Button(
+                    new ClickButton(
                         new Image(
                             'https://images.unsplash.com/photo-1579723985163-28f30af7093b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
                             'Image of an African Gray Parrot'
@@ -142,7 +142,7 @@ new Button(
 
                 new Container(
                     new HStack(
-                        new VStack(new Text('Left Panel'))
+                        new VStack(new TextContent('Left Panel'))
                             .width({
                                 min: 400,
                                 default: 550,
@@ -150,7 +150,9 @@ new Button(
                             })
                             .background(HColor('red')),
 
-                        new VStack(new Text('Right Panel')).width({ min: 200, max: 1000 }).background(HColor('blue'))
+                        new VStack(new TextContent('Right Panel'))
+                            .width({ min: 200, max: 1000 })
+                            .background(HColor('blue'))
                     )
                 ),
 
@@ -183,7 +185,7 @@ new Button(
                     .padding({ left: 200, right: 200 })
                     .rounded(),
 
-                new HStack(new Text('Hello World').background('white').padding(5)).background('black').padding({
+                new HStack(new TextContent('Hello World').background('white').padding(5)).background('black').padding({
                     top: 10,
                     right: '5vw',
                     bottom: '15pt',

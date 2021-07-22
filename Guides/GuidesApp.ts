@@ -1,7 +1,7 @@
 import { HColor, rgba } from './Hi/Colors';
 import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
-import { Button, Text } from './Hi/Components/Basics';
+import { ClickButton, TextContent } from './Hi/Components/Basics';
 import Sidebar from './Sidebar';
 import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
@@ -32,7 +32,7 @@ export default class GuidesApp extends HIFullScreenView {
                         default: 300,
                     }),
                 new VStack(
-                    new HStack(new Text('Title').id('title'))
+                    new HStack(new TextContent('Title').id('title'))
                         .width({
                             min: 'calc(100vw - 300px)',
                             default: 'calc(100vw - 300px)',
@@ -66,6 +66,6 @@ export default class GuidesApp extends HIFullScreenView {
 
 class MessageViewer extends ScrollView {
     constructor() {
-        super(new VStack(new Text('Select a menu item').foreground(HColor('gray'))).stretch());
+        super(new VStack(new TextContent('Select a menu item').foreground(HColor('gray'))).stretch());
     }
 }

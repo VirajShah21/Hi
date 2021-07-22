@@ -1,5 +1,5 @@
 import { HColor } from './Hi/Colors';
-import { Button, Text } from './Hi/Components/Basics';
+import { ClickButton, TextContent } from './Hi/Components/Basics';
 import { Icon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
 import { VStack, HStack } from './Hi/Components/Stacks';
@@ -91,7 +91,9 @@ export default class Sidebar extends VStack {
 }
 
 function MenuButton(iconName: string, title: string, navigateTo: string) {
-    const btn = new Button(new HStack(new Icon(iconName).font({ size: 25 }), new Text(title).padding(), new Spacer()))
+    const btn = new ClickButton(
+        new HStack(new Icon(iconName).font({ size: 25 }), new TextContent(title).padding(), new Spacer())
+    )
         .stretchWidth()
         .padding(5)
         .rounded()
@@ -105,7 +107,7 @@ function MenuButton(iconName: string, title: string, navigateTo: string) {
         })
         .whenClicked(() => {
             ViewController.navigateTo(navigateTo);
-            (btn.root().getViewById('title') as Text).text.value = title;
+            (btn.root().getViewById('title') as TextContent).text.value = title;
         });
     return btn;
 }
