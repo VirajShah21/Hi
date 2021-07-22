@@ -1,5 +1,5 @@
 import { HColor, rgba } from './Hi/Colors';
-import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
+import { HIFullScreenView, HStack, VStack, ScrollView, Container } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
 import { ClickButton, TextContent } from './Hi/Components/Basics';
 import Sidebar from './Sidebar';
@@ -9,6 +9,7 @@ import BasicComponents from './Pages/BasicComponents';
 import { IonIcon } from './Hi/Components/Graphics';
 import { Spacer } from './Hi/Components/Whitespace';
 import GraphicsComponent from './Pages/GraphicsComponents';
+import { Preview } from './Hi/Components/DevKit';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
@@ -66,6 +67,28 @@ export default class GuidesApp extends HIFullScreenView {
 
 class MessageViewer extends ScrollView {
     constructor() {
-        super(new VStack(new TextContent('Select a menu item').foreground(HColor('gray'))).stretch());
+        // super(new VStack(new TextContent('Select a menu item').foreground(HColor('gray'))).stretch());
+        super(
+            new Preview(
+                new VStack(
+                    new HStack(
+                        new Container().width(50).height(50).background('black'),
+                        new Spacer(),
+                        new Container().width(50).height(50).background('black')
+                    ).stretchWidth(),
+                    new Spacer(),
+                    new HStack(
+                        new Container().width(50).height(50).background('black'),
+                        new Spacer(),
+                        new Container().width(50).height(50).background('black')
+                    ).stretchWidth()
+                )
+                    .background(HColor('gray'))
+                    .width(220)
+                    .height(220)
+                    .padding()
+            )
+        );
+        this.margin({ top: 60 }).padding();
     }
 }

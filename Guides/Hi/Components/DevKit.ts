@@ -1,8 +1,9 @@
 import { HColor, rgba } from '../Colors';
 import { StateObject } from '../human';
 import View from '../View';
-import { TextContent, ClickButton } from './Basics';
+import { TextContent, ClickButton, Checkbox } from './Basics';
 import { IonIcon } from './Graphics';
+import { Overlay } from './Overlays';
 import { VStack, HStack } from './Stacks';
 import { Spacer } from './Whitespace';
 
@@ -51,7 +52,7 @@ export class Preview extends VStack {
             contrastToggle: false,
         },
         () => {
-            this.getViewById('enable-contrast-button')?.foreground(
+            this.getViewById('toggle-contrast-button')?.foreground(
                 HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray')
             );
         }
@@ -61,7 +62,7 @@ export class Preview extends VStack {
         super(
             new HStack(
                 new ClickButton(
-                    new IonIcon('contrast-outline').font('lg').foreground(HColor('gray')).id('enable-contrast-button')
+                    new IonIcon('contrast-outline').font('lg').foreground(HColor('gray')).id('toggle-contrast-button')
                 )
                     .padding({
                         top: 0,
@@ -77,6 +78,30 @@ export class Preview extends VStack {
                     })
                     .whenClicked(ev => {
                         this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
+                    }),
+                new ClickButton(
+                    new IonIcon('filter-circle-outline')
+                        .font('lg')
+                        .foreground(HColor('gray'))
+                        .id('filter-properties-button')
+                )
+                    .padding({ top: 0, bottom: 0, left: 5, right: 5 })
+                    .whenMouseOver(ev => {
+                        ev.view.background(rgba(0, 0, 0, 0.1));
+                    })
+                    .whenMouseOut(ev => {
+                        ev.view.background('none');
+                    })
+                    .whenClicked(ev => {
+                        new Overlay(
+                            new VStack(
+                                new HStack(new Checkbox().padding(5), new TextContent('Dimensions')),
+                                new HStack(new Checkbox().padding(5), new TextContent('Padding')),
+                                new HStack(new Checkbox().padding(5), new TextContent('Description'))
+                            )
+                                .alignStart()
+                                .textStart()
+                        );
                     })
             )
                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
