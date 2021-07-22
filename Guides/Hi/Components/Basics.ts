@@ -67,6 +67,17 @@ export class Checkbox extends View {
         this.state.checked = !this.state.checked;
         return this.state.checked;
     }
+
+    whenClicked(callback: (ev: HumanEvent) => void): this {
+        this.body.addEventListener('click', (browserEvent: Event) => {
+            callback({
+                type: 'Click',
+                view: this,
+                browserEvent,
+            });
+        });
+        return this;
+    }
 }
 
 export class RadioButton extends View {
