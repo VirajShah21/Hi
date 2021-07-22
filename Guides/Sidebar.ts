@@ -1,6 +1,6 @@
 import { HColor } from './Hi/Colors';
 import { ClickButton, TextContent } from './Hi/Components/Basics';
-import { Icon } from './Hi/Components/Graphics';
+import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
 import { VStack, HStack } from './Hi/Components/Stacks';
 import { Spacer } from './Hi/Components/Whitespace';
@@ -92,7 +92,7 @@ export default class Sidebar extends VStack {
 
 function MenuButton(iconName: string, title: string, navigateTo: string) {
     const btn = new ClickButton(
-        new HStack(new Icon(iconName).font({ size: 25 }), new TextContent(title).padding(), new Spacer())
+        new HStack(new IonIcon(iconName).font({ size: 25 }), new TextContent(title).padding(), new Spacer())
     )
         .stretchWidth()
         .padding(5)

@@ -6,7 +6,7 @@ import Sidebar from './Sidebar';
 import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
 import BasicComponents from './Pages/BasicComponents';
-import { Icon } from './Hi/Components/Graphics';
+import { IonIcon } from './Hi/Components/Graphics';
 import { Spacer } from './Hi/Components/Whitespace';
 import GraphicsComponent from './Pages/GraphicsComponents';
 

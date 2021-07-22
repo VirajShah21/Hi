@@ -1,7 +1,8 @@
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { ExampleViewer, MajorIcon, PrimaryHeading, PrimaryText, SecondaryHeading } from './PageComponents';
+import { MajorIcon, PrimaryHeading, PrimaryText, SecondaryHeading } from './PageComponents';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
 import { HColor } from '../Hi/Colors';
+import { Preview } from '../Hi/Components/DevKit';
 
 export default class BasicComponents extends Container {
     constructor() {
@@ -34,19 +35,19 @@ export default class BasicComponents extends Container {
                     'The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'
                 ),
 
-                new ExampleViewer(new TextContent('Designed in Philadelphia.')).margin({ top: 25 }),
+                new Preview(new TextContent('Designed in Philadelphia.')).margin({ top: 25 }),
 
                 new PrimaryHeading('Button Components'),
 
                 new PrimaryText('Buttons allow for interactivity.'),
 
-                new ExampleViewer(new ClickButton(new TextContent('Designed in Philadelphia.'))).margin({ top: 25 }),
+                new Preview(new ClickButton(new TextContent('Designed in Philadelphia.'))).margin({ top: 25 }),
 
                 new PrimaryText('Common Modifiers'),
 
                 new SecondaryHeading('Padding'),
 
-                new ExampleViewer(
+                new Preview(
                     new HStack(
                         new TextContent('1').padding().background(HColor('orange')).describe('Default padding'),
                         new TextContent('2').padding(20).background(HColor('green')).describe('20px padding'),
@@ -59,7 +60,7 @@ export default class BasicComponents extends Container {
 
                 new SecondaryHeading('Background/Foreground'),
 
-                new ExampleViewer(
+                new Preview(
                     new VStack(
                         new TextContent('Designed').background('black').foreground(HColor('blue')),
                         new TextContent('in').foreground(HColor('orange')),
@@ -69,7 +70,7 @@ export default class BasicComponents extends Container {
 
                 new SecondaryHeading('Roundedness'),
 
-                new ExampleViewer(
+                new Preview(
                     new VStack(
                         new TextContent('Barely Round').background(HColor('blue')).rounded(5).padding().margin(),
                         new TextContent('Just Round Enough').background(HColor('blue')).rounded().padding().margin(),

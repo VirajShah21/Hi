@@ -1,5 +1,5 @@
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { Icon, ImageContent } from '../Hi/Components/Graphics';
+import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
 import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
 import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
 import { HColor } from '../Hi/Colors';
@@ -9,7 +9,7 @@ export class TypeDefinitionDocumentation extends VStack {
     constructor(expansion: string, description: string, examples: string) {
         super(
             new HStack(
-                new Icon('code-working-outline').font('lg').padding(),
+                new IonIcon('code-working-outline').font('lg').padding(),
                 new TextContent('Type Definition').padding().width(200).textStart(),
                 new BlockCode(expansion).padding().margin(0).textStart(),
                 new Spacer()
@@ -17,7 +17,7 @@ export class TypeDefinitionDocumentation extends VStack {
                 .stretchWidth()
                 .alignStart(),
             new HStack(
-                new Icon('information-outline').font('lg').padding(),
+                new IonIcon('information-outline').font('lg').padding(),
                 new TextContent('Description').padding().width(200).textStart(),
                 new HTMLContent('span', description).textStart().margin(0).padding().width(400),
                 new Spacer()
@@ -25,7 +25,7 @@ export class TypeDefinitionDocumentation extends VStack {
                 .stretchWidth()
                 .alignStart(),
             new HStack(
-                new Icon('code-slash-outline').font('lg').padding(),
+                new IonIcon('code-slash-outline').font('lg').padding(),
                 new TextContent('Example').padding().width(200).textStart(),
                 new BlockCode(examples).textStart().margin(0).padding().width(400),
                 new Spacer()

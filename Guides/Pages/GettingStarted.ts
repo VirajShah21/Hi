@@ -1,4 +1,4 @@
-import { Icon, ImageContent } from '../Hi/Components/Graphics';
+import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
 import { Spacer } from '../Hi/Components/Whitespace';
@@ -43,7 +43,7 @@ export default class GettingStarted extends Container {
                 ),
                 new ClickButton(
                     new HStack(
-                        new Icon('logo-github').font('xl'),
+                        new IonIcon('logo-github').font('xl'),
                         new TextContent('Github Repository').font('md').margin({ left: 10 })
                     )
                 ),

@@ -1,10 +1,11 @@
 import { HColor } from '../Hi/Colors';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
-import { Icon, ImageContent } from '../Hi/Components/Graphics';
+import { Preview } from '../Hi/Components/DevKit';
+import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
 import { AlertOverlay } from '../Hi/Components/Overlays';
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { Spacer } from '../Hi/Components/Whitespace';
-import { ExampleViewer, MajorIcon, PrimaryHeading, SecondaryHeading } from './PageComponents';
+import { MajorIcon, PrimaryHeading, SecondaryHeading } from './PageComponents';
 
 export default class GraphicsComponent extends Container {
     constructor() {
@@ -21,19 +22,19 @@ export default class GraphicsComponent extends Container {
 
                 new PrimaryHeading('Icons'),
 
-                new ExampleViewer(
+                new Preview(
                     new VStack(
                         new HStack(
-                            new Icon('battery-full').padding().foreground(HColor('green')),
-                            new Icon('battery-half').padding().foreground(HColor('yellow')),
-                            new Icon('battery-dead').padding().foreground(HColor('red')),
-                            new Icon('battery-charging').padding()
+                            new IonIcon('battery-full').padding().foreground(HColor('green')),
+                            new IonIcon('battery-half').padding().foreground(HColor('yellow')),
+                            new IonIcon('battery-dead').padding().foreground(HColor('red')),
+                            new IonIcon('battery-charging').padding()
                         ),
                         new HStack(
-                            new Icon('battery-full-sharp').padding().foreground(HColor('green')),
-                            new Icon('battery-half-sharp').padding().foreground(HColor('yellow')),
-                            new Icon('battery-half-sharp').padding().foreground(HColor('red')),
-                            new Icon('battery-charging-sharp').padding()
+                            new IonIcon('battery-full-sharp').padding().foreground(HColor('green')),
+                            new IonIcon('battery-half-sharp').padding().foreground(HColor('yellow')),
+                            new IonIcon('battery-half-sharp').padding().foreground(HColor('red')),
+                            new IonIcon('battery-charging-sharp').padding()
                         )
                     )
                         .font('xxl')
@@ -42,7 +43,7 @@ export default class GraphicsComponent extends Container {
 
                 new PrimaryHeading('Instagram Component?'),
 
-                new ExampleViewer(
+                new Preview(
                     new VStack(
                         new ImageContent(
                             'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80'
@@ -51,7 +52,7 @@ export default class GraphicsComponent extends Container {
                             .margin({ bottom: 10 }),
                         new HStack(
                             new ClickButton(
-                                new Icon('heart-outline')
+                                new IonIcon('heart-outline')
                                     .describe('Icon Name: heart-outline')
                                     .font('xl')
                                     .foreground(HColor('red'))
@@ -66,13 +67,13 @@ export default class GraphicsComponent extends Container {
                                 );
                             }),
                             new ClickButton(
-                                new Icon('chatbubble-outline')
+                                new IonIcon('chatbubble-outline')
                                     .describe('Icon Name: chatbubble-outline')
                                     .font('xl')
                                     .id('comment-button')
                             ).whenClicked(_ => new AlertOverlay('Messages are disabled for this post.')),
                             new ClickButton(
-                                new Icon('bookmark-outline')
+                                new IonIcon('bookmark-outline')
                                     .describe('Icon Name: bookmark-outline')
                                     .font('xl')
                                     .foreground(HColor('orange'))
@@ -87,7 +88,7 @@ export default class GraphicsComponent extends Container {
                                 );
                             }),
                             new ClickButton(
-                                new Icon('share-outline')
+                                new IonIcon('share-outline')
                                     .describe('Icon Name: share-outline')
                                     .font('xl')
                                     .id('share-button')
