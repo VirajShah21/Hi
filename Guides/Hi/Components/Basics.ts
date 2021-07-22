@@ -49,6 +49,9 @@ export class Checkbox extends View {
     constructor() {
         super('ion-icon');
         this.body.setAttribute('name', 'square-outline');
+        this.body.addEventListener('click', _ => {
+            this.state.checked = !this.state.checked;
+        });
     }
 }
 
