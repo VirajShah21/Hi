@@ -71,71 +71,45 @@ export class Preview extends VStack {
     constructor(content: View) {
         super(
             new HStack(
-                new ClickButton(
-                    new IonIcon('contrast-outline').font('lg').foreground(HColor('gray')).id('toggle-contrast-button')
-                )
-                    .padding({
-                        top: 0,
-                        bottom: 0,
-                        left: 5,
-                        right: 5,
-                    })
-                    .whenMouseOver(ev => {
-                        ev.view.background(rgba(0, 0, 0, 0.1));
-                    })
-                    .whenMouseOut(ev => {
-                        ev.view.background('none');
-                    })
-                    .whenClicked(ev => {
-                        this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
-                    }),
-                new ClickButton(
-                    new IonIcon('filter-circle-outline')
-                        .font('lg')
-                        .foreground(HColor('gray'))
-                        .id('filter-properties-button')
-                )
-                    .padding({ top: 0, bottom: 0, left: 5, right: 5 })
-                    .whenMouseOver(ev => {
-                        ev.view.background(rgba(0, 0, 0, 0.1));
-                    })
-                    .whenMouseOut(ev => {
-                        ev.view.background('none');
-                    })
-                    .whenClicked(ev => {
-                        const overlay: Overlay = new Overlay(
+                Preview.OptionButton('toggle-contrast-button', 'contrast-outline').whenClicked(ev => {
+                    this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
+                }),
+                Preview.OptionButton('filter-properties-button', 'filter-circle-outline').whenClicked(ev => {
+                    const overlay: Overlay = new Overlay(
+                        new VStack(
                             new VStack(
-                                new VStack(
-                                    new HStack(
-                                        new Checkbox()
-                                            .padding(5)
-                                            .setChecked(this.viewerSettings.propertyFilters.dimensions)
-                                            .whenClicked(ev => {
-                                                this.viewerSettings.propertyFilters.dimensions =
-                                                    !this.viewerSettings.propertyFilters.dimensions;
-                                            }),
-                                        new TextContent('Dimensions')
-                                    ),
-                                    new HStack(new Checkbox().padding(5), new TextContent('Padding')),
-                                    new HStack(new Checkbox().padding(5), new TextContent('Description'))
-                                )
-                                    .alignStart()
-                                    .textStart(),
-
                                 new HStack(
-                                    new ClickButton(new IonIcon('close-circle-outline').font('lg'))
-                                        .margin({ top: 50 })
-                                        .whenClicked(ev => overlay.destroy())
-                                )
+                                    new Checkbox()
+                                        .padding(5)
+                                        .setChecked(this.viewerSettings.propertyFilters.dimensions)
+                                        .whenClicked(ev => {
+                                            this.viewerSettings.propertyFilters.dimensions =
+                                                !this.viewerSettings.propertyFilters.dimensions;
+                                        }),
+                                    new TextContent('Dimensions')
+                                ),
+                                new HStack(new Checkbox().padding(5), new TextContent('Padding')),
+                                new HStack(new Checkbox().padding(5), new TextContent('Description'))
                             )
-                        );
-                    })
+                                .alignStart()
+                                .textStart(),
+
+                            new HStack(
+                                new ClickButton(new IonIcon('close-circle-outline').font('lg'))
+                                    .margin({ top: 50 })
+                                    .whenClicked(ev => overlay.destroy())
+                            )
+                        )
+                    );
+                })
             )
                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
                 .background(HColor('gray6')),
+
             new VStack(content)
                 .border({ size: 4, style: 'dashed', color: HColor('gray6') })
                 .borderTop({ style: 'solid' }),
+
             new VStack(
                 new HStack(
                     new Spacer(),
@@ -166,41 +140,41 @@ export class Preview extends VStack {
             ).padding()
         );
 
-        function enableHover(view: View, exampleViewer: Preview) {
-            view.whenMouseOver(ev => {
-                exampleViewer.dimensions.width = view.body.clientWidth;
-                exampleViewer.dimensions.height = view.body.clientHeight;
-                exampleViewer.componentInfo.name = view.constructor.name;
-                exampleViewer.componentInfo.id = view.body.id;
-                exampleViewer.componentInfo.description = view.description;
-                let computedStyles = window.getComputedStyle(view.body);
+        Preview.enableHover(content, this);
+    }
 
-                let paddings = [
-                    computedStyles.paddingTop,
-                    computedStyles.paddingRight,
-                    computedStyles.paddingBottom,
-                    computedStyles.paddingLeft,
-                ];
+    static enableHover(view: View, exampleViewer: Preview) {
+        view.whenMouseOver(ev => {
+            exampleViewer.dimensions.width = view.body.clientWidth;
+            exampleViewer.dimensions.height = view.body.clientHeight;
+            exampleViewer.componentInfo.name = view.constructor.name;
+            exampleViewer.componentInfo.id = view.body.id;
+            exampleViewer.componentInfo.description = view.description;
+            let computedStyles = window.getComputedStyle(view.body);
 
-                if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
-                    exampleViewer.dimensions.padding = paddings[0];
-                else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
-                    exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
-                else exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
+            let paddings = [
+                computedStyles.paddingTop,
+                computedStyles.paddingRight,
+                computedStyles.paddingBottom,
+                computedStyles.paddingLeft,
+            ];
 
-                if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(50%)';
+            if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
+                exampleViewer.dimensions.padding = paddings[0];
+            else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
+                exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
+            else exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
 
-                ev.browserEvent.stopPropagation();
-            }).whenMouseOut(() => {
-                if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(100%)';
-            });
+            if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(50%)';
 
-            view.forChild(child => {
-                enableHover(child, exampleViewer);
-            });
-        }
+            ev.browserEvent.stopPropagation();
+        }).whenMouseOut(() => {
+            if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(100%)';
+        });
 
-        enableHover(content, this);
+        view.forChild(child => {
+            this.enableHover(child, exampleViewer);
+        });
     }
 
     static dimensionSub(axis: 'width' | 'height') {
@@ -208,5 +182,21 @@ export class Preview extends VStack {
             new TextContent('•').id(`component-${axis}`).font('lg'),
             new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
         );
+    }
+
+    static OptionButton(id: string, icon: string) {
+        return new ClickButton(new IonIcon(icon).font('lg').foreground(HColor('gray')).id(id))
+            .padding({
+                top: 0,
+                bottom: 0,
+                left: 5,
+                right: 5,
+            })
+            .whenMouseOver(ev => {
+                ev.view.background(rgba(0, 0, 0, 0.1));
+            })
+            .whenMouseOut(ev => {
+                ev.view.background('none');
+            });
     }
 }
