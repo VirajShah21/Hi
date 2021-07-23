@@ -119,6 +119,21 @@ export class RadioButton extends View {
     }
 }
 
+export class RadioGroup {
+    public radios: RadioButton[];
+
+    constructor(...radioButtons: RadioButton[]) {
+        this.radios = radioButtons;
+        this.radios.forEach(radio => {
+            radio.whenClicked(ev => {
+                this.radios.forEach(otherRadio => {
+                    if (otherRadio != radio) otherRadio.setSelected(false);
+                });
+            });
+        });
+    }
+}
+
 export class ClickButton extends View {
     public override body: HTMLButtonElement;
 

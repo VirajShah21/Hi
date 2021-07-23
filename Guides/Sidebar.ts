@@ -1,5 +1,5 @@
 import { HColor } from './Hi/Colors';
-import { ClickButton, RadioButton, TextContent } from './Hi/Components/Basics';
+import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
 import { Overlay } from './Hi/Components/Overlays';
@@ -172,5 +172,6 @@ class SettingsOverlay extends Overlay {
         );
         this.lightRadio = this.getViewById('light-radio-button') as RadioButton;
         this.darkRadio = this.getViewById('dark-radio-button') as RadioButton;
+        new RadioGroup(this.lightRadio, this.darkRadio);
     }
 }
