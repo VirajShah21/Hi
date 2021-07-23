@@ -1,4 +1,4 @@
-import { HColor } from '../Hi/Colors';
+import { HColor, RGBAModel } from '../Hi/Colors';
 import { TextContent } from '../Hi/Components/Basics';
 import { IonIcon } from '../Hi/Components/Graphics';
 import { HStack } from '../Hi/Components/Stacks';
@@ -60,7 +60,7 @@ export class FileTreeItem extends HStack {
         this.icon = icon;
     }
 
-    iconColor(color: string): this {
+    iconColor(color: RGBAModel): this {
         this.icon.foreground(color);
         return this;
     }

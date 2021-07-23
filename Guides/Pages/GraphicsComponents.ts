@@ -1,4 +1,4 @@
-import { HColor } from '../Hi/Colors';
+import { HColor, RGBAModel } from '../Hi/Colors';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
 import { Preview } from '../Hi/Components/DevKit';
 import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
@@ -17,7 +17,7 @@ export default class GraphicsComponent extends Container {
                 )
                     .stretchWidth()
                     .backgroundImage('assets/GraphicsComponents.png')
-                    .foreground('white')
+                    .foreground(RGBAModel.WHITE)
                     .padding(),
 
                 new PrimaryHeading('Icons'),
@@ -94,7 +94,7 @@ export default class GraphicsComponent extends Container {
                                     .id('share-button')
                             ),
                             new Spacer(),
-                            new TextContent('@jimmyferminphotography').font('md').foreground('gray')
+                            new TextContent('@jimmyferminphotography').font('md').foreground(HColor('gray'))
                         ).stretch()
                     )
                         .margin()

@@ -18,7 +18,29 @@ export type HumanColorName =
     // | 'gray5'
     | 'gray6';
 
-export function HColor(color: HumanColorName, mode = 'light'): string {
+export class RGBAModel {
+    public static readonly WHITE = new RGBAModel(255, 255, 255);
+    public static readonly BLACK = new RGBAModel(0, 0, 0);
+
+    public r: number;
+    public g: number;
+    public b: number;
+    public a: number;
+
+    constructor(r: number, g: number, b: number, a = 1) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    toString() {
+        if (this.a != 1) return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+        return `rgb(${this.r}, ${this.g}, ${this.b})`;
+    }
+}
+
+export function HColor(color: HumanColorName, mode = 'light'): RGBAModel {
     if (mode === 'light') {
         return HumanColorSwatch.light[color];
     } else {
@@ -26,12 +48,12 @@ export function HColor(color: HumanColorName, mode = 'light'): string {
     }
 }
 
-export function rgb(r: number, g: number, b: number): string {
-    return `rgb(${r}, ${g}, ${b})`;
+export function rgb(r: number, g: number, b: number): RGBAModel {
+    return new RGBAModel(r, g, b);
 }
 
-export function rgba(r: number, g: number, b: number, a: number): string {
-    return `rgb(${r}, ${g}, ${b}, ${a})`;
+export function rgba(r: number, g: number, b: number, a: number): RGBAModel {
+    return new RGBAModel(r, g, b, a);
 }
 
 export const HumanColorSwatch = {

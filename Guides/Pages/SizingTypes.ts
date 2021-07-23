@@ -2,7 +2,7 @@ import { Container, HStack, ScrollView, VStack } from '../Hi/Components/Stacks';
 import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
 import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
 import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
-import { HColor } from '../Hi/Colors';
+import { HColor, RGBAModel } from '../Hi/Colors';
 import { Spacer } from '../Hi/Components/Whitespace';
 import { Preview } from '../Hi/Components/DevKit';
 
@@ -56,7 +56,7 @@ export default class SizingTypes extends Container {
                     )
                     .stretch()
                     .padding({ bottom: 50 })
-                    .foreground('white'),
+                    .foreground(RGBAModel.WHITE),
                 new ImageCaption('Photo by Jeremy Zero'),
 
                 new PrimaryHeading('Type Definitions Overview'),
@@ -184,8 +184,8 @@ new ClickButton(
                     .rounded(),
 
                 new Preview(
-                    new HStack(new TextContent('Hello World').background('white').padding(5))
-                        .background('black')
+                    new HStack(new TextContent('Hello World').background(RGBAModel.WHITE).padding(5))
+                        .background(RGBAModel.BLACK)
                         .padding({
                             top: 10,
                             right: '5vw',

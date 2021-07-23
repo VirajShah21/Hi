@@ -1,7 +1,7 @@
 import { Container, HStack, VStack } from '../Hi/Components/Stacks';
 import { MajorIcon, PrimaryHeading, PrimaryText, SecondaryHeading } from './PageComponents';
 import { ClickButton, TextContent } from '../Hi/Components/Basics';
-import { HColor } from '../Hi/Colors';
+import { HColor, RGBAModel } from '../Hi/Colors';
 import { Preview } from '../Hi/Components/DevKit';
 
 export default class BasicComponents extends Container {
@@ -16,12 +16,12 @@ export default class BasicComponents extends Container {
                         .font('xxl')
                         .bold()
                         .margin({ top: 25 })
-                        .foreground('black')
+                        .foreground(RGBAModel.BLACK)
                 )
                     .backgroundImage('assets/BasicComponents.png')
                     .stretch()
                     .padding({ bottom: 50 })
-                    .foreground('white'),
+                    .foreground(RGBAModel.WHITE),
 
                 new PrimaryHeading('Overview'),
 
@@ -62,7 +62,7 @@ export default class BasicComponents extends Container {
 
                 new Preview(
                     new VStack(
-                        new TextContent('Designed').background('black').foreground(HColor('blue')),
+                        new TextContent('Designed').background(RGBAModel.BLACK).foreground(HColor('blue')),
                         new TextContent('in').foreground(HColor('orange')),
                         new TextContent('Philadelphia').background(HColor('green')).foreground(HColor('gray6'))
                     ).padding(20)

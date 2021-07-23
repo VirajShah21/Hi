@@ -1,3 +1,4 @@
+import { RGBAModel } from './Colors';
 import { StateObject, sizing, HumanEvent } from './human';
 import { HIEdgeSizingValue, HICornerSizingValue, HISizeBounds, HISizingValue } from './Types/sizing';
 import { StateProxy } from './Types/states';
@@ -101,8 +102,8 @@ export default abstract class View {
         return this;
     }
 
-    background(color: string): this {
-        this.body.style.background = color;
+    background(color: RGBAModel | 'none'): this {
+        this.body.style.background = color.toString();
         return this;
     }
 
@@ -151,8 +152,8 @@ export default abstract class View {
         return this;
     }
 
-    foreground(color: string): this {
-        this.body.style.color = color;
+    foreground(color: RGBAModel): this {
+        this.body.style.color = color.toString();
         return this;
     }
 
@@ -295,7 +296,7 @@ export default abstract class View {
 
     border(options: HIBorderProperties): this {
         if (options.size != undefined) this.body.style.borderWidth = sizing(options.size);
-        if (options.color) this.body.style.borderColor = options.color;
+        if (options.color) this.body.style.borderColor = options.color.toString();
         if (options.style) this.body.style.borderStyle = options.style;
 
         return this;
@@ -303,7 +304,7 @@ export default abstract class View {
 
     borderTop(options: HIBorderProperties): this {
         if (options.size != undefined) this.body.style.borderTopWidth = sizing(options.size);
-        if (options.color) this.body.style.borderTopColor = options.color;
+        if (options.color) this.body.style.borderTopColor = options.color.toString();
         if (options.style) this.body.style.borderTopStyle = options.style;
 
         return this;
@@ -311,7 +312,7 @@ export default abstract class View {
 
     borderRight(options: HIBorderProperties): this {
         if (options.size != undefined) this.body.style.borderRightWidth = sizing(options.size);
-        if (options.color) this.body.style.borderRightColor = options.color;
+        if (options.color) this.body.style.borderRightColor = options.color.toString();
         if (options.style) this.body.style.borderRightStyle = options.style;
 
         return this;
@@ -319,7 +320,7 @@ export default abstract class View {
 
     borderBottom(options: HIBorderProperties): this {
         if (options.size != undefined) this.body.style.borderBottomWidth = sizing(options.size);
-        if (options.color) this.body.style.borderBottomColor = options.color;
+        if (options.color) this.body.style.borderBottomColor = options.color.toString();
         if (options.style) this.body.style.borderBottomStyle = options.style;
 
         return this;
@@ -327,7 +328,7 @@ export default abstract class View {
 
     borderLeft(options: HIBorderProperties): this {
         if (options.size != undefined) this.body.style.borderLeftWidth = sizing(options.size);
-        if (options.color) this.body.style.borderLeftColor = options.color;
+        if (options.color) this.body.style.borderLeftColor = options.color.toString();
         if (options.style) this.body.style.borderLeftStyle = options.style;
 
         return this;
