@@ -1,10 +1,11 @@
 import { HColor } from './Hi/Colors';
-import { ClickButton, TextContent } from './Hi/Components/Basics';
+import { ClickButton, RadioButton, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
+import { Overlay } from './Hi/Components/Overlays';
 import { VStack, HStack } from './Hi/Components/Stacks';
 import { Spacer } from './Hi/Components/Whitespace';
-import { ViewController } from './Hi/human';
+import { StateObject, ViewController } from './Hi/human';
 import View from './Hi/View';
 
 function SmartKeywords(keywords: string[]) {
@@ -46,6 +47,10 @@ export default class Sidebar extends VStack {
             view: MenuButton('images-outline', 'Graphics Components', 'graphicsComponents'),
             keywords: SmartKeywords(['graphics', 'graphic', 'images', 'icons']),
         },
+        {
+            view: SettingsButton(),
+            keywords: SmartKeywords(['settings', 'preferences', 'light', 'dark', 'mode']),
+        },
     ];
 
     constructor() {
@@ -72,7 +77,7 @@ export default class Sidebar extends VStack {
                             .map(item => item.view)
                     );
                 }),
-            new VStack(...Sidebar.menuItems.map(item => item.view)).stretchWidth().id('menu-items-list')
+            new VStack(...Sidebar.menuItems.map(item => item.view), new Spacer()).stretchWidth().id('menu-items-list')
         );
     }
 
@@ -91,23 +96,81 @@ export default class Sidebar extends VStack {
 }
 
 function MenuButton(iconName: string, title: string, navigateTo: string) {
-    const btn = new ClickButton(
+    return new ClickButton(
         new HStack(new IonIcon(iconName).font({ size: 25 }), new TextContent(title).padding(), new Spacer())
     )
         .stretchWidth()
         .padding(5)
         .rounded()
-        .font('sm');
+        .font('sm')
+        .whenMouseOver(ev => {
+            ev.view.background(HColor('gray6'));
+        })
+        .whenMouseOut(ev => {
+            ev.view.background('none');
+        })
+        .whenClicked(ev => {
+            ViewController.navigateTo(navigateTo);
+            (ev.view.root().getViewById('title') as TextContent).text.value = title;
+        });
+}
 
-    btn.whenMouseOver(() => {
-        btn.background(HColor('gray6'));
-    })
-        .whenMouseOut(() => {
-            btn.background('none');
+function SettingsButton() {
+    return new ClickButton(
+        new HStack(
+            new IonIcon('settings-outline').font({ size: 25 }),
+            new TextContent('Preferences').padding(),
+            new Spacer()
+        )
+    )
+        .stretchWidth()
+        .padding(5)
+        .rounded()
+        .font('sm')
+        .whenMouseOver(ev => ev.view.background(HColor('gray6')))
+        .whenMouseOut(ev => {
+            ev.view.background('none');
         })
         .whenClicked(() => {
-            ViewController.navigateTo(navigateTo);
-            (btn.root().getViewById('title') as TextContent).text.value = title;
+            new SettingsOverlay();
         });
-    return btn;
+}
+
+class SettingsOverlay extends Overlay {
+    public settings = StateObject(
+        {
+            color: 'light',
+        },
+        prop => {
+            if (prop == 'color') {
+                if (this.settings.color == 'light') {
+                    this.lightRadio.setSelected(true);
+                    this.darkRadio.setSelected(false);
+                } else {
+                    this.lightRadio.setSelected(false);
+                    this.darkRadio.setSelected(true);
+                }
+            }
+        }
+    );
+
+    private lightRadio: RadioButton;
+    private darkRadio: RadioButton;
+
+    constructor() {
+        super(
+            new VStack(
+                new TextContent('Color Mode').font('xl'),
+                new HStack(
+                    new HStack(
+                        new RadioButton().padding().id('light-radio-button'),
+                        new TextContent('Light')
+                    ).padding(),
+                    new HStack(new RadioButton().padding().id('dark-radio-button'), new TextContent('Dark')).padding()
+                ).stretchWidth()
+            ).stretch()
+        );
+        this.lightRadio = this.getViewById('light-radio-button') as RadioButton;
+        this.darkRadio = this.getViewById('dark-radio-button') as RadioButton;
+    }
 }
