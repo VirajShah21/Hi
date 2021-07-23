@@ -75,3 +75,8 @@ export const HumanColorSwatch = {
         gray6: rgb(242, 242, 247),
     },
 };
+
+export const ColorConfiguration = {
+    swatch: HumanColorSwatch,
+    theme: 'light',
+};

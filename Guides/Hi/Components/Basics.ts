@@ -132,6 +132,11 @@ export class RadioGroup {
             });
         });
     }
+
+    getSelected(): RadioButton | null {
+        for (const radio of this.radios) if (radio.isSelected()) return radio;
+        return null;
+    }
 }
 
 export class ClickButton extends View {

@@ -1,4 +1,5 @@
-import { HColor } from './Hi/Colors';
+import GuidesApp from './GuidesApp';
+import { ColorConfiguration, HColor } from './Hi/Colors';
 import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
@@ -146,10 +147,14 @@ class SettingsOverlay extends Overlay {
                 if (this.settings.color == 'light') {
                     this.lightRadio.setSelected(true);
                     this.darkRadio.setSelected(false);
+                    ColorConfiguration.theme = 'light';
                 } else {
                     this.lightRadio.setSelected(false);
                     this.darkRadio.setSelected(true);
+                    ColorConfiguration.theme = 'dark';
                 }
+                this.root().signal('color');
+                (this.root() as GuidesApp).portfolioViewerController.signal('color');
             }
         }
     );

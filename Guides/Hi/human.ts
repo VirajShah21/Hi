@@ -154,6 +154,10 @@ export class ViewController {
         return ViewControllerData.controllerMap[controllerName];
     }
 
+    signal(data: string) {
+        for (let screen in this.screens) this.screens[screen].signal(data);
+    }
+
     /**
      * Changes the background image of the document body.
      *
