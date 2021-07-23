@@ -1,9 +1,10 @@
-import { Container, HStack, VStack } from '../Hi/Components/Stacks';
+import { Container, HStack, ScrollView, VStack } from '../Hi/Components/Stacks';
 import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
 import { BlockCode, ClickButton, TextContent } from '../Hi/Components/Basics';
 import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
 import { HColor } from '../Hi/Colors';
 import { Spacer } from '../Hi/Components/Whitespace';
+import { Preview } from '../Hi/Components/DevKit';
 
 export class TypeDefinitionDocumentation extends VStack {
     constructor(expansion: string, description: string, examples: string) {
@@ -27,7 +28,7 @@ export class TypeDefinitionDocumentation extends VStack {
             new HStack(
                 new IonIcon('code-slash-outline').font('lg').padding(),
                 new TextContent('Example').padding().width(200).textStart(),
-                new BlockCode(examples).textStart().margin(0).padding().width(400),
+                new ScrollView(new BlockCode(examples).textStart().margin(0).padding().width(400)),
                 new Spacer()
             )
                 .stretchWidth()
@@ -79,8 +80,8 @@ export default class SizingTypes extends Container {
 const imageHeight: HISizingValue = '7em';
 const buttonWidth: HISizingValue = 'calc(50vw - 10px)'
 
-new Button(
-    new Image('assets/bird.png')
+new ClickButton(
+    new ImageContent('assets/bird.png')
         .width(imageWidth)
         .height(imageHeight)
 ).width(buttonWidth);
@@ -88,10 +89,9 @@ new Button(
                 )
                     .margin({ top: 25 })
                     .padding()
-                    .padding({ left: 200, right: 200 })
                     .rounded(),
 
-                new Container(
+                new Preview(
                     new ClickButton(
                         new ImageContent(
                             'https://images.unsplash.com/photo-1579723985163-28f30af7093b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
@@ -137,24 +137,23 @@ new Button(
                 )
                     .margin({ top: 25 })
                     .padding()
-                    .padding({ left: 200, right: 200 })
                     .rounded(),
 
-                new Container(
+                new Preview(
                     new HStack(
                         new VStack(new TextContent('Left Panel'))
                             .width({
-                                min: 400,
-                                default: 550,
-                                max: 700,
+                                min: 100,
+                                default: 200,
+                                max: 300,
                             })
                             .background(HColor('red')),
 
                         new VStack(new TextContent('Right Panel'))
-                            .width({ min: 200, max: 1000 })
+                            .width({ min: 300, max: 500 })
                             .background(HColor('blue'))
                     )
-                ),
+                ).width({ max: '100%' }),
 
                 new HStack(
                     new ImageContent('https://image.flaticon.com/icons/png/512/204/204599.png').height(50),
@@ -182,15 +181,18 @@ new Button(
                 )
                     .margin({ top: 25 })
                     .padding()
-                    .padding({ left: 200, right: 200 })
                     .rounded(),
 
-                new HStack(new TextContent('Hello World').background('white').padding(5)).background('black').padding({
-                    top: 10,
-                    right: '5vw',
-                    bottom: '15pt',
-                    left: '10vw',
-                })
+                new Preview(
+                    new HStack(new TextContent('Hello World').background('white').padding(5))
+                        .background('black')
+                        .padding({
+                            top: 10,
+                            right: '5vw',
+                            bottom: '15pt',
+                            left: '10vw',
+                        })
+                )
             )
         );
     }
