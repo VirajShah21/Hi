@@ -3,14 +3,24 @@ import View from '../View';
 export class Group extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.addClass('hi-group');
+        this.body.style.alignItems = 'center';
+        this.body.style.justifyContent = 'center';
+        this.body.style.textAlign = 'center';
+        this.body.style.boxSizing = 'border-box';
+    }
+}
+
+export abstract class Stack extends Group {
+    constructor(...children: View[]) {
+        super(...children);
+        this.body.style.display = 'flex';
     }
 }
 
 export class VStack extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.addClass('hi-vstack');
+        this.body.style.flexDirection = 'column';
     }
 }
 
@@ -23,14 +33,21 @@ export class ZStack extends View {
      */
     constructor(...children: View[]) {
         super('div', ...children);
-        this.addClass('hi-zstack');
+        this.body.style.display = 'grid';
+        this.body.style.textAlign = 'center';
+        this.body.style.alignItems = 'center';
+        this.body.style.justifyContent = 'center';
+
+        this.$children.forEach(child => {
+            this.body.style.gridArea = '1/1/1/1';
+        });
     }
 }
 
 export class HStack extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.addClass('hi-hstack');
+        this.body.style.flexDirection = 'row';
     }
 }
 

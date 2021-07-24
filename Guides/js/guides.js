@@ -448,7 +448,7 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
             return this;
         }
         grow() {
-            this.addClass('hi-grow');
+            this.body.style.flexGrow = '1';
             return this;
         }
         glow(color) {
@@ -700,18 +700,28 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
 define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (require, exports, View_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Container = exports.HIFullScreenView = exports.ScrollView = exports.HStack = exports.ZStack = exports.VStack = exports.Group = void 0;
+    exports.Container = exports.HIFullScreenView = exports.ScrollView = exports.HStack = exports.ZStack = exports.VStack = exports.Stack = exports.Group = void 0;
     class Group extends View_2.default {
         constructor(...children) {
             super('div', ...children);
-            this.addClass('hi-group');
+            this.body.style.alignItems = 'center';
+            this.body.style.justifyContent = 'center';
+            this.body.style.textAlign = 'center';
+            this.body.style.boxSizing = 'border-box';
         }
     }
     exports.Group = Group;
+    class Stack extends Group {
+        constructor(...children) {
+            super(...children);
+            this.body.style.display = 'flex';
+        }
+    }
+    exports.Stack = Stack;
     class VStack extends View_2.default {
         constructor(...children) {
             super('div', ...children);
-            this.addClass('hi-vstack');
+            this.body.style.flexDirection = 'column';
         }
     }
     exports.VStack = VStack;
@@ -724,14 +734,20 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
          */
         constructor(...children) {
             super('div', ...children);
-            this.addClass('hi-zstack');
+            this.body.style.display = 'grid';
+            this.body.style.textAlign = 'center';
+            this.body.style.alignItems = 'center';
+            this.body.style.justifyContent = 'center';
+            this.$children.forEach(child => {
+                this.body.style.gridArea = '1/1/1/1';
+            });
         }
     }
     exports.ZStack = ZStack;
     class HStack extends View_2.default {
         constructor(...children) {
             super('div', ...children);
-            this.addClass('hi-hstack');
+            this.body.style.flexDirection = 'row';
         }
     }
     exports.HStack = HStack;

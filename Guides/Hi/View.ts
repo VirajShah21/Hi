@@ -26,7 +26,7 @@ export default abstract class View {
     public identifier: string;
 
     public readonly children: StateProxy<View[]>;
-    private readonly $children: View[] = [];
+    protected readonly $children: View[] = [];
 
     constructor(element: string, ...children: View[]) {
         this.body = document.createElement(element);
@@ -227,7 +227,7 @@ export default abstract class View {
     }
 
     grow(): this {
-        this.addClass('hi-grow');
+        this.body.style.flexGrow = '1';
         return this;
     }
 
