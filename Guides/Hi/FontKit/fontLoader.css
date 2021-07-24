@@ -3,7 +3,6 @@
     src: url('./fonts/SF-Pro.ttf');
 }
 
-@font-face {
-    font-family: 'SF Pro Compact Rounded Medium';
-    src: url('./fonts/SF-Compact-Rounded-Medium.otf');
+* {
+    font-family: 'SF Pro';
 }
