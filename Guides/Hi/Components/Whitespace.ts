@@ -3,8 +3,10 @@ import View from '../View';
 export class Spacer extends View {
     constructor() {
         super('div');
-        this.body.className = 'hi-spacer';
         this.body.innerHTML = '&nbsp;';
+        this.body.style.flexGrow = '1';
+        this.body.style.width = 'auto';
+        this.body.style.height = 'auto';
     }
 }
 

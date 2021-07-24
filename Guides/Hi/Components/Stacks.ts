@@ -61,7 +61,7 @@ export class ScrollView extends View {
 export class HIFullScreenView extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.body.className = 'hi-screen';
+        this.width('100vw').height('100vh');
     }
 }
 

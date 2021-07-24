@@ -21,11 +21,13 @@ export class AlertOverlay extends Overlay {
                 new TextContent(message).padding().font('small').lineHeight('200%'),
                 new HStack(
                     new ClickButton(new TextContent('Cancel'))
+                        .background(rgba(255, 255, 255, 0.5))
                         .whenClicked(() => {
                             this.destroy();
                         })
                         .addClass('hi-alert-overlay-cancel-button'),
                     new ClickButton(new TextContent('Ok'))
+                        .background(rgba(255, 255, 255, 0.5))
                         .whenClicked(() => {
                             this.destroy();
                         })
@@ -35,6 +37,8 @@ export class AlertOverlay extends Overlay {
                 .stretchHeight()
                 .width('50%')
         );
+        this.body.style.display = 'flex';
+        this.width('100vw').height('100vh').position('fixed').zIndex(100).setTop(0).setLeft(0).blur();
     }
 
     whenConfirmed(callback: () => void): this {

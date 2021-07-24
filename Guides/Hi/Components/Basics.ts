@@ -1,6 +1,7 @@
 import { StateObject, sizing, HumanEvent } from '../human';
 import View from '../View';
-import { HISizingValue } from '../Types/sizing';
+import { HISizingValue, SizingValues } from '../Types/sizing';
+import { HColor } from '../Colors';
 
 export class TextContent extends View {
     public override body: HTMLSpanElement;
@@ -144,7 +145,11 @@ export class ClickButton extends View {
 
     constructor(...children: View[]) {
         super('button', ...children);
-        this.body.className = 'hi-button';
+        this.body.style.border = 'none';
+        this.body.style.color = HColor('blue').toString();
+        this.body.style.background = 'none';
+        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xxs;
+        this.body.style.padding = `${SizingValues.PADDING.xxs} ${SizingValues.PADDING.sm} ${SizingValues.PADDING.xxs} ${SizingValues.PADDING.sm}`;
     }
 
     whenClicked(callback: (ev: HumanEvent) => void): this {
@@ -170,7 +175,7 @@ export class InlineCode extends View {
     constructor(text: string) {
         super('code');
         this.body.innerText = text;
-        this.addClass('hi-inline-code');
+        this.body.style.fontFamily = 'monospace';
     }
 }
 
@@ -180,6 +185,6 @@ export class BlockCode extends View {
     constructor(text: string) {
         super('pre');
         this.body.innerText = text;
-        this.addClass('hi-block-code');
+        this.body.style.fontFamily = 'monospace';
     }
 }
