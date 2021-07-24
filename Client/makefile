@@ -1,6 +1,6 @@
-all: ts scss
+all: ts
 	tsc
-	cp FontKit -r build/FontKit
+	cp -r FontKit build/FontKit
 
 ts: ts
 	tsc

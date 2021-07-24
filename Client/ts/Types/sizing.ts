@@ -23,11 +23,14 @@ export type HICornerSizingValue =
           bottom?: { left?: HISizingValue; right?: HISizingValue };
       };
 
+export type HISizingName = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
 export const SizingValues = {
     BORDER_RADIUS: {
         xxs: sizing(3),
         xs: sizing(6),
         sm: sizing(9),
+        md: sizing(12),
         lg: sizing(15),
         xl: sizing(18),
         xxl: sizing(21),

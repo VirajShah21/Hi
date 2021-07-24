@@ -1,6 +1,13 @@
 import { RGBAModel } from './Colors';
 import { StateObject, sizing, HumanEvent } from './human';
-import { HIEdgeSizingValue, HICornerSizingValue, HISizeBounds, HISizingValue } from './Types/sizing';
+import {
+    HIEdgeSizingValue,
+    HICornerSizingValue,
+    HISizeBounds,
+    HISizingValue,
+    SizingValues,
+    HISizingName,
+} from './Types/sizing';
 import { StateProxy } from './Types/states';
 import { HIFont, HIBorderProperties } from './Types/styles';
 
@@ -136,9 +143,12 @@ export default abstract class View {
         return this;
     }
 
-    font(fontClass: string | number | HIFont): this {
-        if (typeof fontClass == 'string') this.addClass(`font-${fontClass}`);
-        else if (typeof fontClass == 'number') this.body.style.fontSize = `${fontClass}pt`;
+    font(fontClass: string | number | HIFont | HISizingName): this {
+        if (typeof fontClass == 'string' && SizingValues.FONT.hasOwnProperty(fontClass)) {
+            this.body.style.fontSize = SizingValues.FONT[fontClass as HISizingName];
+        } else if (typeof fontClass == 'string') {
+            this.body.style.font = fontClass;
+        } else if (typeof fontClass == 'number') this.body.style.fontSize = `${fontClass}pt`;
         else if (typeof fontClass == 'object') {
             if (Object.prototype.hasOwnProperty.call(fontClass, 'family'))
                 this.body.style.fontFamily = fontClass.family;
