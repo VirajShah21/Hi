@@ -38,17 +38,41 @@ export class RGBAModel {
         this.a = a;
     }
 
+    red(r: number): this {
+        this.r = r;
+        return this;
+    }
+
+    green(g: number): this {
+        this.g = g;
+        return this;
+    }
+
+    blue(b: number): this {
+        this.b = b;
+        return this;
+    }
+
+    alpha(a: number): this {
+        this.a = a;
+        return this;
+    }
+
     toString() {
         if (this.a != 1) return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
         return `rgb(${this.r}, ${this.g}, ${this.b})`;
     }
+
+    static copy(rgba: RGBAModel): RGBAModel {
+        return new RGBAModel(rgba.r, rgba.g, rgba.b, rgba.a);
+    }
 }
 
 export function HColor(color: HumanColorName): RGBAModel {
-    if (ColorConfiguration.theme === 'light') {
-        return HumanColorSwatch.light[color];
+    if (colorTheme === 'light') {
+        return RGBAModel.copy(HumanColorSwatch.light[color]);
     } else {
-        return HumanColorSwatch.dark[color];
+        return RGBAModel.copy(HumanColorSwatch.dark[color]);
     }
 }
 
@@ -107,13 +131,18 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
     },
 };
 
-// ! TODO: Unexport this member and refactor all other code
-export const ColorConfiguration = {
-    swatch: HumanColorSwatch,
-    theme: 'light',
-};
+var colorTheme: 'light' | 'dark' = (() => {
+    let tmp = localStorage.getItem('hi://theme');
+    if (tmp == 'light' || tmp == 'dark') return tmp;
+    return 'light';
+})();
 
 export function changeTheme(theme: 'light' | 'dark'): void {
-    ColorConfiguration.theme = theme;
+    colorTheme = theme;
     ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+    localStorage.setItem('hi://theme', colorTheme);
+}
+
+export function whichTheme(): 'light' | 'dark' {
+    return colorTheme;
 }

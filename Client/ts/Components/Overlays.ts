@@ -1,4 +1,4 @@
-import { rgba } from '../Colors';
+import { HColor, rgba } from '../Colors';
 import { ClickButton, TextContent } from './Basics';
 import InputField, { TextField } from './Inputs';
 import { VStack, HStack, ScrollView } from './Stacks';
@@ -9,7 +9,8 @@ export class Overlay extends View {
     constructor(...children: View[]) {
         super('div', ...children);
         this.addClass('hi-overlay');
-        this.background(rgba(255, 255, 255, 0.25));
+        this.background(HColor('background').alpha(0.25));
+        this.foreground(HColor('foreground'));
         document.body.appendChild(this.body);
     }
 }
