@@ -747,14 +747,14 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
         }
     }
     exports.Stack = Stack;
-    class VStack extends View_2.default {
+    class VStack extends Stack {
         constructor(...children) {
-            super('div', ...children);
+            super(...children);
             this.body.style.flexDirection = 'column';
         }
     }
     exports.VStack = VStack;
-    class ZStack extends View_2.default {
+    class ZStack extends Stack {
         /**
          * Creates an instance of ZStack.
          * @param {View[]} children The children of this ZStack.
@@ -762,7 +762,7 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
          * @memberOf ZStack
          */
         constructor(...children) {
-            super('div', ...children);
+            super(...children);
             this.body.style.display = 'grid';
             this.body.style.textAlign = 'center';
             this.body.style.alignItems = 'center';
@@ -773,9 +773,9 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
         }
     }
     exports.ZStack = ZStack;
-    class HStack extends View_2.default {
+    class HStack extends Stack {
         constructor(...children) {
-            super('div', ...children);
+            super(...children);
             this.body.style.flexDirection = 'row';
         }
     }

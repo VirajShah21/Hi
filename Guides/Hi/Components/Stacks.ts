@@ -17,14 +17,14 @@ export abstract class Stack extends Group {
     }
 }
 
-export class VStack extends View {
+export class VStack extends Stack {
     constructor(...children: View[]) {
-        super('div', ...children);
+        super(...children);
         this.body.style.flexDirection = 'column';
     }
 }
 
-export class ZStack extends View {
+export class ZStack extends Stack {
     /**
      * Creates an instance of ZStack.
      * @param {View[]} children The children of this ZStack.
@@ -32,7 +32,7 @@ export class ZStack extends View {
      * @memberOf ZStack
      */
     constructor(...children: View[]) {
-        super('div', ...children);
+        super(...children);
         this.body.style.display = 'grid';
         this.body.style.textAlign = 'center';
         this.body.style.alignItems = 'center';
@@ -44,9 +44,9 @@ export class ZStack extends View {
     }
 }
 
-export class HStack extends View {
+export class HStack extends Stack {
     constructor(...children: View[]) {
-        super('div', ...children);
+        super(...children);
         this.body.style.flexDirection = 'row';
     }
 }
