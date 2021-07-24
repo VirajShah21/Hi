@@ -10,5 +10,6 @@
         "noImplicitOverride": true,
         "noImplicitReturns": true,
         "target": "ES2020"
-    }
+    },
+    "include": ["ts/**/*.ts"]
 }
