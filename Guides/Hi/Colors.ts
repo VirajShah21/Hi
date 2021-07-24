@@ -38,6 +38,26 @@ export class RGBAModel {
         this.a = a;
     }
 
+    red(r: number): this {
+        this.r = r;
+        return this;
+    }
+
+    green(g: number): this {
+        this.g = g;
+        return this;
+    }
+
+    blue(b: number): this {
+        this.b = b;
+        return this;
+    }
+
+    alpha(a: number): this {
+        this.a = a;
+        return this;
+    }
+
     toString() {
         if (this.a != 1) return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
         return `rgb(${this.r}, ${this.g}, ${this.b})`;
