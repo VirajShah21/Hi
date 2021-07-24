@@ -70,7 +70,7 @@ define("Hi/Types/states", ["require", "exports"], function (require, exports) {
 define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports, View_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.sizing = exports.ViewController = exports.StateObject = void 0;
+    exports.sizing = exports.ViewController = exports.ViewControllerData = exports.StateObject = void 0;
     /**
      * Constructs a proxy object for a state object.
      *
@@ -106,10 +106,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
         return new Proxy(obj, handler);
     }
     exports.StateObject = StateObject;
-    const ViewControllerData = {
-        /**
-         * @deprecated
-         */
+    exports.ViewControllerData = {
         controllers: [],
         controllerMap: {},
     };
@@ -128,7 +125,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
          */
         constructor(screens) {
             this.screens = screens;
-            ViewControllerData.controllers.push(this);
+            exports.ViewControllerData.controllers.push(this);
         }
         /**
          * Navigate to a specified (or main) view on this ViewController.
@@ -185,7 +182,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
          * @memberOf ViewController
          */
         mapTo(controllerName) {
-            ViewControllerData.controllerMap[controllerName] = this;
+            exports.ViewControllerData.controllerMap[controllerName] = this;
             return this;
         }
         /**
@@ -197,7 +194,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
          * @memberOf ViewController
          */
         getController(controllerName) {
-            return ViewControllerData.controllerMap[controllerName];
+            return exports.ViewControllerData.controllerMap[controllerName];
         }
         signal(data) {
             for (let screen in this.screens)
@@ -228,7 +225,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
          * @memberOf ViewController
          */
         static navigateTo(name = 'main') {
-            const controller = ViewControllerData.controllers.find(currentController => {
+            const controller = exports.ViewControllerData.controllers.find(currentController => {
                 return Object.prototype.hasOwnProperty.call(currentController.screens, name);
             });
             if (controller)
@@ -245,7 +242,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
          */
         static allScreens() {
             const screens = {};
-            ViewControllerData.controllers.forEach(controller => {
+            exports.ViewControllerData.controllers.forEach(controller => {
                 for (const screen in controller.screens)
                     screens[screen] = controller.screens[screen];
             });
@@ -691,13 +688,12 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
             return this;
         }
         signal(data) {
+            this.handle(data);
             this.$children.forEach(child => {
                 child.handle(data);
             });
         }
-        handle(data) {
-            this.signal(data);
-        }
+        handle(data) { }
     }
     exports.default = View;
 });
@@ -1240,7 +1236,7 @@ define("Hi/Components/Whitespace", ["require", "exports", "Hi/View"], function (
     }
     exports.LineBreak = LineBreak;
 });
-define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_2, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_5) {
+define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human", "Hi/human"], function (require, exports, Colors_2, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_5, human_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function SmartKeywords(keywords) {
@@ -1274,7 +1270,19 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
                     .sort((a, b) => Sidebar.menuSearchScore(query, a.keywords) -
                     Sidebar.menuSearchScore(query, b.keywords))
                     .map(item => item.view));
-            }), new Stacks_2.VStack(...Sidebar.menuItems.map(item => item.view), new Whitespace_1.Spacer()).stretchWidth().id('menu-items-list'));
+            })
+                .id('search-field'), new Stacks_2.VStack(...Sidebar.menuItems.map(item => item.view), new Whitespace_1.Spacer()).stretchWidth().id('menu-items-list'));
+        }
+        handle(data) {
+            console.log('Handling ' + data);
+            if (data == 'color') {
+                if (Colors_2.ColorConfiguration.theme == 'dark') {
+                    this.getViewById('search-field').background(Colors_2.RGBAModel.BLACK).foreground(Colors_2.RGBAModel.WHITE);
+                }
+                else {
+                    this.getViewById('search-field').background(Colors_2.RGBAModel.WHITE).foreground(Colors_2.RGBAModel.BLACK);
+                }
+            }
         }
         static menuSearchScore(query, keywords) {
             const queryWords = query.split(' ');
@@ -1355,7 +1363,19 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
     }
     class SettingsOverlay extends Overlays_1.Overlay {
         constructor() {
-            super(new Stacks_2.VStack(new Basics_2.TextContent('Color Mode').font('xl'), new Stacks_2.HStack(new Stacks_2.HStack(new Basics_2.RadioButton().padding().id('light-radio-button'), new Basics_2.TextContent('Light')).padding(), new Stacks_2.HStack(new Basics_2.RadioButton().padding().id('dark-radio-button'), new Basics_2.TextContent('Dark')).padding()).stretchWidth()).stretch());
+            super(new Stacks_2.VStack(new Basics_2.TextContent('Color Mode').font('xl'), new Stacks_2.HStack(new Stacks_2.HStack(new Basics_2.RadioButton()
+                .padding()
+                .id('light-radio-button')
+                .whenClicked(() => {
+                this.settings.color = 'light';
+            }), new Basics_2.TextContent('Light')).padding(), new Stacks_2.HStack(new Basics_2.RadioButton()
+                .padding()
+                .id('dark-radio-button')
+                .whenClicked(() => {
+                this.settings.color = 'dark';
+            }), new Basics_2.TextContent('Dark')).padding()).stretchWidth(), new Stacks_2.HStack(new Basics_2.ClickButton(new Stacks_2.VStack(new Graphics_2.IonIcon('close-circle-outline'), new Basics_2.TextContent('Close').font('sm'))).whenClicked(ev => {
+                this.destroy();
+            }))).stretch());
             this.settings = human_5.StateObject({
                 color: 'light',
             }, prop => {
@@ -1370,8 +1390,9 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
                         this.darkRadio.setSelected(true);
                         Colors_2.ColorConfiguration.theme = 'dark';
                     }
-                    this.root().signal('color');
-                    this.root().portfolioViewerController.signal('color');
+                    for (const controller of human_6.ViewControllerData.controllers) {
+                        controller.signal('color');
+                    }
                 }
             });
             this.lightRadio = this.getViewById('light-radio-button');
@@ -1470,7 +1491,7 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
     }
     exports.default = GettingStarted;
 });
-define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_5, human_6, Basics_5, Graphics_5, Overlays_2, Stacks_5, Whitespace_3) {
+define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_5, human_7, Basics_5, Graphics_5, Overlays_2, Stacks_5, Whitespace_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Preview = void 0;
@@ -1503,7 +1524,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                 .borderTop({ style: 'solid' }), new Stacks_5.VStack(new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.HStack(Preview.dimensionSub('width').padding(), new Basics_5.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_3.Spacer(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-padding').font('lg'), new Basics_5.TextContent('Padding').font('sm').foreground(Colors_5.HColor('gray')))
                 .padding()
                 .id('component-padding-wrapper'), new Whitespace_3.Spacer()), new Stacks_5.HStack(new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-name').font('lg'), new Basics_5.TextContent('Component').font('sm').foreground(Colors_5.HColor('gray'))).padding(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-id').font('lg'), new Basics_5.TextContent('ID').font('sm').foreground(Colors_5.HColor('gray'))).padding()), new Basics_5.TextContent('Description').font('sm').foreground(Colors_5.HColor('gray')), new Basics_5.TextContent('•').id('component-description')).padding());
-            this.dimensions = human_6.StateObject({
+            this.dimensions = human_7.StateObject({
                 width: 0,
                 height: 0,
                 padding: '',
@@ -1514,7 +1535,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                 else if (property == 'padding')
                     this.getViewById('component-padding').text.value = this.dimensions.padding || '•';
             });
-            this.componentInfo = human_6.StateObject({
+            this.componentInfo = human_7.StateObject({
                 name: '',
                 id: '',
                 description: '',
@@ -1534,7 +1555,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                         break;
                 }
             });
-            this.viewerSettings = human_6.StateObject({
+            this.viewerSettings = human_7.StateObject({
                 contrastToggle: false,
                 propertyFilters: {
                     dimensions: true,
@@ -1783,7 +1804,7 @@ define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Compo
     }
     exports.default = GraphicsComponent;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_9, Stacks_9, human_7, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_9, Stacks_9, human_8, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_9.HIFullScreenView {
@@ -1812,7 +1833,8 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .position('fixed')
                 .background(Colors_9.rgba(255, 255, 255, 0.5))
                 .blur(25)
-                .zIndex(10), new MessageViewer().id('portfolio-viewer').stretch())
+                .zIndex(10)
+                .id('titlebar'), new MessageViewer().id('portfolio-viewer').stretch())
                 .stretchHeight()
                 .width({
                 min: 'calc(100vw - 300px)',
@@ -1820,7 +1842,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 max: 'calc(100vw - 300px)',
             })
                 .alignStart()).stretch());
-            this.portfolioViewerController = new human_7.ViewController({
+            this.portfolioViewerController = new human_8.ViewController({
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
                 sizingTypes: new SizingTypes_1.default().stretch().padding({ top: 60 }),
                 basicComponents: new BasicComponents_1.default().stretch().padding({ top: 60 }),
@@ -1830,6 +1852,20 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
             if (portfolioViewer)
                 this.portfolioViewerController.bind(portfolioViewer.body);
         }
+        handle(data) {
+            if (data == 'color') {
+                if (Colors_9.ColorConfiguration.theme == 'dark') {
+                    this.background(Colors_9.RGBAModel.BLACK).foreground(Colors_9.RGBAModel.WHITE);
+                    this.getViewById('titlebar').background(Colors_9.rgba(0, 0, 0, 0.5)).foreground(Colors_9.RGBAModel.WHITE);
+                }
+                else {
+                    this.background(Colors_9.RGBAModel.WHITE).foreground(Colors_9.RGBAModel.BLACK);
+                    this.getViewById('titlebar').background(Colors_9.rgba(255, 255, 255, 0.5)).foreground(Colors_9.RGBAModel.BLACK);
+                }
+            }
+            for (const screenName in this.portfolioViewerController.screens)
+                this.portfolioViewerController.screens[screenName].signal(data);
+        }
     }
     exports.default = GuidesApp;
     class MessageViewer extends Stacks_9.ScrollView {
@@ -1838,10 +1874,10 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
 });
-define("guides", ["require", "exports", "GuidesApp", "Hi/human"], function (require, exports, GuidesApp_1, human_8) {
+define("guides", ["require", "exports", "GuidesApp", "Hi/human"], function (require, exports, GuidesApp_1, human_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    new human_8.ViewController({
+    new human_9.ViewController({
         main: new GuidesApp_1.default(),
     })
         .bind()

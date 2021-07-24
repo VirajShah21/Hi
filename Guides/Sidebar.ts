@@ -1,5 +1,5 @@
 import GuidesApp from './GuidesApp';
-import { ColorConfiguration, HColor } from './Hi/Colors';
+import { ColorConfiguration, HColor, RGBAModel } from './Hi/Colors';
 import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
@@ -8,6 +8,7 @@ import { VStack, HStack } from './Hi/Components/Stacks';
 import { Spacer } from './Hi/Components/Whitespace';
 import { StateObject, ViewController } from './Hi/human';
 import View from './Hi/View';
+import { ViewControllerData } from './Hi/human';
 
 function SmartKeywords(keywords: string[]) {
     const results = [];
@@ -77,9 +78,22 @@ export default class Sidebar extends VStack {
                             )
                             .map(item => item.view)
                     );
-                }),
+                })
+                .id('search-field'),
             new VStack(...Sidebar.menuItems.map(item => item.view), new Spacer()).stretchWidth().id('menu-items-list')
         );
+    }
+
+    override handle(data: string): void {
+        console.log('Handling ' + data);
+
+        if (data == 'color') {
+            if (ColorConfiguration.theme == 'dark') {
+                this.getViewById('search-field').background(RGBAModel.BLACK).foreground(RGBAModel.WHITE);
+            } else {
+                this.getViewById('search-field').background(RGBAModel.WHITE).foreground(RGBAModel.BLACK);
+            }
+        }
     }
 
     static menuSearchScore(query: string, keywords: string[]): number {
@@ -153,8 +167,10 @@ class SettingsOverlay extends Overlay {
                     this.darkRadio.setSelected(true);
                     ColorConfiguration.theme = 'dark';
                 }
-                this.root().signal('color');
-                (this.root() as GuidesApp).portfolioViewerController.signal('color');
+
+                for (const controller of ViewControllerData.controllers) {
+                    controller.signal('color');
+                }
             }
         }
     );
@@ -168,13 +184,34 @@ class SettingsOverlay extends Overlay {
                 new TextContent('Color Mode').font('xl'),
                 new HStack(
                     new HStack(
-                        new RadioButton().padding().id('light-radio-button'),
+                        new RadioButton()
+                            .padding()
+                            .id('light-radio-button')
+                            .whenClicked(() => {
+                                this.settings.color = 'light';
+                            }),
                         new TextContent('Light')
                     ).padding(),
-                    new HStack(new RadioButton().padding().id('dark-radio-button'), new TextContent('Dark')).padding()
-                ).stretchWidth()
+                    new HStack(
+                        new RadioButton()
+                            .padding()
+                            .id('dark-radio-button')
+                            .whenClicked(() => {
+                                this.settings.color = 'dark';
+                            }),
+                        new TextContent('Dark')
+                    ).padding()
+                ).stretchWidth(),
+                new HStack(
+                    new ClickButton(
+                        new VStack(new IonIcon('close-circle-outline'), new TextContent('Close').font('sm'))
+                    ).whenClicked(ev => {
+                        this.destroy();
+                    })
+                )
             ).stretch()
         );
+
         this.lightRadio = this.getViewById('light-radio-button') as RadioButton;
         this.darkRadio = this.getViewById('dark-radio-button') as RadioButton;
         new RadioGroup(this.lightRadio, this.darkRadio);

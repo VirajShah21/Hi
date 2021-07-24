@@ -1,4 +1,4 @@
-import { HColor, rgba } from './Hi/Colors';
+import { ColorConfiguration, HColor, rgba, RGBAModel } from './Hi/Colors';
 import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
 import { TextContent } from './Hi/Components/Basics';
@@ -7,6 +7,7 @@ import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
 import BasicComponents from './Pages/BasicComponents';
 import GraphicsComponent from './Pages/GraphicsComponents';
+import View from './Hi/View';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
@@ -45,7 +46,8 @@ export default class GuidesApp extends HIFullScreenView {
                         .position('fixed')
                         .background(rgba(255, 255, 255, 0.5))
                         .blur(25)
-                        .zIndex(10),
+                        .zIndex(10)
+                        .id('titlebar'),
                     new MessageViewer().id('portfolio-viewer').stretch()
                 )
                     .stretchHeight()
@@ -59,6 +61,21 @@ export default class GuidesApp extends HIFullScreenView {
         );
         const portfolioViewer = this.getViewById('portfolio-viewer');
         if (portfolioViewer) this.portfolioViewerController.bind(portfolioViewer.body);
+    }
+
+    override handle(data: string): void {
+        if (data == 'color') {
+            if (ColorConfiguration.theme == 'dark') {
+                this.background(RGBAModel.BLACK).foreground(RGBAModel.WHITE);
+                (this.getViewById('titlebar') as View).background(rgba(0, 0, 0, 0.5)).foreground(RGBAModel.WHITE);
+            } else {
+                this.background(RGBAModel.WHITE).foreground(RGBAModel.BLACK);
+                (this.getViewById('titlebar') as View).background(rgba(255, 255, 255, 0.5)).foreground(RGBAModel.BLACK);
+            }
+        }
+
+        for (const screenName in this.portfolioViewerController.screens)
+            this.portfolioViewerController.screens[screenName].signal(data);
     }
 }
 

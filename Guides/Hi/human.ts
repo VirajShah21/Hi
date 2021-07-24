@@ -43,10 +43,7 @@ export function StateObject<T extends Record<string, unknown> | unknown[]>(
     return new Proxy(obj, handler);
 }
 
-const ViewControllerData = {
-    /**
-     * @deprecated
-     */
+export const ViewControllerData = {
     controllers: [] as ViewController[],
     controllerMap: {} as Record<string, ViewController>,
 };
