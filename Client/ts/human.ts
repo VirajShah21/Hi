@@ -216,3 +216,5 @@ export function sizing(size: HISizingValue): string {
     if (typeof size == 'number') return `${size}px`;
     return size;
 }
+
+document.body.style.margin = '0';
