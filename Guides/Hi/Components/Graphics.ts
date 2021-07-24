@@ -1,4 +1,4 @@
-import { StateObject } from '../human';
+import { StateObject } from '../Types/states';
 import View from '../View';
 
 export class IonIcon extends View {

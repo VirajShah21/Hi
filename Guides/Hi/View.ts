@@ -1,5 +1,5 @@
 import { RGBAModel } from './Colors';
-import { StateObject, sizing, HumanEvent } from './human';
+import { HumanEvent } from './ViewController';
 import {
     HIEdgeSizingValue,
     HICornerSizingValue,
@@ -7,8 +7,9 @@ import {
     HISizingValue,
     SizingValues,
     HISizingName,
+    sizing,
 } from './Types/sizing';
-import { StateProxy } from './Types/states';
+import { StateObject, StateProxy } from './Types/states';
 import { HIFont, HIBorderProperties } from './Types/styles';
 
 interface ModelData {

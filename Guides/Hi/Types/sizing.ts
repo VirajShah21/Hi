@@ -1,5 +1,3 @@
-import { sizing } from '../human';
-
 export type HISizingValue = string | number;
 export type HISizeBounds =
     | HISizingValue
@@ -56,3 +54,8 @@ export const SizingValues = {
         xxl: sizing(21),
     },
 };
+
+export function sizing(size: HISizingValue): string {
+    if (typeof size == 'number') return `${size}px`;
+    return size;
+}

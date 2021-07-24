@@ -1,7 +1,8 @@
-import { StateObject, sizing, HumanEvent } from '../human';
+import { HumanEvent } from '../ViewController';
 import View from '../View';
-import { HISizingValue, SizingValues } from '../Types/sizing';
+import { HISizingValue, sizing, SizingValues } from '../Types/sizing';
 import { HColor } from '../Colors';
+import { StateObject } from '../Types/states';
 
 export class TextContent extends View {
     public override body: HTMLSpanElement;

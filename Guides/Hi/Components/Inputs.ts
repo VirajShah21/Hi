@@ -1,5 +1,6 @@
-import { StateObject, HumanEvent } from '../human';
+import { HumanEvent } from '../ViewController';
 import { SizingValues } from '../Types/sizing';
+import { StateObject } from '../Types/states';
 import View from '../View';
 
 export default class InputField extends View {

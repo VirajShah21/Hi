@@ -1,4 +1,4 @@
-import { ViewControllerData } from './human';
+import { ViewControllerData } from './ViewController';
 
 export type HumanColorName =
     | 'blue'

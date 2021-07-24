@@ -1,46 +1,88 @@
-define("Hi/Types/sizing", ["require", "exports", "Hi/human"], function (require, exports, human_1) {
+define("Hi/Types/sizing", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SizingValues = void 0;
+    exports.sizing = exports.SizingValues = void 0;
     exports.SizingValues = {
         BORDER_RADIUS: {
-            xxs: human_1.sizing(3),
-            xs: human_1.sizing(6),
-            sm: human_1.sizing(9),
-            md: human_1.sizing(12),
-            lg: human_1.sizing(15),
-            xl: human_1.sizing(18),
-            xxl: human_1.sizing(21),
+            xxs: sizing(3),
+            xs: sizing(6),
+            sm: sizing(9),
+            md: sizing(12),
+            lg: sizing(15),
+            xl: sizing(18),
+            xxl: sizing(21),
         },
         PADDING: {
-            xxs: human_1.sizing(3),
-            xs: human_1.sizing(6),
-            sm: human_1.sizing(9),
-            md: human_1.sizing(12),
-            lg: human_1.sizing(15),
-            xl: human_1.sizing(18),
-            xxl: human_1.sizing(21),
+            xxs: sizing(3),
+            xs: sizing(6),
+            sm: sizing(9),
+            md: sizing(12),
+            lg: sizing(15),
+            xl: sizing(18),
+            xxl: sizing(21),
         },
         FONT: {
-            xxs: human_1.sizing(3),
-            xs: human_1.sizing(6),
-            sm: human_1.sizing(9),
-            md: human_1.sizing(12),
-            lg: human_1.sizing(15),
-            xl: human_1.sizing(18),
-            xxl: human_1.sizing(21),
+            xxs: sizing(3),
+            xs: sizing(6),
+            sm: sizing(9),
+            md: sizing(12),
+            lg: sizing(15),
+            xl: sizing(18),
+            xxl: sizing(21),
         },
     };
+    function sizing(size) {
+        if (typeof size == 'number')
+            return `${size}px`;
+        return size;
+    }
+    exports.sizing = sizing;
 });
 define("Hi/Types/states", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.StateObject = void 0;
+    /**
+     * Constructs a proxy object for a state object.
+     *
+     * @export
+     * @template T The state object to observe. (Cannot be a number or string).
+     * @param {T} obj The object to observe.
+     * @param {(property?: string) => void} onChange The action to trigger once a property on the object is changed.
+     * @returns {StateProxy<T>} The observable object.
+     */
+    function StateObject(obj, onChange) {
+        if (!onChange)
+            throw new Error(`State object (${JSON.stringify(obj, null, 2)}) must have a handler. Otherwise leave as native object.`);
+        const handler = {
+            get(target, property, receiver) {
+                try {
+                    return new Proxy(target[property], handler);
+                }
+                catch (err) {
+                    return Reflect.get(target, property, receiver);
+                }
+            },
+            defineProperty(target, property, descriptor) {
+                const result = Reflect.defineProperty(target, property, descriptor);
+                onChange(property);
+                return result;
+            },
+            deleteProperty(target, property) {
+                const result = Reflect.deleteProperty(target, property);
+                onChange(property);
+                return result;
+            },
+        };
+        return new Proxy(obj, handler);
+    }
+    exports.StateObject = StateObject;
 });
 define("Hi/Types/styles", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], function (require, exports, human_2, sizing_1) {
+define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], function (require, exports, sizing_1, states_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -55,7 +97,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
             this.$children = [];
             this.body = document.createElement(element);
             this.addClass('hi-view');
-            this.children = human_2.StateObject(this.$children, () => {
+            this.children = states_1.StateObject(this.$children, () => {
                 this.buildChildren();
             });
             children.forEach(child => {
@@ -124,8 +166,8 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
             return this;
         }
         blur(radius = 5) {
-            this.body.style.backdropFilter = `blur(${human_2.sizing(radius)})`;
-            this.body.style.webkitBackdropFilter = `blur(${human_2.sizing(radius)})`;
+            this.body.style.backdropFilter = `blur(${sizing_1.sizing(radius)})`;
+            this.body.style.webkitBackdropFilter = `blur(${sizing_1.sizing(radius)})`;
             return this;
         }
         bold() {
@@ -161,7 +203,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
                     this.body.style.fontFamily = fontClass.family;
                 if (Object.prototype.hasOwnProperty.call(fontClass, 'size') &&
                     ['number', 'string'].indexOf(typeof fontClass.size) >= 0)
-                    this.body.style.fontSize = human_2.sizing(fontClass.size);
+                    this.body.style.fontSize = sizing_1.sizing(fontClass.size);
                 if (Object.prototype.hasOwnProperty.call(fontClass, 'color'))
                     this.foreground(fontClass.color);
             }
@@ -285,7 +327,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         }
         border(options) {
             if (options.size != undefined)
-                this.body.style.borderWidth = human_2.sizing(options.size);
+                this.body.style.borderWidth = sizing_1.sizing(options.size);
             if (options.color)
                 this.body.style.borderColor = options.color.toString();
             if (options.style)
@@ -294,7 +336,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         }
         borderTop(options) {
             if (options.size != undefined)
-                this.body.style.borderTopWidth = human_2.sizing(options.size);
+                this.body.style.borderTopWidth = sizing_1.sizing(options.size);
             if (options.color)
                 this.body.style.borderTopColor = options.color.toString();
             if (options.style)
@@ -303,7 +345,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         }
         borderRight(options) {
             if (options.size != undefined)
-                this.body.style.borderRightWidth = human_2.sizing(options.size);
+                this.body.style.borderRightWidth = sizing_1.sizing(options.size);
             if (options.color)
                 this.body.style.borderRightColor = options.color.toString();
             if (options.style)
@@ -312,7 +354,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         }
         borderBottom(options) {
             if (options.size != undefined)
-                this.body.style.borderBottomWidth = human_2.sizing(options.size);
+                this.body.style.borderBottomWidth = sizing_1.sizing(options.size);
             if (options.color)
                 this.body.style.borderBottomColor = options.color.toString();
             if (options.style)
@@ -321,7 +363,7 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         }
         borderLeft(options) {
             if (options.size != undefined)
-                this.body.style.borderLeftWidth = human_2.sizing(options.size);
+                this.body.style.borderLeftWidth = sizing_1.sizing(options.size);
             if (options.color)
                 this.body.style.borderLeftColor = options.color.toString();
             if (options.style)
@@ -331,16 +373,16 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         padding(amount) {
             if (amount != undefined) {
                 if (typeof amount == 'number' || typeof amount == 'string')
-                    this.body.style.padding = human_2.sizing(amount);
+                    this.body.style.padding = sizing_1.sizing(amount);
                 else if (typeof amount == 'object') {
                     if (amount.top)
-                        this.body.style.paddingTop = human_2.sizing(amount.top);
+                        this.body.style.paddingTop = sizing_1.sizing(amount.top);
                     if (amount.right)
-                        this.body.style.paddingRight = human_2.sizing(amount.right);
+                        this.body.style.paddingRight = sizing_1.sizing(amount.right);
                     if (amount.bottom)
-                        this.body.style.paddingBottom = human_2.sizing(amount.bottom);
+                        this.body.style.paddingBottom = sizing_1.sizing(amount.bottom);
                     if (amount.left)
-                        this.body.style.paddingLeft = human_2.sizing(amount.left);
+                        this.body.style.paddingLeft = sizing_1.sizing(amount.left);
                 }
             }
             else
@@ -350,16 +392,16 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         margin(amount) {
             if (amount != undefined) {
                 if (typeof amount == 'number' || typeof amount == 'string')
-                    this.body.style.margin = human_2.sizing(amount);
+                    this.body.style.margin = sizing_1.sizing(amount);
                 else if (typeof amount == 'object') {
                     if (amount.top != undefined)
-                        this.body.style.marginTop = human_2.sizing(amount.top);
+                        this.body.style.marginTop = sizing_1.sizing(amount.top);
                     if (amount.right != undefined)
-                        this.body.style.marginRight = human_2.sizing(amount.right);
+                        this.body.style.marginRight = sizing_1.sizing(amount.right);
                     if (amount.bottom != undefined)
-                        this.body.style.marginBottom = human_2.sizing(amount.bottom);
+                        this.body.style.marginBottom = sizing_1.sizing(amount.bottom);
                     if (amount.left != undefined)
-                        this.body.style.marginLeft = human_2.sizing(amount.left);
+                        this.body.style.marginLeft = sizing_1.sizing(amount.left);
                 }
             }
             else
@@ -369,20 +411,20 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         rounded(amount) {
             if (amount != undefined) {
                 if (typeof amount === 'string' || typeof amount === 'number') {
-                    this.body.style.borderRadius = human_2.sizing(amount);
+                    this.body.style.borderRadius = sizing_1.sizing(amount);
                 }
                 else {
                     if (amount.top) {
                         if (amount.top.left != undefined)
-                            this.body.style.borderTopLeftRadius = human_2.sizing(amount.top.left);
+                            this.body.style.borderTopLeftRadius = sizing_1.sizing(amount.top.left);
                         if (amount.top.right != undefined)
-                            this.body.style.borderTopRightRadius = human_2.sizing(amount.top.right);
+                            this.body.style.borderTopRightRadius = sizing_1.sizing(amount.top.right);
                     }
                     if (amount.bottom) {
                         if (amount.bottom.left != undefined)
-                            this.body.style.borderBottomLeftRadius = human_2.sizing(amount.bottom.left);
+                            this.body.style.borderBottomLeftRadius = sizing_1.sizing(amount.bottom.left);
                         if (amount.bottom.right != undefined)
-                            this.body.style.borderBottomRightRadius = human_2.sizing(amount.bottom.right);
+                            this.body.style.borderBottomRightRadius = sizing_1.sizing(amount.bottom.right);
                     }
                 }
             }
@@ -392,27 +434,27 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
         }
         width(frameWidth) {
             if (typeof frameWidth == 'string' || typeof frameWidth == 'number')
-                this.body.style.width = human_2.sizing(frameWidth);
+                this.body.style.width = sizing_1.sizing(frameWidth);
             else {
                 if (frameWidth.min)
-                    this.body.style.minWidth = human_2.sizing(frameWidth.min);
+                    this.body.style.minWidth = sizing_1.sizing(frameWidth.min);
                 if (frameWidth.max)
-                    this.body.style.maxWidth = human_2.sizing(frameWidth.max);
+                    this.body.style.maxWidth = sizing_1.sizing(frameWidth.max);
                 if (frameWidth.default)
-                    this.body.style.width = human_2.sizing(frameWidth.default);
+                    this.body.style.width = sizing_1.sizing(frameWidth.default);
             }
             return this;
         }
         height(frameHeight) {
             if (typeof frameHeight == 'string' || typeof frameHeight == 'number')
-                this.body.style.height = human_2.sizing(frameHeight);
+                this.body.style.height = sizing_1.sizing(frameHeight);
             else {
                 if (frameHeight.min)
-                    this.body.style.minWidth = human_2.sizing(frameHeight.min);
+                    this.body.style.minWidth = sizing_1.sizing(frameHeight.min);
                 if (frameHeight.max)
-                    this.body.style.maxWidth = human_2.sizing(frameHeight.max);
+                    this.body.style.maxWidth = sizing_1.sizing(frameHeight.max);
                 if (frameHeight.default)
-                    this.body.style.width = human_2.sizing(frameHeight.default);
+                    this.body.style.width = sizing_1.sizing(frameHeight.default);
             }
             return this;
         }
@@ -434,19 +476,19 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
             return this;
         }
         setBottom(offset) {
-            this.body.style.bottom = human_2.sizing(offset);
+            this.body.style.bottom = sizing_1.sizing(offset);
             return this;
         }
         setTop(offset) {
-            this.body.style.top = human_2.sizing(offset);
+            this.body.style.top = sizing_1.sizing(offset);
             return this;
         }
         setLeft(offset) {
-            this.body.style.left = human_2.sizing(offset);
+            this.body.style.left = sizing_1.sizing(offset);
             return this;
         }
         setRight(offset) {
-            this.body.style.right = human_2.sizing(offset);
+            this.body.style.right = sizing_1.sizing(offset);
             return this;
         }
         // * Mouse Hover Event Modifiers
@@ -482,45 +524,10 @@ define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], functio
     }
     exports.default = View;
 });
-define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports, View_1) {
+define("Hi/ViewController", ["require", "exports", "Hi/View"], function (require, exports, View_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.sizing = exports.ViewController = exports.ViewControllerData = exports.StateObject = void 0;
-    /**
-     * Constructs a proxy object for a state object.
-     *
-     * @export
-     * @template T The state object to observe. (Cannot be a number or string).
-     * @param {T} obj The object to observe.
-     * @param {(property?: string) => void} onChange The action to trigger once a property on the object is changed.
-     * @returns {StateProxy<T>} The observable object.
-     */
-    function StateObject(obj, onChange) {
-        if (!onChange)
-            throw new Error(`State object (${JSON.stringify(obj, null, 2)}) must have a handler. Otherwise leave as native object.`);
-        const handler = {
-            get(target, property, receiver) {
-                try {
-                    return new Proxy(target[property], handler);
-                }
-                catch (err) {
-                    return Reflect.get(target, property, receiver);
-                }
-            },
-            defineProperty(target, property, descriptor) {
-                const result = Reflect.defineProperty(target, property, descriptor);
-                onChange(property);
-                return result;
-            },
-            deleteProperty(target, property) {
-                const result = Reflect.deleteProperty(target, property);
-                onChange(property);
-                return result;
-            },
-        };
-        return new Proxy(obj, handler);
-    }
-    exports.StateObject = StateObject;
+    exports.ViewController = exports.ViewControllerData = void 0;
     exports.ViewControllerData = {
         controllers: [],
         controllerMap: {},
@@ -665,15 +672,9 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
         }
     }
     exports.ViewController = ViewController;
-    function sizing(size) {
-        if (typeof size == 'number')
-            return `${size}px`;
-        return size;
-    }
-    exports.sizing = sizing;
     document.body.style.margin = '0';
 });
-define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, exports, human_3) {
+define("Hi/Colors", ["require", "exports", "Hi/ViewController"], function (require, exports, ViewController_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.whichTheme = exports.changeTheme = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
@@ -783,7 +784,7 @@ define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, expor
     })();
     function changeTheme(theme) {
         colorTheme = theme;
-        human_3.ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+        ViewController_1.ViewControllerData.controllers.forEach(controller => controller.signal('color'));
         localStorage.setItem('hi://theme', colorTheme);
     }
     exports.changeTheme = changeTheme;
@@ -867,14 +868,14 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
     }
     exports.Container = Container;
 });
-define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi/Types/sizing", "Hi/Colors"], function (require, exports, human_4, View_3, sizing_2, Colors_1) {
+define("Hi/Components/Basics", ["require", "exports", "Hi/View", "Hi/Types/sizing", "Hi/Colors", "Hi/Types/states"], function (require, exports, View_3, sizing_2, Colors_1, states_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.BlockCode = exports.InlineCode = exports.ClickButton = exports.RadioGroup = exports.RadioButton = exports.Checkbox = exports.Hyperlink = exports.TextContent = void 0;
     class TextContent extends View_3.default {
         constructor(text) {
             super('span');
-            this.text = human_4.StateObject({
+            this.text = states_2.StateObject({
                 value: '',
             }, () => {
                 this.body.textContent = this.text.value;
@@ -882,7 +883,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
             this.text.value = text;
         }
         lineHeight(height) {
-            this.body.style.lineHeight = human_4.sizing(height);
+            this.body.style.lineHeight = sizing_2.sizing(height);
             return this;
         }
     }
@@ -890,7 +891,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     class Hyperlink extends View_3.default {
         constructor(text) {
             super('a');
-            this.text = human_4.StateObject({
+            this.text = states_2.StateObject({
                 value: '',
             }, () => {
                 this.body.textContent = this.text.value;
@@ -902,7 +903,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     class Checkbox extends View_3.default {
         constructor() {
             super('ion-icon');
-            this.state = human_4.StateObject({ checked: false }, () => {
+            this.state = states_2.StateObject({ checked: false }, () => {
                 this.body.setAttribute('name', this.state.checked ? 'checkbox' : 'square-outline');
             });
             this.body.setAttribute('name', 'square-outline');
@@ -936,7 +937,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     class RadioButton extends View_3.default {
         constructor() {
             super('ion-icon');
-            this.state = human_4.StateObject({ selected: false }, () => {
+            this.state = states_2.StateObject({ selected: false }, () => {
                 this.body.setAttribute('name', this.state.selected ? 'radio-button-on' : 'radio-button-off');
             });
             this.body.setAttribute('name', 'radio-button-off');
@@ -1029,7 +1030,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     }
     exports.BlockCode = BlockCode;
 });
-define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], function (require, exports, human_5, View_4) {
+define("Hi/Components/Graphics", ["require", "exports", "Hi/Types/states", "Hi/View"], function (require, exports, states_3, View_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ImageContent = exports.Canvas = exports.IonIcon = void 0;
@@ -1090,7 +1091,7 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], 
     class ImageContent extends View_4.default {
         constructor(source, altText) {
             super('img');
-            this.data = human_5.StateObject({
+            this.data = states_3.StateObject({
                 source: '',
                 altText: '',
             }, p => {
@@ -1106,14 +1107,14 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], 
     }
     exports.ImageContent = ImageContent;
 });
-define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizing", "Hi/View"], function (require, exports, human_6, sizing_3, View_5) {
+define("Hi/Components/Inputs", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states", "Hi/View"], function (require, exports, sizing_3, states_4, View_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TextBox = exports.DropdownOption = exports.PasswordField = exports.TextField = void 0;
     class InputField extends View_5.default {
         constructor(placeholder) {
             super('input');
-            this.attributes = human_6.StateObject({
+            this.attributes = states_4.StateObject({
                 value: '',
                 placeholder: '',
             }, () => {
@@ -1322,7 +1323,7 @@ define("Hi/Components/Whitespace", ["require", "exports", "Hi/View"], function (
     }
     exports.LineBreak = LineBreak;
 });
-define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_3, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_7) {
+define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "./Hi/human"], function (require, exports, Colors_3, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function SmartKeywords(keywords) {
@@ -1441,7 +1442,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             ev.view.background('none');
         })
             .whenClicked(ev => {
-            human_7.ViewController.navigateTo(navigateTo);
+            human_1.ViewController.navigateTo(navigateTo);
             ev.view.root().getViewById('title').text.value = title;
         });
     }
@@ -1474,7 +1475,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             }), new Basics_2.TextContent('Dark')).padding()).stretchWidth(), new Stacks_2.HStack(new Basics_2.ClickButton(new Stacks_2.VStack(new Graphics_2.IonIcon('close-circle-outline'), new Basics_2.TextContent('Close').font('sm'))).whenClicked(ev => {
                 this.destroy();
             }))).stretch());
-            this.settings = human_7.StateObject({
+            this.settings = human_1.StateObject({
                 color: 'light',
             }, prop => {
                 if (prop == 'color') {
@@ -1586,7 +1587,7 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
     }
     exports.default = GettingStarted;
 });
-define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_6, human_8, Basics_5, Graphics_5, Overlays_2, Stacks_5, Whitespace_3) {
+define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/states", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_6, states_5, Basics_5, Graphics_5, Overlays_2, Stacks_5, Whitespace_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Preview = void 0;
@@ -1621,7 +1622,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                 .addClass('preview-canvas'), new Stacks_5.VStack(new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.HStack(Preview.dimensionSub('width').padding(), new Basics_5.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_3.Spacer(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-padding').font('lg'), new Basics_5.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray')))
                 .padding()
                 .id('component-padding-wrapper'), new Whitespace_3.Spacer()), new Stacks_5.HStack(new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-name').font('lg'), new Basics_5.TextContent('Component').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-id').font('lg'), new Basics_5.TextContent('ID').font('sm').foreground(Colors_6.HColor('gray'))).padding()), new Basics_5.TextContent('Description').font('sm').foreground(Colors_6.HColor('gray')), new Basics_5.TextContent('•').id('component-description')).padding());
-            this.dimensions = human_8.StateObject({
+            this.dimensions = states_5.StateObject({
                 width: 0,
                 height: 0,
                 padding: '',
@@ -1632,7 +1633,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                 else if (property == 'padding')
                     this.getViewById('component-padding').text.value = this.dimensions.padding || '•';
             });
-            this.componentInfo = human_8.StateObject({
+            this.componentInfo = states_5.StateObject({
                 name: '',
                 id: '',
                 description: '',
@@ -1652,7 +1653,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                         break;
                 }
             });
-            this.viewerSettings = human_8.StateObject({
+            this.viewerSettings = states_5.StateObject({
                 contrastToggle: false,
                 propertyFilters: {
                     dimensions: true,
@@ -1900,7 +1901,7 @@ define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Compo
     }
     exports.default = GraphicsComponent;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_10, Stacks_9, human_9, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "./Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_10, Stacks_9, human_2, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_9.HIFullScreenView {
@@ -1913,7 +1914,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 max: 'calc(100vw - 300px)',
             })
                 .alignStart()).stretch());
-            this.portfolioViewerController = new human_9.ViewController({
+            this.portfolioViewerController = new human_2.ViewController({
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
                 sizingTypes: new SizingTypes_1.default().stretch(),
                 basicComponents: new BasicComponents_1.default().stretch(),
@@ -1971,10 +1972,10 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
 });
-define("guides", ["require", "exports", "GuidesApp", "Hi/human"], function (require, exports, GuidesApp_1, human_10) {
+define("guides", ["require", "exports", "GuidesApp", "./Hi/human"], function (require, exports, GuidesApp_1, human_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    new human_10.ViewController({
+    new human_3.ViewController({
         main: new GuidesApp_1.default(),
     })
         .bind()
