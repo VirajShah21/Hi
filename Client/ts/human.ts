@@ -43,10 +43,7 @@ export function StateObject<T extends Record<string, unknown> | unknown[]>(
     return new Proxy(obj, handler);
 }
 
-const ViewControllerData = {
-    /**
-     * @deprecated
-     */
+export const ViewControllerData = {
     controllers: [] as ViewController[],
     controllerMap: {} as Record<string, ViewController>,
 };
@@ -152,6 +149,10 @@ export class ViewController {
      */
     getController(controllerName: string): ViewController | undefined {
         return ViewControllerData.controllerMap[controllerName];
+    }
+
+    signal(data: string) {
+        for (let screen in this.screens) this.screens[screen].signal(data);
     }
 
     /**

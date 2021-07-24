@@ -1,6 +1,7 @@
 import { StateObject, sizing, HumanEvent } from '../human';
 import View from '../View';
-import { HISizingValue } from '../Types/sizing';
+import { HISizingValue, SizingValues } from '../Types/sizing';
+import { HColor } from '../Colors';
 
 export class TextContent extends View {
     public override body: HTMLSpanElement;
@@ -88,6 +89,54 @@ export class RadioButton extends View {
     constructor() {
         super('ion-icon');
         this.body.setAttribute('name', 'radio-button-off');
+        this.body.addEventListener('click', ev => {
+            this.state.selected = !this.state.selected;
+        });
+    }
+
+    setSelected(value: boolean): this {
+        this.state.selected = value;
+        return this;
+    }
+
+    isSelected(): boolean {
+        return this.state.selected;
+    }
+
+    toggle(): this {
+        this.state.selected = !this.state.selected;
+        return this;
+    }
+
+    whenClicked(callback: (ev: HumanEvent) => void): this {
+        this.body.addEventListener('click', (browserEvent: Event) => {
+            callback({
+                type: 'Click',
+                view: this,
+                browserEvent,
+            });
+        });
+        return this;
+    }
+}
+
+export class RadioGroup {
+    public radios: RadioButton[];
+
+    constructor(...radioButtons: RadioButton[]) {
+        this.radios = radioButtons;
+        this.radios.forEach(radio => {
+            radio.whenClicked(ev => {
+                this.radios.forEach(otherRadio => {
+                    if (otherRadio != radio) otherRadio.setSelected(false);
+                });
+            });
+        });
+    }
+
+    getSelected(): RadioButton | null {
+        for (const radio of this.radios) if (radio.isSelected()) return radio;
+        return null;
     }
 }
 
@@ -96,7 +145,11 @@ export class ClickButton extends View {
 
     constructor(...children: View[]) {
         super('button', ...children);
-        this.body.className = 'hi-button';
+        this.body.style.border = 'none';
+        this.body.style.color = HColor('blue').toString();
+        this.body.style.background = 'none';
+        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xxs;
+        this.body.style.padding = `${SizingValues.PADDING.xxs} ${SizingValues.PADDING.sm} ${SizingValues.PADDING.xxs} ${SizingValues.PADDING.sm}`;
     }
 
     whenClicked(callback: (ev: HumanEvent) => void): this {
@@ -122,7 +175,7 @@ export class InlineCode extends View {
     constructor(text: string) {
         super('code');
         this.body.innerText = text;
-        this.addClass('hi-inline-code');
+        this.body.style.fontFamily = 'monospace';
     }
 }
 
@@ -132,6 +185,6 @@ export class BlockCode extends View {
     constructor(text: string) {
         super('pre');
         this.body.innerText = text;
-        this.addClass('hi-block-code');
+        this.body.style.fontFamily = 'monospace';
     }
 }

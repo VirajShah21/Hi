@@ -3,18 +3,28 @@ import View from '../View';
 export class Group extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.addClass('hi-group');
+        this.body.style.alignItems = 'center';
+        this.body.style.justifyContent = 'center';
+        this.body.style.textAlign = 'center';
+        this.body.style.boxSizing = 'border-box';
     }
 }
 
-export class VStack extends View {
+export abstract class Stack extends Group {
     constructor(...children: View[]) {
-        super('div', ...children);
-        this.addClass('hi-vstack');
+        super(...children);
+        this.body.style.display = 'flex';
     }
 }
 
-export class ZStack extends View {
+export class VStack extends Stack {
+    constructor(...children: View[]) {
+        super(...children);
+        this.body.style.flexDirection = 'column';
+    }
+}
+
+export class ZStack extends Stack {
     /**
      * Creates an instance of ZStack.
      * @param {View[]} children The children of this ZStack.
@@ -22,15 +32,22 @@ export class ZStack extends View {
      * @memberOf ZStack
      */
     constructor(...children: View[]) {
-        super('div', ...children);
-        this.addClass('hi-zstack');
+        super(...children);
+        this.body.style.display = 'grid';
+        this.body.style.textAlign = 'center';
+        this.body.style.alignItems = 'center';
+        this.body.style.justifyContent = 'center';
+
+        this.$children.forEach(child => {
+            this.body.style.gridArea = '1/1/1/1';
+        });
     }
 }
 
-export class HStack extends View {
+export class HStack extends Stack {
     constructor(...children: View[]) {
-        super('div', ...children);
-        this.addClass('hi-hstack');
+        super(...children);
+        this.body.style.flexDirection = 'row';
     }
 }
 
@@ -44,7 +61,7 @@ export class ScrollView extends View {
 export class HIFullScreenView extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.body.className = 'hi-screen';
+        this.width('100vw').height('100vh');
     }
 }
 

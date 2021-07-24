@@ -1,4 +1,5 @@
 import { StateObject, HumanEvent } from '../human';
+import { SizingValues } from '../Types/sizing';
 import View from '../View';
 
 export default class InputField extends View {
@@ -17,9 +18,13 @@ export default class InputField extends View {
 
     constructor(placeholder: string) {
         super('input');
-        this.addClass('hi-inputfield');
         this.attributes.value = '';
         this.attributes.placeholder = placeholder || '';
+        this.body.style.border = '1px solid silver';
+        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xxs;
+        this.body.style.padding = SizingValues.PADDING.xxs;
+        this.body.style.margin = '0';
+        this.body.style.boxSizing = 'border-box';
         this.body.addEventListener('input', () => {
             this.attributes.value = this.body.value;
         });
@@ -85,52 +90,6 @@ export class PasswordField extends InputField {
     }
 }
 
-/**
- * A dropdown list which allows the user to select an option
- * based on predefined values.
- *
- * @class DropdownMenu
- * @extends {View}
- */
-// class DropdownMenu extends View {
-//     public selected: any;
-//     public body: HTMLSelectElement;
-
-//     /**
-//      * Creates an instance of DropdownMenu.
-//      * @param {any} options The list of options to include in the dropdown menu.
-//      *
-//      * @memberOf DropdownMenu
-//      */
-//     constructor(...options: DropdownOption[]) {
-//         super('select', ...options);
-//         this.selected = StateString(this.body.value, () => {
-//             this.body.value = this.selected;
-//         });
-//         this.body.addEventListener('change', () => {
-//             this.selected = this.body.value;
-//         });
-//         this.addClass('hi-dropdown-menu');
-//     }
-
-//     /**
-//      * Binds an action to this DropdownMenu for when the selected
-//      * value is changed.
-//      *
-//      * @param {(value: string) => voids} action The action to be called when changed.
-//      * @returns This DropdownMenu.
-//      *
-//      * @memberOf DropdownMenu
-//      */
-//     whenChanged(action: (value: string) => void) {
-//         this.body.addEventListener('change', () => {
-//             this.selected = this.body.value;
-//             action(this.selected);
-//         });
-//         return this;
-//     }
-// }
-
 export class DropdownOption extends View {
     public value: string;
     public text: string;
@@ -154,6 +113,9 @@ export class TextBox extends View {
             this.value = this.body.value;
         });
         this.value = '';
-        this.addClass('hi-textbox');
+        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xxs;
+        this.body.style.border = '1px solid silver';
+        this.body.style.textAlign = 'left';
+        this.body.style.padding = SizingValues.PADDING.xxs;
     }
 }
