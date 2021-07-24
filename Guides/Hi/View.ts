@@ -477,5 +477,7 @@ export default abstract class View {
         });
     }
 
-    handle(data: string): void {}
+    handle(data: string): void {
+        // Should be overrideen by children
+    }
 }

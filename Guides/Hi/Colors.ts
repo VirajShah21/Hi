@@ -1,3 +1,5 @@
+import { ViewControllerData } from './human';
+
 export type HumanColorName =
     | 'blue'
     | 'brown'
@@ -105,7 +107,13 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
     },
 };
 
+// ! TODO: Unexport this member and refactor all other code
 export const ColorConfiguration = {
     swatch: HumanColorSwatch,
     theme: 'light',
 };
+
+export function changeTheme(theme: 'light' | 'dark'): void {
+    ColorConfiguration.theme = theme;
+    ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+}

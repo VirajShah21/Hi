@@ -1,4 +1,4 @@
-import { ColorConfiguration, HColor, RGBAModel } from './Hi/Colors';
+import { changeTheme, ColorConfiguration, HColor, RGBAModel } from './Hi/Colors';
 import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
@@ -173,15 +173,11 @@ class SettingsOverlay extends Overlay {
                 if (this.settings.color == 'light') {
                     this.lightRadio.setSelected(true);
                     this.darkRadio.setSelected(false);
-                    ColorConfiguration.theme = 'light';
+                    changeTheme('light');
                 } else {
                     this.lightRadio.setSelected(false);
                     this.darkRadio.setSelected(true);
-                    ColorConfiguration.theme = 'dark';
-                }
-
-                for (const controller of ViewControllerData.controllers) {
-                    controller.signal('color');
+                    changeTheme('dark');
                 }
             }
         }
@@ -189,6 +185,7 @@ class SettingsOverlay extends Overlay {
 
     private lightRadio: RadioButton;
     private darkRadio: RadioButton;
+    private radioGroup: RadioGroup;
 
     constructor() {
         super(
@@ -226,6 +223,6 @@ class SettingsOverlay extends Overlay {
 
         this.lightRadio = this.getViewById('light-radio-button') as RadioButton;
         this.darkRadio = this.getViewById('dark-radio-button') as RadioButton;
-        new RadioGroup(this.lightRadio, this.darkRadio);
+        this.radioGroup = new RadioGroup(this.lightRadio, this.darkRadio);
     }
 }

@@ -1,91 +1,3 @@
-define("Hi/Colors", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ColorConfiguration = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
-    class RGBAModel {
-        constructor(r, g, b, a = 1) {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
-        }
-        toString() {
-            if (this.a != 1)
-                return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
-            return `rgb(${this.r}, ${this.g}, ${this.b})`;
-        }
-    }
-    exports.RGBAModel = RGBAModel;
-    RGBAModel.WHITE = new RGBAModel(255, 255, 255);
-    RGBAModel.BLACK = new RGBAModel(0, 0, 0);
-    function HColor(color) {
-        if (exports.ColorConfiguration.theme === 'light') {
-            return exports.HumanColorSwatch.light[color];
-        }
-        else {
-            return exports.HumanColorSwatch.dark[color];
-        }
-    }
-    exports.HColor = HColor;
-    function rgb(r, g, b) {
-        return new RGBAModel(r, g, b);
-    }
-    exports.rgb = rgb;
-    function rgba(r, g, b, a) {
-        return new RGBAModel(r, g, b, a);
-    }
-    exports.rgba = rgba;
-    exports.HumanColorSwatch = {
-        light: {
-            blue: rgb(0, 122, 255),
-            brown: rgb(162, 132, 94),
-            cyan: rgb(50, 173, 230),
-            green: rgb(52, 199, 89),
-            indigo: rgb(88, 86, 214),
-            mint: rgb(0, 199, 190),
-            orange: rgb(255, 149, 0),
-            pink: rgb(255, 45, 85),
-            purple: rgb(175, 82, 222),
-            red: rgb(255, 59, 48),
-            teal: rgb(48, 176, 199),
-            yellow: rgb(255, 204, 0),
-            gray: rgb(142, 142, 147),
-            gray2: rgb(174, 174, 178),
-            gray3: rgb(199, 199, 204),
-            gray4: rgb(209, 209, 214),
-            gray5: rgb(229, 229, 234),
-            gray6: rgb(242, 242, 247),
-            foreground: rgb(0, 0, 0),
-            background: rgb(255, 255, 255),
-        },
-        dark: {
-            blue: rgb(10, 132, 255),
-            brown: rgb(172, 142, 104),
-            cyan: rgb(100, 210, 255),
-            green: rgb(48, 209, 88),
-            indigo: rgb(94, 92, 230),
-            mint: rgb(102, 212, 207),
-            orange: rgb(255, 159, 10),
-            pink: rgb(255, 55, 95),
-            purple: rgb(191, 90, 242),
-            red: rgb(255, 69, 58),
-            teal: rgb(64, 200, 224),
-            yellow: rgb(255, 214, 10),
-            gray: rgb(142, 142, 147),
-            gray2: rgb(99, 99, 102),
-            gray3: rgb(72, 72, 74),
-            gray4: rgb(58, 58, 60),
-            gray5: rgb(44, 44, 46),
-            gray6: rgb(28, 28, 30),
-            foreground: rgb(255, 255, 255),
-            background: rgb(0, 0, 0),
-        },
-    };
-    exports.ColorConfiguration = {
-        swatch: exports.HumanColorSwatch,
-        theme: 'light',
-    };
-});
 define("Hi/Types/sizing", ["require", "exports", "Hi/human"], function (require, exports, human_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -122,196 +34,6 @@ define("Hi/Types/sizing", ["require", "exports", "Hi/human"], function (require,
 define("Hi/Types/states", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-});
-define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports, View_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.sizing = exports.ViewController = exports.ViewControllerData = exports.StateObject = void 0;
-    /**
-     * Constructs a proxy object for a state object.
-     *
-     * @export
-     * @template T The state object to observe. (Cannot be a number or string).
-     * @param {T} obj The object to observe.
-     * @param {(property?: string) => void} onChange The action to trigger once a property on the object is changed.
-     * @returns {StateProxy<T>} The observable object.
-     */
-    function StateObject(obj, onChange) {
-        if (!onChange)
-            throw new Error(`State object (${JSON.stringify(obj, null, 2)}) must have a handler. Otherwise leave as native object.`);
-        const handler = {
-            get(target, property, receiver) {
-                try {
-                    return new Proxy(target[property], handler);
-                }
-                catch (err) {
-                    return Reflect.get(target, property, receiver);
-                }
-            },
-            defineProperty(target, property, descriptor) {
-                const result = Reflect.defineProperty(target, property, descriptor);
-                onChange(property);
-                return result;
-            },
-            deleteProperty(target, property) {
-                const result = Reflect.deleteProperty(target, property);
-                onChange(property);
-                return result;
-            },
-        };
-        return new Proxy(obj, handler);
-    }
-    exports.StateObject = StateObject;
-    exports.ViewControllerData = {
-        controllers: [],
-        controllerMap: {},
-    };
-    /**
-     * The controller which manages all the views on the scrren.
-     *
-     * @export
-     * @class ViewController
-     */
-    class ViewController {
-        /**
-         * Creates an instance of ViewController.
-         * @param {Record<string, View>} screens The screen map
-         *
-         * @memberOf ViewController
-         */
-        constructor(screens) {
-            this.screens = screens;
-            exports.ViewControllerData.controllers.push(this);
-        }
-        /**
-         * Navigate to a specified (or main) view on this ViewController.
-         *
-         * @param {string} [name='main'] The name of the view to navigate to. If no name is specified, then the default view (main) is used.
-         * @returns {this}
-         *
-         * @memberOf ViewController
-         */
-        navigateTo(name = 'main') {
-            if (typeof name != 'string')
-                throw new Error(`ViewController.navigateTo: Parameter name (1) should be of type string, instead got ${typeof name}`);
-            if (!Object.prototype.hasOwnProperty.call(this.screens, name))
-                throw new Error(`ViewController.navigateTo: ViewController does not have a screen named ${name}`);
-            this.binding.innerHTML = '';
-            this.binding.appendChild(this.screens[name].body);
-            return this;
-        }
-        /**
-         * Adds a screen to the navigator.
-         *
-         * @param {string} name The name (or alias) of the screen.
-         * @param {View} screen The screen object.
-         * @returns {this}
-         *
-         * @memberOf ViewController
-         */
-        addNavigator(name, screen) {
-            if (typeof name != 'string')
-                throw new Error(`ViewController.addNavigator: Parameter name (1) should be of type string, instead got ${typeof name}`);
-            if (!(screen instanceof View_1.default))
-                throw new Error(`ViewController.addNavigator: Parameter screen (2) should be of type View, instead got ${typeof screen}.\nValue: ${typeof screen == 'object' ? JSON.stringify(screen, null, 4) : screen}`);
-            this.screens[name] = screen;
-            return this;
-        }
-        /**
-         * Binds the ViewController to a specified DOM element.
-         *
-         * @param {HTMLElement} [element=document.body] The DOM element to bind the controller to. If no element is provided then the document body is used instead.
-         * @returns {this}
-         *
-         * @memberOf ViewController
-         */
-        bind(element = document.body) {
-            this.binding = element;
-            return this;
-        }
-        /**
-         * Adds this ViewController to the ViewControllerData controllerMap.
-         *
-         * @param {string} controllerName The name of the controller.
-         * @returns {this}
-         *
-         * @memberOf ViewController
-         */
-        mapTo(controllerName) {
-            exports.ViewControllerData.controllerMap[controllerName] = this;
-            return this;
-        }
-        /**
-         * Gets a speified controller from the controller map.
-         *
-         * @param {string} controllerName The name of the controller to get.
-         * @returns {ViewController} The requested view controller.
-         *
-         * @memberOf ViewController
-         */
-        getController(controllerName) {
-            return exports.ViewControllerData.controllerMap[controllerName];
-        }
-        signal(data) {
-            for (let screen in this.screens)
-                this.screens[screen].signal(data);
-        }
-        /**
-         * Changes the background image of the document body.
-         *
-         * @static
-         * @param {string} path The path to set the image to.
-         *
-         * @memberOf ViewController
-         */
-        static wallpaper(path) {
-            if (typeof path != 'string')
-                throw new Error(`ViewController.wallpaper: Parameter path (1) should be of of type string, instead got ${typeof path}.`);
-            document.body.style.backgroundImage = `url(${path})`;
-        }
-        /**
-         * Automatically finds a view controller with a specified screen and navigates that controller to the specified screen.
-         *
-         * @static
-         * @param {string} [name='main'] The name of the screen to navigate to.
-         * If no screen name is provided the the first controller with a screen
-         * named "main" will be selected and will be navigated to its main screen.
-         * @returns {ViewController} The view controller which was selected for navigation.
-         *
-         * @memberOf ViewController
-         */
-        static navigateTo(name = 'main') {
-            const controller = exports.ViewControllerData.controllers.find(currentController => {
-                return Object.prototype.hasOwnProperty.call(currentController.screens, name);
-            });
-            if (controller)
-                controller.navigateTo(name);
-            else
-                console.warn(`Could not navigate to ${name}`);
-            return controller;
-        }
-        /**
-         * @static
-         * @returns A JSON map of all the screens on all of the controllers.
-         *
-         * @memberOf ViewController
-         */
-        static allScreens() {
-            const screens = {};
-            exports.ViewControllerData.controllers.forEach(controller => {
-                for (const screen in controller.screens)
-                    screens[screen] = controller.screens[screen];
-            });
-            return screens;
-        }
-    }
-    exports.ViewController = ViewController;
-    function sizing(size) {
-        if (typeof size == 'number')
-            return `${size}px`;
-        return size;
-    }
-    exports.sizing = sizing;
 });
 define("Hi/Types/styles", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -749,9 +471,295 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
                 child.signal(data);
             });
         }
-        handle(data) { }
+        handle(data) {
+            // Should be overrideen by children
+        }
     }
     exports.default = View;
+});
+define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports, View_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.sizing = exports.ViewController = exports.ViewControllerData = exports.StateObject = void 0;
+    /**
+     * Constructs a proxy object for a state object.
+     *
+     * @export
+     * @template T The state object to observe. (Cannot be a number or string).
+     * @param {T} obj The object to observe.
+     * @param {(property?: string) => void} onChange The action to trigger once a property on the object is changed.
+     * @returns {StateProxy<T>} The observable object.
+     */
+    function StateObject(obj, onChange) {
+        if (!onChange)
+            throw new Error(`State object (${JSON.stringify(obj, null, 2)}) must have a handler. Otherwise leave as native object.`);
+        const handler = {
+            get(target, property, receiver) {
+                try {
+                    return new Proxy(target[property], handler);
+                }
+                catch (err) {
+                    return Reflect.get(target, property, receiver);
+                }
+            },
+            defineProperty(target, property, descriptor) {
+                const result = Reflect.defineProperty(target, property, descriptor);
+                onChange(property);
+                return result;
+            },
+            deleteProperty(target, property) {
+                const result = Reflect.deleteProperty(target, property);
+                onChange(property);
+                return result;
+            },
+        };
+        return new Proxy(obj, handler);
+    }
+    exports.StateObject = StateObject;
+    exports.ViewControllerData = {
+        controllers: [],
+        controllerMap: {},
+    };
+    /**
+     * The controller which manages all the views on the scrren.
+     *
+     * @export
+     * @class ViewController
+     */
+    class ViewController {
+        /**
+         * Creates an instance of ViewController.
+         * @param {Record<string, View>} screens The screen map
+         *
+         * @memberOf ViewController
+         */
+        constructor(screens) {
+            this.screens = screens;
+            exports.ViewControllerData.controllers.push(this);
+        }
+        /**
+         * Navigate to a specified (or main) view on this ViewController.
+         *
+         * @param {string} [name='main'] The name of the view to navigate to. If no name is specified, then the default view (main) is used.
+         * @returns {this}
+         *
+         * @memberOf ViewController
+         */
+        navigateTo(name = 'main') {
+            if (typeof name != 'string')
+                throw new Error(`ViewController.navigateTo: Parameter name (1) should be of type string, instead got ${typeof name}`);
+            if (!Object.prototype.hasOwnProperty.call(this.screens, name))
+                throw new Error(`ViewController.navigateTo: ViewController does not have a screen named ${name}`);
+            this.binding.innerHTML = '';
+            this.binding.appendChild(this.screens[name].body);
+            return this;
+        }
+        /**
+         * Adds a screen to the navigator.
+         *
+         * @param {string} name The name (or alias) of the screen.
+         * @param {View} screen The screen object.
+         * @returns {this}
+         *
+         * @memberOf ViewController
+         */
+        addNavigator(name, screen) {
+            if (typeof name != 'string')
+                throw new Error(`ViewController.addNavigator: Parameter name (1) should be of type string, instead got ${typeof name}`);
+            if (!(screen instanceof View_1.default))
+                throw new Error(`ViewController.addNavigator: Parameter screen (2) should be of type View, instead got ${typeof screen}.\nValue: ${typeof screen == 'object' ? JSON.stringify(screen, null, 4) : screen}`);
+            this.screens[name] = screen;
+            return this;
+        }
+        /**
+         * Binds the ViewController to a specified DOM element.
+         *
+         * @param {HTMLElement} [element=document.body] The DOM element to bind the controller to. If no element is provided then the document body is used instead.
+         * @returns {this}
+         *
+         * @memberOf ViewController
+         */
+        bind(element = document.body) {
+            this.binding = element;
+            return this;
+        }
+        /**
+         * Adds this ViewController to the ViewControllerData controllerMap.
+         *
+         * @param {string} controllerName The name of the controller.
+         * @returns {this}
+         *
+         * @memberOf ViewController
+         */
+        mapTo(controllerName) {
+            exports.ViewControllerData.controllerMap[controllerName] = this;
+            return this;
+        }
+        /**
+         * Gets a speified controller from the controller map.
+         *
+         * @param {string} controllerName The name of the controller to get.
+         * @returns {ViewController} The requested view controller.
+         *
+         * @memberOf ViewController
+         */
+        getController(controllerName) {
+            return exports.ViewControllerData.controllerMap[controllerName];
+        }
+        signal(data) {
+            for (let screen in this.screens)
+                this.screens[screen].signal(data);
+        }
+        /**
+         * Changes the background image of the document body.
+         *
+         * @static
+         * @param {string} path The path to set the image to.
+         *
+         * @memberOf ViewController
+         */
+        static wallpaper(path) {
+            if (typeof path != 'string')
+                throw new Error(`ViewController.wallpaper: Parameter path (1) should be of of type string, instead got ${typeof path}.`);
+            document.body.style.backgroundImage = `url(${path})`;
+        }
+        /**
+         * Automatically finds a view controller with a specified screen and navigates that controller to the specified screen.
+         *
+         * @static
+         * @param {string} [name='main'] The name of the screen to navigate to.
+         * If no screen name is provided the the first controller with a screen
+         * named "main" will be selected and will be navigated to its main screen.
+         * @returns {ViewController} The view controller which was selected for navigation.
+         *
+         * @memberOf ViewController
+         */
+        static navigateTo(name = 'main') {
+            const controller = exports.ViewControllerData.controllers.find(currentController => {
+                return Object.prototype.hasOwnProperty.call(currentController.screens, name);
+            });
+            if (controller)
+                controller.navigateTo(name);
+            else
+                console.warn(`Could not navigate to ${name}`);
+            return controller;
+        }
+        /**
+         * @static
+         * @returns A JSON map of all the screens on all of the controllers.
+         *
+         * @memberOf ViewController
+         */
+        static allScreens() {
+            const screens = {};
+            exports.ViewControllerData.controllers.forEach(controller => {
+                for (const screen in controller.screens)
+                    screens[screen] = controller.screens[screen];
+            });
+            return screens;
+        }
+    }
+    exports.ViewController = ViewController;
+    function sizing(size) {
+        if (typeof size == 'number')
+            return `${size}px`;
+        return size;
+    }
+    exports.sizing = sizing;
+});
+define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, exports, human_3) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.changeTheme = exports.ColorConfiguration = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
+    class RGBAModel {
+        constructor(r, g, b, a = 1) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+        toString() {
+            if (this.a != 1)
+                return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+            return `rgb(${this.r}, ${this.g}, ${this.b})`;
+        }
+    }
+    exports.RGBAModel = RGBAModel;
+    RGBAModel.WHITE = new RGBAModel(255, 255, 255);
+    RGBAModel.BLACK = new RGBAModel(0, 0, 0);
+    function HColor(color) {
+        if (exports.ColorConfiguration.theme === 'light') {
+            return exports.HumanColorSwatch.light[color];
+        }
+        else {
+            return exports.HumanColorSwatch.dark[color];
+        }
+    }
+    exports.HColor = HColor;
+    function rgb(r, g, b) {
+        return new RGBAModel(r, g, b);
+    }
+    exports.rgb = rgb;
+    function rgba(r, g, b, a) {
+        return new RGBAModel(r, g, b, a);
+    }
+    exports.rgba = rgba;
+    exports.HumanColorSwatch = {
+        light: {
+            blue: rgb(0, 122, 255),
+            brown: rgb(162, 132, 94),
+            cyan: rgb(50, 173, 230),
+            green: rgb(52, 199, 89),
+            indigo: rgb(88, 86, 214),
+            mint: rgb(0, 199, 190),
+            orange: rgb(255, 149, 0),
+            pink: rgb(255, 45, 85),
+            purple: rgb(175, 82, 222),
+            red: rgb(255, 59, 48),
+            teal: rgb(48, 176, 199),
+            yellow: rgb(255, 204, 0),
+            gray: rgb(142, 142, 147),
+            gray2: rgb(174, 174, 178),
+            gray3: rgb(199, 199, 204),
+            gray4: rgb(209, 209, 214),
+            gray5: rgb(229, 229, 234),
+            gray6: rgb(242, 242, 247),
+            foreground: rgb(0, 0, 0),
+            background: rgb(255, 255, 255),
+        },
+        dark: {
+            blue: rgb(10, 132, 255),
+            brown: rgb(172, 142, 104),
+            cyan: rgb(100, 210, 255),
+            green: rgb(48, 209, 88),
+            indigo: rgb(94, 92, 230),
+            mint: rgb(102, 212, 207),
+            orange: rgb(255, 159, 10),
+            pink: rgb(255, 55, 95),
+            purple: rgb(191, 90, 242),
+            red: rgb(255, 69, 58),
+            teal: rgb(64, 200, 224),
+            yellow: rgb(255, 214, 10),
+            gray: rgb(142, 142, 147),
+            gray2: rgb(99, 99, 102),
+            gray3: rgb(72, 72, 74),
+            gray4: rgb(58, 58, 60),
+            gray5: rgb(44, 44, 46),
+            gray6: rgb(28, 28, 30),
+            foreground: rgb(255, 255, 255),
+            background: rgb(0, 0, 0),
+        },
+    };
+    // ! TODO: Unexport this member and refactor all other code
+    exports.ColorConfiguration = {
+        swatch: exports.HumanColorSwatch,
+        theme: 'light',
+    };
+    function changeTheme(theme) {
+        exports.ColorConfiguration.theme = theme;
+        human_3.ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+    }
+    exports.changeTheme = changeTheme;
 });
 define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (require, exports, View_2) {
     "use strict";
@@ -828,14 +836,14 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
     }
     exports.Container = Container;
 });
-define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi/Types/sizing", "Hi/Colors"], function (require, exports, human_3, View_3, sizing_1, Colors_1) {
+define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi/Types/sizing", "Hi/Colors"], function (require, exports, human_4, View_3, sizing_1, Colors_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.BlockCode = exports.InlineCode = exports.ClickButton = exports.RadioGroup = exports.RadioButton = exports.Checkbox = exports.Hyperlink = exports.TextContent = void 0;
     class TextContent extends View_3.default {
         constructor(text) {
             super('span');
-            this.text = human_3.StateObject({
+            this.text = human_4.StateObject({
                 value: '',
             }, () => {
                 this.body.textContent = this.text.value;
@@ -843,7 +851,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
             this.text.value = text;
         }
         lineHeight(height) {
-            this.body.style.lineHeight = human_3.sizing(height);
+            this.body.style.lineHeight = human_4.sizing(height);
             return this;
         }
     }
@@ -851,7 +859,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     class Hyperlink extends View_3.default {
         constructor(text) {
             super('a');
-            this.text = human_3.StateObject({
+            this.text = human_4.StateObject({
                 value: '',
             }, () => {
                 this.body.textContent = this.text.value;
@@ -863,7 +871,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     class Checkbox extends View_3.default {
         constructor() {
             super('ion-icon');
-            this.state = human_3.StateObject({ checked: false }, () => {
+            this.state = human_4.StateObject({ checked: false }, () => {
                 this.body.setAttribute('name', this.state.checked ? 'checkbox' : 'square-outline');
             });
             this.body.setAttribute('name', 'square-outline');
@@ -897,7 +905,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     class RadioButton extends View_3.default {
         constructor() {
             super('ion-icon');
-            this.state = human_3.StateObject({ selected: false }, () => {
+            this.state = human_4.StateObject({ selected: false }, () => {
                 this.body.setAttribute('name', this.state.selected ? 'radio-button-on' : 'radio-button-off');
             });
             this.body.setAttribute('name', 'radio-button-off');
@@ -990,7 +998,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
     }
     exports.BlockCode = BlockCode;
 });
-define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], function (require, exports, human_4, View_4) {
+define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], function (require, exports, human_5, View_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ImageContent = exports.Canvas = exports.IonIcon = void 0;
@@ -1051,7 +1059,7 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], 
     class ImageContent extends View_4.default {
         constructor(source, altText) {
             super('img');
-            this.data = human_4.StateObject({
+            this.data = human_5.StateObject({
                 source: '',
                 altText: '',
             }, p => {
@@ -1067,14 +1075,14 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], 
     }
     exports.ImageContent = ImageContent;
 });
-define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizing", "Hi/View"], function (require, exports, human_5, sizing_2, View_5) {
+define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizing", "Hi/View"], function (require, exports, human_6, sizing_2, View_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TextBox = exports.DropdownOption = exports.PasswordField = exports.TextField = void 0;
     class InputField extends View_5.default {
         constructor(placeholder) {
             super('input');
-            this.attributes = human_5.StateObject({
+            this.attributes = human_6.StateObject({
                 value: '',
                 placeholder: '',
             }, () => {
@@ -1282,7 +1290,7 @@ define("Hi/Components/Whitespace", ["require", "exports", "Hi/View"], function (
     }
     exports.LineBreak = LineBreak;
 });
-define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human", "Hi/human"], function (require, exports, Colors_3, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_6, human_7) {
+define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/human"], function (require, exports, Colors_3, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function SmartKeywords(keywords) {
@@ -1399,7 +1407,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             ev.view.background('none');
         })
             .whenClicked(ev => {
-            human_6.ViewController.navigateTo(navigateTo);
+            human_7.ViewController.navigateTo(navigateTo);
             ev.view.root().getViewById('title').text.value = title;
         });
     }
@@ -1432,28 +1440,25 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             }), new Basics_2.TextContent('Dark')).padding()).stretchWidth(), new Stacks_2.HStack(new Basics_2.ClickButton(new Stacks_2.VStack(new Graphics_2.IonIcon('close-circle-outline'), new Basics_2.TextContent('Close').font('sm'))).whenClicked(ev => {
                 this.destroy();
             }))).stretch());
-            this.settings = human_6.StateObject({
+            this.settings = human_7.StateObject({
                 color: 'light',
             }, prop => {
                 if (prop == 'color') {
                     if (this.settings.color == 'light') {
                         this.lightRadio.setSelected(true);
                         this.darkRadio.setSelected(false);
-                        Colors_3.ColorConfiguration.theme = 'light';
+                        Colors_3.changeTheme('light');
                     }
                     else {
                         this.lightRadio.setSelected(false);
                         this.darkRadio.setSelected(true);
-                        Colors_3.ColorConfiguration.theme = 'dark';
-                    }
-                    for (const controller of human_7.ViewControllerData.controllers) {
-                        controller.signal('color');
+                        Colors_3.changeTheme('dark');
                     }
                 }
             });
             this.lightRadio = this.getViewById('light-radio-button');
             this.darkRadio = this.getViewById('dark-radio-button');
-            new Basics_2.RadioGroup(this.lightRadio, this.darkRadio);
+            this.radioGroup = new Basics_2.RadioGroup(this.lightRadio, this.darkRadio);
         }
     }
 });
