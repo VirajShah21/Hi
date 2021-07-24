@@ -5,8 +5,9 @@ import { TextField } from './Hi/Components/Inputs';
 import { Overlay } from './Hi/Components/Overlays';
 import { VStack, HStack } from './Hi/Components/Stacks';
 import { Spacer } from './Hi/Components/Whitespace';
-import { StateObject, ViewController } from './Hi/human';
+import { StateObject } from './Hi/Types/states';
 import View from './Hi/View';
+import { ViewController } from './Hi/ViewController';
 
 function SmartKeywords(keywords: string[]) {
     const results = [];

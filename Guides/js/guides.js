@@ -1323,7 +1323,7 @@ define("Hi/Components/Whitespace", ["require", "exports", "Hi/View"], function (
     }
     exports.LineBreak = LineBreak;
 });
-define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "./Hi/human"], function (require, exports, Colors_3, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, human_1) {
+define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Inputs", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace", "Hi/Types/states", "Hi/ViewController"], function (require, exports, Colors_3, Basics_2, Graphics_2, Inputs_2, Overlays_1, Stacks_2, Whitespace_1, states_5, ViewController_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function SmartKeywords(keywords) {
@@ -1442,7 +1442,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             ev.view.background('none');
         })
             .whenClicked(ev => {
-            human_1.ViewController.navigateTo(navigateTo);
+            ViewController_2.ViewController.navigateTo(navigateTo);
             ev.view.root().getViewById('title').text.value = title;
         });
     }
@@ -1475,7 +1475,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             }), new Basics_2.TextContent('Dark')).padding()).stretchWidth(), new Stacks_2.HStack(new Basics_2.ClickButton(new Stacks_2.VStack(new Graphics_2.IonIcon('close-circle-outline'), new Basics_2.TextContent('Close').font('sm'))).whenClicked(ev => {
                 this.destroy();
             }))).stretch());
-            this.settings = human_1.StateObject({
+            this.settings = states_5.StateObject({
                 color: 'light',
             }, prop => {
                 if (prop == 'color') {
@@ -1587,7 +1587,7 @@ define("Pages/GettingStarted", ["require", "exports", "Hi/Components/Graphics", 
     }
     exports.default = GettingStarted;
 });
-define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/states", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_6, states_5, Basics_5, Graphics_5, Overlays_2, Stacks_5, Whitespace_3) {
+define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/states", "Hi/Components/Basics", "Hi/Components/Graphics", "Hi/Components/Overlays", "Hi/Components/Stacks", "Hi/Components/Whitespace"], function (require, exports, Colors_6, states_6, Basics_5, Graphics_5, Overlays_2, Stacks_5, Whitespace_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Preview = void 0;
@@ -1622,7 +1622,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/sta
                 .addClass('preview-canvas'), new Stacks_5.VStack(new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.HStack(Preview.dimensionSub('width').padding(), new Basics_5.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_3.Spacer(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-padding').font('lg'), new Basics_5.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray')))
                 .padding()
                 .id('component-padding-wrapper'), new Whitespace_3.Spacer()), new Stacks_5.HStack(new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-name').font('lg'), new Basics_5.TextContent('Component').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-id').font('lg'), new Basics_5.TextContent('ID').font('sm').foreground(Colors_6.HColor('gray'))).padding()), new Basics_5.TextContent('Description').font('sm').foreground(Colors_6.HColor('gray')), new Basics_5.TextContent('•').id('component-description')).padding());
-            this.dimensions = states_5.StateObject({
+            this.dimensions = states_6.StateObject({
                 width: 0,
                 height: 0,
                 padding: '',
@@ -1633,7 +1633,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/sta
                 else if (property == 'padding')
                     this.getViewById('component-padding').text.value = this.dimensions.padding || '•';
             });
-            this.componentInfo = states_5.StateObject({
+            this.componentInfo = states_6.StateObject({
                 name: '',
                 id: '',
                 description: '',
@@ -1653,7 +1653,7 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/sta
                         break;
                 }
             });
-            this.viewerSettings = states_5.StateObject({
+            this.viewerSettings = states_6.StateObject({
                 contrastToggle: false,
                 propertyFilters: {
                     dimensions: true,
@@ -1901,7 +1901,7 @@ define("Pages/GraphicsComponents", ["require", "exports", "Hi/Colors", "Hi/Compo
     }
     exports.default = GraphicsComponent;
 });
-define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "./Hi/human", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents"], function (require, exports, Colors_10, Stacks_9, human_2, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1) {
+define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", "Hi/Components/Basics", "Sidebar", "Pages/GettingStarted", "Pages/SizingTypes", "Pages/BasicComponents", "Pages/GraphicsComponents", "Hi/ViewController"], function (require, exports, Colors_10, Stacks_9, Basics_9, Sidebar_1, GettingStarted_1, SizingTypes_1, BasicComponents_1, GraphicsComponents_1, ViewController_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_9.HIFullScreenView {
@@ -1914,7 +1914,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 max: 'calc(100vw - 300px)',
             })
                 .alignStart()).stretch());
-            this.portfolioViewerController = new human_2.ViewController({
+            this.portfolioViewerController = new ViewController_3.ViewController({
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
                 sizingTypes: new SizingTypes_1.default().stretch(),
                 basicComponents: new BasicComponents_1.default().stretch(),
@@ -1972,10 +1972,10 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
 });
-define("guides", ["require", "exports", "GuidesApp", "./Hi/human"], function (require, exports, GuidesApp_1, human_3) {
+define("guides", ["require", "exports", "GuidesApp", "Hi/ViewController"], function (require, exports, GuidesApp_1, ViewController_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    new human_3.ViewController({
+    new ViewController_4.ViewController({
         main: new GuidesApp_1.default(),
     })
         .bind()

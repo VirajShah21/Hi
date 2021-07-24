@@ -1,5 +1,5 @@
 import GuidesApp from './GuidesApp';
-import { ViewController } from './Hi/human';
+import { ViewController } from './Hi/ViewController';
 
 new ViewController({
     main: new GuidesApp(),
