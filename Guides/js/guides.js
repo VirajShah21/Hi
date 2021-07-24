@@ -1411,7 +1411,9 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
                 })
                     .sort((a, b) => Sidebar.menuSearchScore(query, a.keywords) - Sidebar.menuSearchScore(query, b.keywords))
                     .map(item => item.view));
-            });
+            })
+                .background(Colors_3.HColor('background'))
+                .foreground(Colors_3.HColor('foreground'));
         }
         handle(data) {
             if (data == 'color') {

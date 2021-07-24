@@ -110,7 +110,9 @@ class SearchField extends TextField {
                         )
                         .map(item => item.view)
                 );
-            });
+            })
+            .background(HColor('background'))
+            .foreground(HColor('foreground'));
     }
 
     override handle(data: string): void {
