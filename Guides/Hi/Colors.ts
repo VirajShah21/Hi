@@ -127,11 +127,16 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
     },
 };
 
-var colorTheme: 'light' | 'dark' = 'light';
+var colorTheme: 'light' | 'dark' = (() => {
+    let tmp = localStorage.getItem('hi://theme');
+    if (tmp == 'light' || tmp == 'dark') return tmp;
+    return 'light';
+})();
 
 export function changeTheme(theme: 'light' | 'dark'): void {
     colorTheme = theme;
     ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+    localStorage.setItem('hi://theme', colorTheme);
 }
 
 export function whichTheme(): 'light' | 'dark' {
