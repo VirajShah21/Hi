@@ -190,7 +190,7 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
             return this;
         }
         font(fontClass) {
-            if (typeof fontClass == 'string' && sizing_1.SizingValues.FONT.hasOwnProperty(fontClass)) {
+            if (typeof fontClass == 'string' && Object.prototype.hasOwnProperty.call(sizing_1.SizingValues.FONT, fontClass)) {
                 this.body.style.fontSize = sizing_1.SizingValues.FONT[fontClass];
             }
             else if (typeof fontClass == 'string') {
@@ -519,7 +519,10 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
             });
         }
         handle(data) {
-            // Should be overrideen by children
+            if (data == '') {
+                console.warn('Caught an empty signal');
+                console.trace();
+            }
         }
     }
     exports.default = View;
@@ -619,7 +622,7 @@ define("Hi/ViewController", ["require", "exports", "Hi/View"], function (require
             return exports.ViewControllerData.controllerMap[controllerName];
         }
         signal(data) {
-            for (let screen in this.screens)
+            for (const screen in this.screens)
                 this.screens[screen].signal(data);
         }
         /**
@@ -776,8 +779,8 @@ define("Hi/Colors", ["require", "exports", "Hi/ViewController"], function (requi
             background: rgb(0, 0, 0),
         },
     };
-    var colorTheme = (() => {
-        let tmp = localStorage.getItem('hi://theme');
+    let colorTheme = (() => {
+        const tmp = localStorage.getItem('hi://theme');
         if (tmp == 'light' || tmp == 'dark')
             return tmp;
         return 'light';
@@ -835,7 +838,7 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
             this.body.style.alignItems = 'center';
             this.body.style.justifyContent = 'center';
             this.$children.forEach(child => {
-                this.body.style.gridArea = '1/1/1/1';
+                child.body.style.gridArea = '1/1/1/1';
             });
         }
     }
@@ -941,7 +944,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/View", "Hi/Types/sizin
                 this.body.setAttribute('name', this.state.selected ? 'radio-button-on' : 'radio-button-off');
             });
             this.body.setAttribute('name', 'radio-button-off');
-            this.body.addEventListener('click', ev => {
+            this.body.addEventListener('click', () => {
                 this.state.selected = !this.state.selected;
             });
         }
@@ -972,7 +975,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/View", "Hi/Types/sizin
         constructor(...radioButtons) {
             this.radios = radioButtons;
             this.radios.forEach(radio => {
-                radio.whenClicked(ev => {
+                radio.whenClicked(() => {
                     this.radios.forEach(otherRadio => {
                         if (otherRadio != radio)
                             otherRadio.setSelected(false);
@@ -1472,7 +1475,7 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
                 .id('dark-radio-button')
                 .whenClicked(() => {
                 this.settings.color = 'dark';
-            }), new Basics_2.TextContent('Dark')).padding()).stretchWidth(), new Stacks_2.HStack(new Basics_2.ClickButton(new Stacks_2.VStack(new Graphics_2.IonIcon('close-circle-outline'), new Basics_2.TextContent('Close').font('sm'))).whenClicked(ev => {
+            }), new Basics_2.TextContent('Dark')).padding()).stretchWidth(), new Stacks_2.HStack(new Basics_2.ClickButton(new Stacks_2.VStack(new Graphics_2.IonIcon('close-circle-outline'), new Basics_2.TextContent('Close').font('sm'))).whenClicked(() => {
                 this.destroy();
             }))).stretch());
             this.settings = states_5.StateObject({
