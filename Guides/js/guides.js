@@ -678,6 +678,22 @@ define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, expor
             this.b = b;
             this.a = a;
         }
+        red(r) {
+            this.r = r;
+            return this;
+        }
+        green(g) {
+            this.g = g;
+            return this;
+        }
+        blue(b) {
+            this.b = b;
+            return this;
+        }
+        alpha(a) {
+            this.a = a;
+            return this;
+        }
         toString() {
             if (this.a != 1)
                 return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
@@ -1189,7 +1205,8 @@ define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Compone
         constructor(...children) {
             super('div', ...children);
             this.addClass('hi-overlay');
-            this.background(Colors_2.rgba(255, 255, 255, 0.25));
+            this.background(Colors_2.HColor('background').alpha(0.25));
+            this.foreground(Colors_2.HColor('foreground'));
             document.body.appendChild(this.body);
         }
     }
