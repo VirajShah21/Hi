@@ -62,13 +62,17 @@ export class RGBAModel {
         if (this.a != 1) return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
         return `rgb(${this.r}, ${this.g}, ${this.b})`;
     }
+
+    static copy(rgba: RGBAModel): RGBAModel {
+        return new RGBAModel(rgba.r, rgba.g, rgba.b, rgba.a);
+    }
 }
 
 export function HColor(color: HumanColorName): RGBAModel {
     if (colorTheme === 'light') {
-        return HumanColorSwatch.light[color];
+        return RGBAModel.copy(HumanColorSwatch.light[color]);
     } else {
-        return HumanColorSwatch.dark[color];
+        return RGBAModel.copy(HumanColorSwatch.dark[color]);
     }
 }
 

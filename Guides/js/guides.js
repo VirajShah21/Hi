@@ -699,16 +699,19 @@ define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, expor
                 return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
             return `rgb(${this.r}, ${this.g}, ${this.b})`;
         }
+        static copy(rgba) {
+            return new RGBAModel(rgba.r, rgba.g, rgba.b, rgba.a);
+        }
     }
     exports.RGBAModel = RGBAModel;
     RGBAModel.WHITE = new RGBAModel(255, 255, 255);
     RGBAModel.BLACK = new RGBAModel(0, 0, 0);
     function HColor(color) {
         if (colorTheme === 'light') {
-            return exports.HumanColorSwatch.light[color];
+            return RGBAModel.copy(exports.HumanColorSwatch.light[color]);
         }
         else {
-            return exports.HumanColorSwatch.dark[color];
+            return RGBAModel.copy(exports.HumanColorSwatch.dark[color]);
         }
     }
     exports.HColor = HColor;
@@ -766,10 +769,16 @@ define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, expor
             background: rgb(0, 0, 0),
         },
     };
-    var colorTheme = 'light';
+    var colorTheme = (() => {
+        let tmp = localStorage.getItem('hi://theme');
+        if (tmp == 'light' || tmp == 'dark')
+            return tmp;
+        return 'light';
+    })();
     function changeTheme(theme) {
         colorTheme = theme;
         human_3.ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+        localStorage.setItem('hi://theme', colorTheme);
     }
     exports.changeTheme = changeTheme;
     function whichTheme() {
@@ -1909,6 +1918,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 basicComponents: new BasicComponents_1.default().stretch().padding({ top: 60 }),
                 graphicsComponents: new GraphicsComponents_1.default().stretch().padding({ top: 60 }),
             });
+            this.background(Colors_10.HColor('background')).foreground(Colors_10.HColor('foreground'));
             const portfolioViewer = this.getViewById('portfolio-viewer');
             if (portfolioViewer)
                 this.portfolioViewerController.bind(portfolioViewer.body);
@@ -1945,7 +1955,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 color: Colors_10.HColor('gray5'),
             })
                 .position('fixed')
-                .background(Colors_10.rgba(255, 255, 255, 0.5))
+                .background(Colors_10.HColor('background').alpha(0.25))
                 .blur(25)
                 .zIndex(10);
         }

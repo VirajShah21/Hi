@@ -31,6 +31,7 @@ export default class GuidesApp extends HIFullScreenView {
                     .alignStart()
             ).stretch()
         );
+        this.background(HColor('background')).foreground(HColor('foreground'));
         const portfolioViewer = this.getViewById('portfolio-viewer');
         if (portfolioViewer) this.portfolioViewerController.bind(portfolioViewer.body);
     }
@@ -67,7 +68,7 @@ class Titlebar extends HStack {
                 color: HColor('gray5'),
             })
             .position('fixed')
-            .background(rgba(255, 255, 255, 0.5))
+            .background(HColor('background').alpha(0.25))
             .blur(25)
             .zIndex(10);
     }
