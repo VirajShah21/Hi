@@ -7,6 +7,7 @@ define("Hi/Types/sizing", ["require", "exports", "Hi/human"], function (require,
             xxs: human_1.sizing(3),
             xs: human_1.sizing(6),
             sm: human_1.sizing(9),
+            md: human_1.sizing(12),
             lg: human_1.sizing(15),
             xl: human_1.sizing(18),
             xxl: human_1.sizing(21),
@@ -39,7 +40,7 @@ define("Hi/Types/styles", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports, human_2) {
+define("Hi/View", ["require", "exports", "Hi/human", "Hi/Types/sizing"], function (require, exports, human_2, sizing_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -147,8 +148,12 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
             return this;
         }
         font(fontClass) {
-            if (typeof fontClass == 'string')
-                this.addClass(`font-${fontClass}`);
+            if (typeof fontClass == 'string' && sizing_1.SizingValues.FONT.hasOwnProperty(fontClass)) {
+                this.body.style.fontSize = sizing_1.SizingValues.FONT[fontClass];
+            }
+            else if (typeof fontClass == 'string') {
+                this.body.style.font = fontClass;
+            }
             else if (typeof fontClass == 'number')
                 this.body.style.fontSize = `${fontClass}pt`;
             else if (typeof fontClass == 'object') {
@@ -666,6 +671,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
         return size;
     }
     exports.sizing = sizing;
+    document.body.style.margin = '0';
 });
 define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, exports, human_3) {
     "use strict";
@@ -861,7 +867,7 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
     }
     exports.Container = Container;
 });
-define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi/Types/sizing", "Hi/Colors"], function (require, exports, human_4, View_3, sizing_1, Colors_1) {
+define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi/Types/sizing", "Hi/Colors"], function (require, exports, human_4, View_3, sizing_2, Colors_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.BlockCode = exports.InlineCode = exports.ClickButton = exports.RadioGroup = exports.RadioButton = exports.Checkbox = exports.Hyperlink = exports.TextContent = void 0;
@@ -987,8 +993,8 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/human", "Hi/View", "Hi
             this.body.style.border = 'none';
             this.body.style.color = Colors_1.HColor('blue').toString();
             this.body.style.background = 'none';
-            this.body.style.borderRadius = sizing_1.SizingValues.BORDER_RADIUS.xxs;
-            this.body.style.padding = `${sizing_1.SizingValues.PADDING.xxs} ${sizing_1.SizingValues.PADDING.sm} ${sizing_1.SizingValues.PADDING.xxs} ${sizing_1.SizingValues.PADDING.sm}`;
+            this.body.style.borderRadius = sizing_2.SizingValues.BORDER_RADIUS.xxs;
+            this.body.style.padding = `${sizing_2.SizingValues.PADDING.xxs} ${sizing_2.SizingValues.PADDING.sm} ${sizing_2.SizingValues.PADDING.xxs} ${sizing_2.SizingValues.PADDING.sm}`;
         }
         whenClicked(callback) {
             this.body.addEventListener('click', browserEvent => {
@@ -1100,7 +1106,7 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/human", "Hi/View"], 
     }
     exports.ImageContent = ImageContent;
 });
-define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizing", "Hi/View"], function (require, exports, human_6, sizing_2, View_5) {
+define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizing", "Hi/View"], function (require, exports, human_6, sizing_3, View_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TextBox = exports.DropdownOption = exports.PasswordField = exports.TextField = void 0;
@@ -1117,8 +1123,8 @@ define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizi
             this.attributes.value = '';
             this.attributes.placeholder = placeholder || '';
             this.body.style.border = '1px solid silver';
-            this.body.style.borderRadius = sizing_2.SizingValues.BORDER_RADIUS.xxs;
-            this.body.style.padding = sizing_2.SizingValues.PADDING.xxs;
+            this.body.style.borderRadius = sizing_3.SizingValues.BORDER_RADIUS.xxs;
+            this.body.style.padding = sizing_3.SizingValues.PADDING.xxs;
             this.body.style.margin = '0';
             this.body.style.boxSizing = 'border-box';
             this.body.addEventListener('input', () => {
@@ -1198,10 +1204,10 @@ define("Hi/Components/Inputs", ["require", "exports", "Hi/human", "Hi/Types/sizi
                 this.value = this.body.value;
             });
             this.value = '';
-            this.body.style.borderRadius = sizing_2.SizingValues.BORDER_RADIUS.xxs;
+            this.body.style.borderRadius = sizing_3.SizingValues.BORDER_RADIUS.xxs;
             this.body.style.border = '1px solid silver';
             this.body.style.textAlign = 'left';
-            this.body.style.padding = sizing_2.SizingValues.PADDING.xxs;
+            this.body.style.padding = sizing_3.SizingValues.PADDING.xxs;
         }
     }
     exports.TextBox = TextBox;

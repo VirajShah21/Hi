@@ -1,5 +1,5 @@
 import { HColor, rgba } from '../Colors';
-import { StateObject } from '../human';
+import { StateObject } from '../Types/states';
 import View from '../View';
 import { TextContent, ClickButton, Checkbox } from './Basics';
 import { IonIcon } from './Graphics';
