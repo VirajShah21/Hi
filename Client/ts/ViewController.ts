@@ -1,5 +1,3 @@
-import { HISizingValue } from './Types/sizing';
-import { StateProxy } from './Types/states';
 import View from './View';
 
 export const ViewControllerData = {

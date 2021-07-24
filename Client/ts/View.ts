@@ -1,5 +1,5 @@
 import { RGBAModel } from './Colors';
-import { HumanEvent } from './human';
+import { HumanEvent } from './ViewController';
 import {
     HIEdgeSizingValue,
     HICornerSizingValue,

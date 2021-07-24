@@ -1,4 +1,4 @@
-import { HumanEvent } from '../human';
+import { HumanEvent } from '../ViewController';
 import View from '../View';
 import { HISizingValue, sizing, SizingValues } from '../Types/sizing';
 import { HColor } from '../Colors';
