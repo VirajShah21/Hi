@@ -12,10 +12,10 @@ export type HumanColorName =
     | 'teal'
     | 'yellow'
     | 'gray'
-    // | 'gray2'
+    | 'gray2'
     | 'gray3'
-    // | 'gray4'
-    // | 'gray5'
+    | 'gray4'
+    | 'gray5'
     | 'gray6';
 
 export class RGBAModel {
@@ -40,11 +40,11 @@ export class RGBAModel {
     }
 }
 
-export function HColor(color: HumanColorName, mode = 'light'): RGBAModel {
-    if (mode === 'light') {
+export function HColor(color: HumanColorName): RGBAModel {
+    if (ColorConfiguration.theme === 'light') {
         return HumanColorSwatch.light[color];
     } else {
-        throw new Error("HColor(..., 'dark') does not work yet.");
+        return HumanColorSwatch.dark[color];
     }
 }
 
@@ -56,7 +56,7 @@ export function rgba(r: number, g: number, b: number, a: number): RGBAModel {
     return new RGBAModel(r, g, b, a);
 }
 
-export const HumanColorSwatch = {
+export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
     light: {
         blue: rgb(0, 122, 255),
         brown: rgb(162, 132, 94),
@@ -71,8 +71,31 @@ export const HumanColorSwatch = {
         teal: rgb(48, 176, 199),
         yellow: rgb(255, 204, 0),
         gray: rgb(142, 142, 147),
+        gray2: rgb(174, 174, 178),
         gray3: rgb(199, 199, 204),
+        gray4: rgb(209, 209, 214),
+        gray5: rgb(229, 229, 234),
         gray6: rgb(242, 242, 247),
+    },
+    dark: {
+        blue: rgb(10, 132, 255),
+        brown: rgb(172, 142, 104),
+        cyan: rgb(100, 210, 255),
+        green: rgb(48, 209, 88),
+        indigo: rgb(94, 92, 230),
+        mint: rgb(102, 212, 207),
+        orange: rgb(255, 159, 10),
+        pink: rgb(255, 55, 95),
+        purple: rgb(191, 90, 242),
+        red: rgb(255, 69, 58),
+        teal: rgb(64, 200, 224),
+        yellow: rgb(255, 214, 10),
+        gray: rgb(142, 142, 147),
+        gray2: rgb(99, 99, 102),
+        gray3: rgb(72, 72, 74),
+        gray4: rgb(58, 58, 60),
+        gray5: rgb(44, 44, 46),
+        gray6: rgb(28, 28, 30),
     },
 };
 
