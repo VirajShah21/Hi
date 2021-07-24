@@ -58,7 +58,7 @@ export class RGBAModel {
         return this;
     }
 
-    toString() {
+    toString(): string {
         if (this.a != 1) return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
         return `rgb(${this.r}, ${this.g}, ${this.b})`;
     }
@@ -131,8 +131,8 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
     },
 };
 
-var colorTheme: 'light' | 'dark' = (() => {
-    let tmp = localStorage.getItem('hi://theme');
+let colorTheme: 'light' | 'dark' = (() => {
+    const tmp = localStorage.getItem('hi://theme');
     if (tmp == 'light' || tmp == 'dark') return tmp;
     return 'light';
 })();

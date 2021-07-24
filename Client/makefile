@@ -1,4 +1,4 @@
-build: .
+build: ts FontKit
 	mkdir build
 	cp -r ts/* build
 	cp -r FontKit build/FontKit

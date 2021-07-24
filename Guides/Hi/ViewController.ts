@@ -108,8 +108,8 @@ export class ViewController {
         return ViewControllerData.controllerMap[controllerName];
     }
 
-    signal(data: string) {
-        for (let screen in this.screens) this.screens[screen].signal(data);
+    signal(data: string): void {
+        for (const screen in this.screens) this.screens[screen].signal(data);
     }
 
     /**

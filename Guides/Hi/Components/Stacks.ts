@@ -39,7 +39,7 @@ export class ZStack extends Stack {
         this.body.style.justifyContent = 'center';
 
         this.$children.forEach(child => {
-            this.body.style.gridArea = '1/1/1/1';
+            child.body.style.gridArea = '1/1/1/1';
         });
     }
 }
