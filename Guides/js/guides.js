@@ -719,7 +719,7 @@ define("Hi/View", ["require", "exports", "Hi/human"], function (require, exports
         signal(data) {
             this.handle(data);
             this.$children.forEach(child => {
-                child.handle(data);
+                child.signal(data);
             });
         }
         handle(data) { }
@@ -1293,8 +1293,8 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
                 .id('search-field'), new Stacks_2.VStack(...Sidebar.menuItems.map(item => item.view), new Whitespace_1.Spacer()).stretchWidth().id('menu-items-list'));
         }
         handle(data) {
-            console.log('Handling ' + data);
             if (data == 'color') {
+                console.log(Colors_3.ColorConfiguration.theme);
                 if (Colors_3.ColorConfiguration.theme == 'dark') {
                     this.getViewById('search-field').background(Colors_3.RGBAModel.BLACK).foreground(Colors_3.RGBAModel.WHITE);
                 }
@@ -1872,6 +1872,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 this.portfolioViewerController.bind(portfolioViewer.body);
         }
         handle(data) {
+            console.log('Handling guides app');
             if (data == 'color') {
                 if (Colors_10.ColorConfiguration.theme == 'dark') {
                     this.background(Colors_10.RGBAModel.BLACK).foreground(Colors_10.RGBAModel.WHITE);

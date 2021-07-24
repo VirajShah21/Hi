@@ -1,4 +1,3 @@
-import GuidesApp from './GuidesApp';
 import { ColorConfiguration, HColor, RGBAModel } from './Hi/Colors';
 import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
@@ -85,9 +84,8 @@ export default class Sidebar extends VStack {
     }
 
     override handle(data: string): void {
-        console.log('Handling ' + data);
-
         if (data == 'color') {
+            console.log(ColorConfiguration.theme);
             if (ColorConfiguration.theme == 'dark') {
                 this.getViewById('search-field').background(RGBAModel.BLACK).foreground(RGBAModel.WHITE);
             } else {

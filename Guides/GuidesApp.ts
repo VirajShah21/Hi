@@ -64,6 +64,7 @@ export default class GuidesApp extends HIFullScreenView {
     }
 
     override handle(data: string): void {
+        console.log('Handling guides app');
         if (data == 'color') {
             if (ColorConfiguration.theme == 'dark') {
                 this.background(RGBAModel.BLACK).foreground(RGBAModel.WHITE);

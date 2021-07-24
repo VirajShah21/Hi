@@ -473,7 +473,7 @@ export default abstract class View {
     signal(data: string): void {
         this.handle(data);
         this.$children.forEach(child => {
-            child.handle(data);
+            child.signal(data);
         });
     }
 
