@@ -65,7 +65,7 @@ export class RGBAModel {
 }
 
 export function HColor(color: HumanColorName): RGBAModel {
-    if (ColorConfiguration.theme === 'light') {
+    if (colorTheme === 'light') {
         return HumanColorSwatch.light[color];
     } else {
         return HumanColorSwatch.dark[color];
@@ -127,13 +127,13 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
     },
 };
 
-// ! TODO: Unexport this member and refactor all other code
-export const ColorConfiguration = {
-    swatch: HumanColorSwatch,
-    theme: 'light',
-};
+var colorTheme: 'light' | 'dark' = 'light';
 
 export function changeTheme(theme: 'light' | 'dark'): void {
-    ColorConfiguration.theme = theme;
+    colorTheme = theme;
     ViewControllerData.controllers.forEach(controller => controller.signal('color'));
+}
+
+export function whichTheme(): 'light' | 'dark' {
+    return colorTheme;
 }

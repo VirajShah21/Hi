@@ -670,7 +670,7 @@ define("Hi/human", ["require", "exports", "Hi/View"], function (require, exports
 define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, exports, human_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.changeTheme = exports.ColorConfiguration = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
+    exports.whichTheme = exports.changeTheme = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
     class RGBAModel {
         constructor(r, g, b, a = 1) {
             this.r = r;
@@ -704,7 +704,7 @@ define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, expor
     RGBAModel.WHITE = new RGBAModel(255, 255, 255);
     RGBAModel.BLACK = new RGBAModel(0, 0, 0);
     function HColor(color) {
-        if (exports.ColorConfiguration.theme === 'light') {
+        if (colorTheme === 'light') {
             return exports.HumanColorSwatch.light[color];
         }
         else {
@@ -766,16 +766,16 @@ define("Hi/Colors", ["require", "exports", "Hi/human"], function (require, expor
             background: rgb(0, 0, 0),
         },
     };
-    // ! TODO: Unexport this member and refactor all other code
-    exports.ColorConfiguration = {
-        swatch: exports.HumanColorSwatch,
-        theme: 'light',
-    };
+    var colorTheme = 'light';
     function changeTheme(theme) {
-        exports.ColorConfiguration.theme = theme;
+        colorTheme = theme;
         human_3.ViewControllerData.controllers.forEach(controller => controller.signal('color'));
     }
     exports.changeTheme = changeTheme;
+    function whichTheme() {
+        return colorTheme;
+    }
+    exports.whichTheme = whichTheme;
 });
 define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (require, exports, View_2) {
     "use strict";
@@ -1916,7 +1916,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         handle(data) {
             console.log('Handling guides app');
             if (data == 'color') {
-                if (Colors_10.ColorConfiguration.theme == 'dark') {
+                if (Colors_10.whichTheme() == 'dark') {
                     this.background(Colors_10.RGBAModel.BLACK).foreground(Colors_10.RGBAModel.WHITE);
                     this.getViewById('titlebar').background(Colors_10.rgba(0, 0, 0, 0.5)).foreground(Colors_10.RGBAModel.WHITE);
                 }

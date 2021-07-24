@@ -1,4 +1,4 @@
-import { ColorConfiguration, HColor, rgba, RGBAModel } from './Hi/Colors';
+import { HColor, rgba, RGBAModel, whichTheme } from './Hi/Colors';
 import { HIFullScreenView, HStack, VStack, ScrollView } from './Hi/Components/Stacks';
 import { ViewController } from './Hi/human';
 import { TextContent } from './Hi/Components/Basics';
@@ -38,7 +38,7 @@ export default class GuidesApp extends HIFullScreenView {
     override handle(data: string): void {
         console.log('Handling guides app');
         if (data == 'color') {
-            if (ColorConfiguration.theme == 'dark') {
+            if (whichTheme() == 'dark') {
                 this.background(RGBAModel.BLACK).foreground(RGBAModel.WHITE);
                 (this.getViewById('titlebar') as View).background(rgba(0, 0, 0, 0.5)).foreground(RGBAModel.WHITE);
             } else {

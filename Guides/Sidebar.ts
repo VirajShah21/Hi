@@ -1,4 +1,4 @@
-import { changeTheme, ColorConfiguration, HColor, RGBAModel } from './Hi/Colors';
+import { changeTheme, HColor } from './Hi/Colors';
 import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
 import { IonIcon } from './Hi/Components/Graphics';
 import { TextField } from './Hi/Components/Inputs';
@@ -7,7 +7,6 @@ import { VStack, HStack } from './Hi/Components/Stacks';
 import { Spacer } from './Hi/Components/Whitespace';
 import { StateObject, ViewController } from './Hi/human';
 import View from './Hi/View';
-import { ViewControllerData } from './Hi/human';
 
 function SmartKeywords(keywords: string[]) {
     const results = [];
