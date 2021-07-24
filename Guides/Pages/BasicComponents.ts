@@ -10,18 +10,11 @@ export default class BasicComponents extends Container {
             new VStack(
                 new VStack(
                     new MajorIcon('text').padding().rounded(),
-                    new TextContent('Basic Components')
-                        .padding()
-                        .rounded()
-                        .font('xxl')
-                        .bold()
-                        .margin({ top: 25 })
-                        .foreground(RGBAModel.BLACK)
+                    new TextContent('Basic Components').padding().rounded().font('xxl').bold().margin({ top: 25 })
                 )
                     .backgroundImage('assets/BasicComponents.png')
                     .stretch()
-                    .padding({ bottom: 50 })
-                    .foreground(RGBAModel.WHITE),
+                    .padding({ bottom: 50 }),
 
                 new PrimaryHeading('Overview'),
 

@@ -1835,17 +1835,10 @@ define("Pages/BasicComponents", ["require", "exports", "Hi/Components/Stacks", "
     Object.defineProperty(exports, "__esModule", { value: true });
     class BasicComponents extends Stacks_7.Container {
         constructor() {
-            super(new Stacks_7.VStack(new Stacks_7.VStack(new PageComponents_3.MajorIcon('text').padding().rounded(), new Basics_7.TextContent('Basic Components')
-                .padding()
-                .rounded()
-                .font('xxl')
-                .bold()
-                .margin({ top: 25 })
-                .foreground(Colors_8.RGBAModel.BLACK))
+            super(new Stacks_7.VStack(new Stacks_7.VStack(new PageComponents_3.MajorIcon('text').padding().rounded(), new Basics_7.TextContent('Basic Components').padding().rounded().font('xxl').bold().margin({ top: 25 }))
                 .backgroundImage('assets/BasicComponents.png')
                 .stretch()
-                .padding({ bottom: 50 })
-                .foreground(Colors_8.RGBAModel.WHITE), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new DevKit_2.Preview(new Basics_7.TextContent('Designed in Philadelphia.')).margin({ top: 25 }), new PageComponents_3.PrimaryHeading('Button Components'), new PageComponents_3.PrimaryText('Buttons allow for interactivity.'), new DevKit_2.Preview(new Basics_7.ClickButton(new Basics_7.TextContent('Designed in Philadelphia.'))).margin({ top: 25 }), new PageComponents_3.PrimaryText('Common Modifiers'), new PageComponents_3.SecondaryHeading('Padding'), new DevKit_2.Preview(new Stacks_7.HStack(new Basics_7.TextContent('1').padding().background(Colors_8.HColor('orange')).describe('Default padding'), new Basics_7.TextContent('2').padding(20).background(Colors_8.HColor('green')).describe('20px padding'), new Basics_7.TextContent('3')
+                .padding({ bottom: 50 }), new PageComponents_3.PrimaryHeading('Overview'), new PageComponents_3.PrimaryText('The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'), new PageComponents_3.PrimaryHeading('Text Component'), new PageComponents_3.PrimaryText('The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'), new DevKit_2.Preview(new Basics_7.TextContent('Designed in Philadelphia.')).margin({ top: 25 }), new PageComponents_3.PrimaryHeading('Button Components'), new PageComponents_3.PrimaryText('Buttons allow for interactivity.'), new DevKit_2.Preview(new Basics_7.ClickButton(new Basics_7.TextContent('Designed in Philadelphia.'))).margin({ top: 25 }), new PageComponents_3.PrimaryText('Common Modifiers'), new PageComponents_3.SecondaryHeading('Padding'), new DevKit_2.Preview(new Stacks_7.HStack(new Basics_7.TextContent('1').padding().background(Colors_8.HColor('orange')).describe('Default padding'), new Basics_7.TextContent('2').padding(20).background(Colors_8.HColor('green')).describe('20px padding'), new Basics_7.TextContent('3')
                 .padding({ top: 10, right: 10, bottom: 25, left: 25 })
                 .background(Colors_8.HColor('indigo'))
                 .describe('10px 10px 25px 25px')).padding(50)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Background/Foreground'), new DevKit_2.Preview(new Stacks_7.VStack(new Basics_7.TextContent('Designed').background(Colors_8.RGBAModel.BLACK).foreground(Colors_8.HColor('blue')), new Basics_7.TextContent('in').foreground(Colors_8.HColor('orange')), new Basics_7.TextContent('Philadelphia').background(Colors_8.HColor('green')).foreground(Colors_8.HColor('gray6'))).padding(20)).margin({ top: 25 }), new PageComponents_3.SecondaryHeading('Roundedness'), new DevKit_2.Preview(new Stacks_7.VStack(new Basics_7.TextContent('Barely Round').background(Colors_8.HColor('blue')).rounded(5).padding().margin(), new Basics_7.TextContent('Just Round Enough').background(Colors_8.HColor('blue')).rounded().padding().margin(), new Basics_7.TextContent('Very Round').background(Colors_8.HColor('blue')).rounded(20).padding().margin(), new Basics_7.TextContent('Too Round').background(Colors_8.HColor('blue')).rounded('100%').padding().margin()))));
@@ -1914,9 +1907,9 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
                 .alignStart()).stretch());
             this.portfolioViewerController = new human_9.ViewController({
                 gettingStarted: new GettingStarted_1.default().stretch().padding({ top: 60 }),
-                sizingTypes: new SizingTypes_1.default().stretch().padding({ top: 60 }),
-                basicComponents: new BasicComponents_1.default().stretch().padding({ top: 60 }),
-                graphicsComponents: new GraphicsComponents_1.default().stretch().padding({ top: 60 }),
+                sizingTypes: new SizingTypes_1.default().stretch(),
+                basicComponents: new BasicComponents_1.default().stretch(),
+                graphicsComponents: new GraphicsComponents_1.default().stretch(),
             });
             this.background(Colors_10.HColor('background')).foreground(Colors_10.HColor('foreground'));
             const portfolioViewer = this.getViewById('portfolio-viewer');

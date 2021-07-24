@@ -12,9 +12,9 @@ import View from './Hi/View';
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
         gettingStarted: new GettingStarted().stretch().padding({ top: 60 }),
-        sizingTypes: new SizingTypes().stretch().padding({ top: 60 }),
-        basicComponents: new BasicComponents().stretch().padding({ top: 60 }),
-        graphicsComponents: new GraphicsComponent().stretch().padding({ top: 60 }),
+        sizingTypes: new SizingTypes().stretch(),
+        basicComponents: new BasicComponents().stretch(),
+        graphicsComponents: new GraphicsComponent().stretch(),
     });
 
     constructor() {
