@@ -117,11 +117,13 @@ export class Preview extends VStack {
                 })
             )
                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
-                .background(HColor('gray6')),
+                .background(HColor('gray5'))
+                .addClass('preview-options'),
 
             new VStack(content)
-                .border({ size: 4, style: 'dashed', color: HColor('gray6') })
-                .borderTop({ style: 'solid' }),
+                .border({ size: 4, style: 'dashed', color: HColor('gray5') })
+                .borderTop({ style: 'solid' })
+                .addClass('preview-canvas'),
 
             new VStack(
                 new HStack(
@@ -156,6 +158,13 @@ export class Preview extends VStack {
         );
 
         Preview.enableHover(content, this);
+    }
+
+    override handle(data: string): void {
+        if (data == 'color') {
+            this.getViewsByClass('preview-canvas').forEach(canvas => canvas.border({ color: HColor('gray5') }));
+            this.getViewsByClass('preview-options').forEach(wrapper => wrapper.background(HColor('gray5')));
+        }
     }
 
     static enableHover(view: View, exampleViewer: Preview): void {

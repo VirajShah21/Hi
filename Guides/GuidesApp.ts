@@ -20,36 +20,8 @@ export default class GuidesApp extends HIFullScreenView {
     constructor() {
         super(
             new HStack(
-                new Sidebar()
-                    .alignStart()
-                    .stretchHeight()
-                    .padding(20)
-                    .borderRight({ size: 1, style: 'solid', color: HColor('gray6') })
-                    .width({
-                        min: 300,
-                        max: 300,
-                        default: 300,
-                    }),
-                new VStack(
-                    new HStack(new TextContent('Title').id('title'))
-                        .width({
-                            min: 'calc(100vw - 300px)',
-                            default: 'calc(100vw - 300px)',
-                            max: 'calc(100vw - 300px)',
-                        })
-                        .padding(20)
-                        .borderBottom({
-                            size: 1,
-                            style: 'solid',
-                            color: HColor('gray6'),
-                        })
-                        .position('fixed')
-                        .background(rgba(255, 255, 255, 0.5))
-                        .blur(25)
-                        .zIndex(10)
-                        .id('titlebar'),
-                    new MessageViewer().id('portfolio-viewer').stretch()
-                )
+                new Sidebar(),
+                new VStack(new Titlebar().id('titlebar'), new MessageViewer().id('portfolio-viewer').stretch())
                     .stretchHeight()
                     .width({
                         min: 'calc(100vw - 300px)',
@@ -77,6 +49,31 @@ export default class GuidesApp extends HIFullScreenView {
 
         for (const screenName in this.portfolioViewerController.screens)
             this.portfolioViewerController.screens[screenName].signal(data);
+    }
+}
+
+class Titlebar extends HStack {
+    constructor() {
+        super(new TextContent('Title').id('title'));
+        this.width({
+            min: 'calc(100vw - 300px)',
+            default: 'calc(100vw - 300px)',
+            max: 'calc(100vw - 300px)',
+        })
+            .padding(20)
+            .borderBottom({
+                size: 1,
+                style: 'solid',
+                color: HColor('gray5'),
+            })
+            .position('fixed')
+            .background(rgba(255, 255, 255, 0.5))
+            .blur(25)
+            .zIndex(10);
+    }
+
+    override handle(data: string): void {
+        if (data == 'color') this.border({ color: HColor('gray5') });
     }
 }
 

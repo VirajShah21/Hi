@@ -55,6 +55,8 @@ define("Hi/Colors", ["require", "exports"], function (require, exports) {
             gray4: rgb(209, 209, 214),
             gray5: rgb(229, 229, 234),
             gray6: rgb(242, 242, 247),
+            foreground: rgb(0, 0, 0),
+            background: rgb(255, 255, 255),
         },
         dark: {
             blue: rgb(10, 132, 255),
@@ -75,6 +77,8 @@ define("Hi/Colors", ["require", "exports"], function (require, exports) {
             gray4: rgb(58, 58, 60),
             gray5: rgb(44, 44, 46),
             gray6: rgb(28, 28, 30),
+            foreground: rgb(255, 255, 255),
+            background: rgb(0, 0, 0),
         },
     };
     exports.ColorConfiguration = {
@@ -1296,35 +1300,19 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
     }
     class Sidebar extends Stacks_2.VStack {
         constructor() {
-            super(new Inputs_2.TextField('Search')
-                .stretchWidth()
-                .border({ color: Colors_3.HColor('gray6') })
-                .margin({ bottom: 20 })
-                .whenChanged(ev => {
-                const target = ev.view.parent?.getViewById('menu-items-list');
-                const query = ev.view.attributes.value.trim().toLowerCase();
-                target.removeAllChildren();
-                target.addChildren(...Sidebar.menuItems
-                    .filter(item => {
-                    const score = Sidebar.menuSearchScore(query, item.keywords);
-                    return score != 0 && score / query.split(' ').length >= 0.25;
-                })
-                    .sort((a, b) => Sidebar.menuSearchScore(query, a.keywords) -
-                    Sidebar.menuSearchScore(query, b.keywords))
-                    .map(item => item.view));
-            })
-                .id('search-field'), new Stacks_2.VStack(...Sidebar.menuItems.map(item => item.view), new Whitespace_1.Spacer()).stretchWidth().id('menu-items-list'));
+            super(new SearchField(), new Stacks_2.VStack(...Sidebar.menuItems.map(item => item.view), new Whitespace_1.Spacer()).stretchWidth().id('menu-items-list'));
+            this.alignStart()
+                .stretchHeight()
+                .padding(20)
+                .borderRight({ size: 1, style: 'solid', color: Colors_3.HColor('gray5') })
+                .width({
+                min: 300,
+                max: 300,
+                default: 300,
+            });
         }
-        handle(data) {
-            if (data == 'color') {
-                console.log(Colors_3.ColorConfiguration.theme);
-                if (Colors_3.ColorConfiguration.theme == 'dark') {
-                    this.getViewById('search-field').background(Colors_3.RGBAModel.BLACK).foreground(Colors_3.RGBAModel.WHITE);
-                }
-                else {
-                    this.getViewById('search-field').background(Colors_3.RGBAModel.WHITE).foreground(Colors_3.RGBAModel.BLACK);
-                }
-            }
+        handle() {
+            this.border({ color: Colors_3.HColor('gray5') });
         }
         static menuSearchScore(query, keywords) {
             const queryWords = query.split(' ');
@@ -1372,6 +1360,32 @@ define("Sidebar", ["require", "exports", "Hi/Colors", "Hi/Components/Basics", "H
             keywords: SmartKeywords(['settings', 'preferences', 'light', 'dark', 'mode']),
         },
     ];
+    class SearchField extends Inputs_2.TextField {
+        constructor() {
+            super('Search');
+            this.stretchWidth()
+                .border({ color: Colors_3.HColor('gray5') })
+                .margin({ bottom: 20 })
+                .whenChanged(ev => {
+                const target = ev.view.parent?.getViewById('menu-items-list');
+                const query = ev.view.attributes.value.trim().toLowerCase();
+                target.removeAllChildren();
+                target.addChildren(...Sidebar.menuItems
+                    .filter(item => {
+                    const score = Sidebar.menuSearchScore(query, item.keywords);
+                    return score != 0 && score / query.split(' ').length >= 0.25;
+                })
+                    .sort((a, b) => Sidebar.menuSearchScore(query, a.keywords) - Sidebar.menuSearchScore(query, b.keywords))
+                    .map(item => item.view));
+            });
+        }
+        handle(data) {
+            if (data == 'color') {
+                this.background(Colors_3.HColor('background')).foreground(Colors_3.HColor('foreground'));
+                this.border({ color: Colors_3.HColor('gray5') });
+            }
+        }
+    }
     function MenuButton(iconName, title, navigateTo) {
         return new Basics_2.ClickButton(new Stacks_2.HStack(new Graphics_2.IonIcon(iconName).font({ size: 25 }), new Basics_2.TextContent(title).padding(), new Whitespace_1.Spacer()))
             .stretchWidth()
@@ -1561,9 +1575,11 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                     .whenClicked(() => overlay.destroy()))));
             }))
                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
-                .background(Colors_6.HColor('gray6')), new Stacks_5.VStack(content)
-                .border({ size: 4, style: 'dashed', color: Colors_6.HColor('gray6') })
-                .borderTop({ style: 'solid' }), new Stacks_5.VStack(new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.HStack(Preview.dimensionSub('width').padding(), new Basics_5.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_3.Spacer(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-padding').font('lg'), new Basics_5.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray')))
+                .background(Colors_6.HColor('gray5'))
+                .addClass('preview-options'), new Stacks_5.VStack(content)
+                .border({ size: 4, style: 'dashed', color: Colors_6.HColor('gray5') })
+                .borderTop({ style: 'solid' })
+                .addClass('preview-canvas'), new Stacks_5.VStack(new Stacks_5.HStack(new Whitespace_3.Spacer(), new Stacks_5.HStack(Preview.dimensionSub('width').padding(), new Basics_5.TextContent(' by '), Preview.dimensionSub('height').padding()).id('component-dimensions'), new Whitespace_3.Spacer(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-padding').font('lg'), new Basics_5.TextContent('Padding').font('sm').foreground(Colors_6.HColor('gray')))
                 .padding()
                 .id('component-padding-wrapper'), new Whitespace_3.Spacer()), new Stacks_5.HStack(new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-name').font('lg'), new Basics_5.TextContent('Component').font('sm').foreground(Colors_6.HColor('gray'))).padding(), new Stacks_5.VStack(new Basics_5.TextContent('•').id('component-id').font('lg'), new Basics_5.TextContent('ID').font('sm').foreground(Colors_6.HColor('gray'))).padding()), new Basics_5.TextContent('Description').font('sm').foreground(Colors_6.HColor('gray')), new Basics_5.TextContent('•').id('component-description')).padding());
             this.dimensions = human_8.StateObject({
@@ -1619,6 +1635,12 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/human", "
                         this.getViewById('component-padding-wrapper').hide();
             });
             Preview.enableHover(content, this);
+        }
+        handle(data) {
+            if (data == 'color') {
+                this.getViewsByClass('preview-canvas').forEach(canvas => canvas.border({ color: Colors_6.HColor('gray5') }));
+                this.getViewsByClass('preview-options').forEach(wrapper => wrapper.background(Colors_6.HColor('gray5')));
+            }
         }
         static enableHover(view, exampleViewer) {
             view.whenMouseOver(ev => {
@@ -1851,32 +1873,7 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
     Object.defineProperty(exports, "__esModule", { value: true });
     class GuidesApp extends Stacks_9.HIFullScreenView {
         constructor() {
-            super(new Stacks_9.HStack(new Sidebar_1.default()
-                .alignStart()
-                .stretchHeight()
-                .padding(20)
-                .borderRight({ size: 1, style: 'solid', color: Colors_10.HColor('gray6') })
-                .width({
-                min: 300,
-                max: 300,
-                default: 300,
-            }), new Stacks_9.VStack(new Stacks_9.HStack(new Basics_9.TextContent('Title').id('title'))
-                .width({
-                min: 'calc(100vw - 300px)',
-                default: 'calc(100vw - 300px)',
-                max: 'calc(100vw - 300px)',
-            })
-                .padding(20)
-                .borderBottom({
-                size: 1,
-                style: 'solid',
-                color: Colors_10.HColor('gray6'),
-            })
-                .position('fixed')
-                .background(Colors_10.rgba(255, 255, 255, 0.5))
-                .blur(25)
-                .zIndex(10)
-                .id('titlebar'), new MessageViewer().id('portfolio-viewer').stretch())
+            super(new Stacks_9.HStack(new Sidebar_1.default(), new Stacks_9.VStack(new Titlebar().id('titlebar'), new MessageViewer().id('portfolio-viewer').stretch())
                 .stretchHeight()
                 .width({
                 min: 'calc(100vw - 300px)',
@@ -1911,6 +1908,30 @@ define("GuidesApp", ["require", "exports", "Hi/Colors", "Hi/Components/Stacks", 
         }
     }
     exports.default = GuidesApp;
+    class Titlebar extends Stacks_9.HStack {
+        constructor() {
+            super(new Basics_9.TextContent('Title').id('title'));
+            this.width({
+                min: 'calc(100vw - 300px)',
+                default: 'calc(100vw - 300px)',
+                max: 'calc(100vw - 300px)',
+            })
+                .padding(20)
+                .borderBottom({
+                size: 1,
+                style: 'solid',
+                color: Colors_10.HColor('gray5'),
+            })
+                .position('fixed')
+                .background(Colors_10.rgba(255, 255, 255, 0.5))
+                .blur(25)
+                .zIndex(10);
+        }
+        handle(data) {
+            if (data == 'color')
+                this.border({ color: Colors_10.HColor('gray5') });
+        }
+    }
     class MessageViewer extends Stacks_9.ScrollView {
         constructor() {
             super(new Stacks_9.VStack(new Basics_9.TextContent('Select a menu item').foreground(Colors_10.HColor('gray'))).stretch());

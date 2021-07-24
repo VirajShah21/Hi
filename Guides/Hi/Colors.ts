@@ -16,7 +16,9 @@ export type HumanColorName =
     | 'gray3'
     | 'gray4'
     | 'gray5'
-    | 'gray6';
+    | 'gray6'
+    | 'foreground'
+    | 'background';
 
 export class RGBAModel {
     public static readonly WHITE = new RGBAModel(255, 255, 255);
@@ -76,6 +78,8 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
         gray4: rgb(209, 209, 214),
         gray5: rgb(229, 229, 234),
         gray6: rgb(242, 242, 247),
+        foreground: rgb(0, 0, 0),
+        background: rgb(255, 255, 255),
     },
     dark: {
         blue: rgb(10, 132, 255),
@@ -96,6 +100,8 @@ export const HumanColorSwatch: Record<string, Record<string, RGBAModel>> = {
         gray4: rgb(58, 58, 60),
         gray5: rgb(44, 44, 46),
         gray6: rgb(28, 28, 30),
+        foreground: rgb(255, 255, 255),
+        background: rgb(0, 0, 0),
     },
 };
 

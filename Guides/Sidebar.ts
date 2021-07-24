@@ -56,42 +56,23 @@ export default class Sidebar extends VStack {
 
     constructor() {
         super(
-            new TextField('Search')
-                .stretchWidth()
-                .border({ color: HColor('gray6') })
-                .margin({ bottom: 20 })
-                .whenChanged(ev => {
-                    const target = ev.view.parent?.getViewById('menu-items-list') as View;
-                    const query = (ev.view as TextField).attributes.value.trim().toLowerCase();
-                    target.removeAllChildren();
-                    target.addChildren(
-                        ...Sidebar.menuItems
-                            .filter(item => {
-                                const score = Sidebar.menuSearchScore(query, item.keywords);
-                                return score != 0 && score / query.split(' ').length >= 0.25;
-                            })
-                            .sort(
-                                (a, b) =>
-                                    Sidebar.menuSearchScore(query, a.keywords) -
-                                    Sidebar.menuSearchScore(query, b.keywords)
-                            )
-                            .map(item => item.view)
-                    );
-                })
-                .id('search-field'),
+            new SearchField(),
             new VStack(...Sidebar.menuItems.map(item => item.view), new Spacer()).stretchWidth().id('menu-items-list')
         );
+
+        this.alignStart()
+            .stretchHeight()
+            .padding(20)
+            .borderRight({ size: 1, style: 'solid', color: HColor('gray5') })
+            .width({
+                min: 300,
+                max: 300,
+                default: 300,
+            });
     }
 
-    override handle(data: string): void {
-        if (data == 'color') {
-            console.log(ColorConfiguration.theme);
-            if (ColorConfiguration.theme == 'dark') {
-                this.getViewById('search-field').background(RGBAModel.BLACK).foreground(RGBAModel.WHITE);
-            } else {
-                this.getViewById('search-field').background(RGBAModel.WHITE).foreground(RGBAModel.BLACK);
-            }
-        }
+    override handle(): void {
+        this.border({ color: HColor('gray5') });
     }
 
     static menuSearchScore(query: string, keywords: string[]): number {
@@ -105,6 +86,39 @@ export default class Sidebar extends VStack {
                 });
         }
         return score;
+    }
+}
+
+class SearchField extends TextField {
+    constructor() {
+        super('Search');
+        this.stretchWidth()
+            .border({ color: HColor('gray5') })
+            .margin({ bottom: 20 })
+            .whenChanged(ev => {
+                const target = ev.view.parent?.getViewById('menu-items-list') as View;
+                const query = (ev.view as TextField).attributes.value.trim().toLowerCase();
+                target.removeAllChildren();
+                target.addChildren(
+                    ...Sidebar.menuItems
+                        .filter(item => {
+                            const score = Sidebar.menuSearchScore(query, item.keywords);
+                            return score != 0 && score / query.split(' ').length >= 0.25;
+                        })
+                        .sort(
+                            (a, b) =>
+                                Sidebar.menuSearchScore(query, a.keywords) - Sidebar.menuSearchScore(query, b.keywords)
+                        )
+                        .map(item => item.view)
+                );
+            });
+    }
+
+    override handle(data: string): void {
+        if (data == 'color') {
+            this.background(HColor('background')).foreground(HColor('foreground'));
+            this.border({ color: HColor('gray5') });
+        }
     }
 }
 
