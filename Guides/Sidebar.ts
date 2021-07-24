@@ -216,7 +216,7 @@ class SettingsOverlay extends Overlay {
                 new HStack(
                     new ClickButton(
                         new VStack(new IonIcon('close-circle-outline'), new TextContent('Close').font('sm'))
-                    ).whenClicked(ev => {
+                    ).whenClicked(() => {
                         this.destroy();
                     })
                 )

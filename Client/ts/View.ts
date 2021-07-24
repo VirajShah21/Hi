@@ -145,7 +145,7 @@ export default abstract class View {
     }
 
     font(fontClass: string | number | HIFont | HISizingName): this {
-        if (typeof fontClass == 'string' && SizingValues.FONT.hasOwnProperty(fontClass)) {
+        if (typeof fontClass == 'string' && Object.prototype.hasOwnProperty.call(SizingValues.FONT, fontClass)) {
             this.body.style.fontSize = SizingValues.FONT[fontClass as HISizingName];
         } else if (typeof fontClass == 'string') {
             this.body.style.font = fontClass;
@@ -489,6 +489,9 @@ export default abstract class View {
     }
 
     handle(data: string): void {
-        // Should be overrideen by children
+        if (data == '') {
+            console.warn('Caught an empty signal');
+            console.trace();
+        }
     }
 }

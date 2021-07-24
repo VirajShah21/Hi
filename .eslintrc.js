@@ -1,15 +1,10 @@
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
-    plugins: [
-      '@typescript-eslint',
-    ],
-    extends: [
-      'eslint:recommended',
-      'plugin:@typescript-eslint/recommended',
-    ],
+    plugins: ['@typescript-eslint'],
+    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
     rules: {
-      // "@typescript-eslint/explicit-function-return-type": ["error"]
+        // "@typescript-eslint/explicit-function-return-type": ["error"]
     },
-    ignorePatterns: ["*.js", "Guides/Hi/**/*"]
-  };
+    ignorePatterns: ['*.js', 'Guides/Hi/**/*', 'Client/build/**/*'],
+};

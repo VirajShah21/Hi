@@ -90,7 +90,7 @@ export class RadioButton extends View {
     constructor() {
         super('ion-icon');
         this.body.setAttribute('name', 'radio-button-off');
-        this.body.addEventListener('click', ev => {
+        this.body.addEventListener('click', () => {
             this.state.selected = !this.state.selected;
         });
     }
@@ -127,7 +127,7 @@ export class RadioGroup {
     constructor(...radioButtons: RadioButton[]) {
         this.radios = radioButtons;
         this.radios.forEach(radio => {
-            radio.whenClicked(ev => {
+            radio.whenClicked(() => {
                 this.radios.forEach(otherRadio => {
                     if (otherRadio != radio) otherRadio.setSelected(false);
                 });
