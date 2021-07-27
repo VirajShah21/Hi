@@ -407,9 +407,9 @@ export default abstract class View {
         if (typeof frameHeight == 'string' || typeof frameHeight == 'number')
             this.body.style.height = sizing(frameHeight);
         else {
-            if (frameHeight.min) this.body.style.minWidth = sizing(frameHeight.min);
-            if (frameHeight.max) this.body.style.maxWidth = sizing(frameHeight.max);
-            if (frameHeight.default) this.body.style.width = sizing(frameHeight.default);
+            if (frameHeight.min) this.body.style.minHeight = sizing(frameHeight.min);
+            if (frameHeight.max) this.body.style.maxHeight = sizing(frameHeight.max);
+            if (frameHeight.default) this.body.style.height = sizing(frameHeight.default);
         }
 
         return this;
