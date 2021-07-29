@@ -32,6 +32,15 @@ export class RGBAModel {
     public a: number;
 
     constructor(r: number, g: number, b: number, a = 1) {
+        if (r < 0) r = 0;
+        else if (r > 255) r = 255;
+
+        if (g < 0) g = 0;
+        else if (g > 255) g = 255;
+
+        if (b < 0) b = 0;
+        else if (b > 255) b = 255;
+
         this.r = r;
         this.g = g;
         this.b = b;
@@ -39,17 +48,23 @@ export class RGBAModel {
     }
 
     red(r: number): this {
+        if (r < 0) r = 0;
+        else if (r > 255) r = 255;
         this.r = r;
         return this;
     }
 
     green(g: number): this {
+        if (g < 0) g = 0;
+        else if (g > 255) g = 255;
         this.g = g;
         return this;
     }
 
     blue(b: number): this {
-        this.b = b;
+        if (b < 0) b = 0;
+        else if (b > 255) b = 255;
+        this.b = b % 256;
         return this;
     }
 
@@ -145,4 +160,53 @@ export function changeTheme(theme: 'light' | 'dark'): void {
 
 export function whichTheme(): 'light' | 'dark' {
     return colorTheme;
+}
+
+/**
+ * From: https://stackoverflow.com/questions/2541481/get-average-color-of-image-via-javascript
+ *
+ * @export
+ * @param {any} imgEl
+ * @returns
+ */
+export function getAverageRGB(imgEl: HTMLImageElement) {
+    const blockSize = 5, // only visit every 5 pixels
+        canvas = document.createElement('canvas'),
+        context = canvas.getContext && canvas.getContext('2d'),
+        rgb = new RGBAModel(0, 0, 0);
+    let data,
+        i = -4,
+        count = 0;
+
+    if (!context) {
+        return rgb;
+    }
+
+    const height = (canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height);
+    const width = (canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width);
+
+    context.drawImage(imgEl, 0, 0);
+
+    try {
+        data = context.getImageData(0, 0, width, height);
+    } catch (e) {
+        /* security error, img on diff domain */
+        return rgb;
+    }
+
+    const length = data.data.length;
+
+    while ((i += blockSize * 4) < length) {
+        ++count;
+        rgb.r += data.data[i];
+        rgb.g += data.data[i + 1];
+        rgb.b += data.data[i + 2];
+    }
+
+    // ~~ used to floor values
+    rgb.r = ~~(rgb.r / count);
+    rgb.g = ~~(rgb.g / count);
+    rgb.b = ~~(rgb.b / count);
+
+    return rgb;
 }
