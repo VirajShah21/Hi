@@ -14,6 +14,7 @@ export const ViewControllerData = {
 export class ViewController {
     public screens: Record<string, View>;
     public binding: HTMLElement;
+    public visibleScreen: string;
 
     /**
      * Creates an instance of ViewController.
@@ -43,6 +44,7 @@ export class ViewController {
             throw new Error(`ViewController.navigateTo: ViewController does not have a screen named ${name}`);
         this.binding.innerHTML = '';
         this.binding.appendChild(this.screens[name].body);
+        this.visibleScreen = name;
         return this;
     }
 
@@ -80,6 +82,13 @@ export class ViewController {
      */
     bind(element: HTMLElement = document.body): this {
         this.binding = element;
+        return this;
+    }
+
+    whenResized(handler: (ev: HumanEvent) => void): this {
+        window.addEventListener('resize', ev =>
+            handler({ type: 'Resize', view: this.screens[this.visibleScreen], browserEvent: ev })
+        );
         return this;
     }
 
@@ -143,8 +152,11 @@ export class ViewController {
         const controller = ViewControllerData.controllers.find(currentController => {
             return Object.prototype.hasOwnProperty.call(currentController.screens, name);
         });
-        if (controller) controller.navigateTo(name);
-        else console.warn(`Could not navigate to ${name}`);
+        if (controller) {
+            controller.navigateTo(name);
+            controller.visibleScreen = name;
+        } else console.warn(`Could not navigate to ${name}`);
+
         return controller;
     }
 
