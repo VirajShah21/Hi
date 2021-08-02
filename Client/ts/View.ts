@@ -163,7 +163,7 @@ export default abstract class View {
             this.body.style.fontSize = SizingValues.FONT[fontClass as HISizingName];
         } else if (typeof fontClass == 'string') {
             this.body.style.font = fontClass;
-        } else if (typeof fontClass == 'number') this.body.style.fontSize = `${fontClass}pt`;
+        } else if (typeof fontClass == 'number') this.body.style.fontSize = sizing(fontClass);
         else if (typeof fontClass == 'object') {
             if (Object.prototype.hasOwnProperty.call(fontClass, 'family'))
                 this.body.style.fontFamily = fontClass.family;
