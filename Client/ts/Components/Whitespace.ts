@@ -7,6 +7,7 @@ export class Spacer extends View {
         this.body.style.flexGrow = '1';
         this.body.style.width = 'auto';
         this.body.style.height = 'auto';
+        this.body.style.fontSize = '1px';
     }
 }
 
