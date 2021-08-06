@@ -8,9 +8,15 @@ import { IonIcon } from './Graphics';
 export class Overlay extends View {
     constructor(...children: View[]) {
         super('div', ...children);
-        this.addClass('hi-overlay');
-        this.background(HColor('background').alpha(0.25));
-        this.foreground(HColor('foreground'));
+        this.background(HColor('background').alpha(0.25))
+            .foreground(HColor('foreground'))
+            .width('100vw')
+            .height('100vh')
+            .zIndex(100)
+            .fixed()
+            .setTop(0)
+            .setLeft(0)
+            .blur();
         document.body.appendChild(this.body);
     }
 }

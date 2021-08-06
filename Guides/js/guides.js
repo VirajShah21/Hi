@@ -85,6 +85,20 @@ define("Hi/Types/styles", ["require", "exports"], function (require, exports) {
 define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], function (require, exports, sizing_1, states_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.PStatus = void 0;
+    /**
+     * Status codes for the parent to use
+     *
+     * @export
+     * @enum {number}
+     */
+    var PStatus;
+    (function (PStatus) {
+        PStatus[PStatus["Visible"] = 0] = "Visible";
+        PStatus[PStatus["Invisible"] = 1] = "Invisible";
+        PStatus[PStatus["Destroyed"] = 2] = "Destroyed";
+        PStatus[PStatus["Null"] = 0] = "Null";
+    })(PStatus = exports.PStatus || (exports.PStatus = {}));
     /**
      * The base class for all Human Interface views.
      *
@@ -94,6 +108,7 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
      */
     class View {
         constructor(element, ...children) {
+            this.pstatus = PStatus.Visible;
             this.$children = [];
             this.body = document.createElement(element);
             this.addClass('hi-view');
@@ -197,7 +212,7 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
                 this.body.style.font = fontClass;
             }
             else if (typeof fontClass == 'number')
-                this.body.style.fontSize = `${fontClass}pt`;
+                this.body.style.fontSize = sizing_1.sizing(fontClass);
             else if (typeof fontClass == 'object') {
                 if (Object.prototype.hasOwnProperty.call(fontClass, 'family'))
                     this.body.style.fontFamily = fontClass.family;
@@ -222,18 +237,6 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
             this.body.style.display = 'inline-flex';
             return this;
         }
-        hide() {
-            const original = this.body.style.display;
-            this.unhide = () => {
-                this.body.style.display = original;
-                return this;
-            };
-            this.body.style.display = 'none';
-            return this;
-        }
-        unhide() {
-            return this;
-        }
         relative() {
             this.body.style.position = 'relative';
             return this;
@@ -252,7 +255,7 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
         buildChildren() {
             this.body.innerHTML = '';
             this.$children.forEach(child => {
-                if (child) {
+                if (child && child.pstatus == PStatus.Visible) {
                     child.parent = this;
                     this.body.appendChild(child.body);
                 }
@@ -450,11 +453,11 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
                 this.body.style.height = sizing_1.sizing(frameHeight);
             else {
                 if (frameHeight.min)
-                    this.body.style.minWidth = sizing_1.sizing(frameHeight.min);
+                    this.body.style.minHeight = sizing_1.sizing(frameHeight.min);
                 if (frameHeight.max)
-                    this.body.style.maxWidth = sizing_1.sizing(frameHeight.max);
+                    this.body.style.maxHeight = sizing_1.sizing(frameHeight.max);
                 if (frameHeight.default)
-                    this.body.style.width = sizing_1.sizing(frameHeight.default);
+                    this.body.style.height = sizing_1.sizing(frameHeight.default);
             }
             return this;
         }
@@ -489,6 +492,20 @@ define("Hi/View", ["require", "exports", "Hi/Types/sizing", "Hi/Types/states"], 
         }
         setRight(offset) {
             this.body.style.right = sizing_1.sizing(offset);
+            return this;
+        }
+        opacity(o) {
+            this.body.style.opacity = `${o}`;
+            return this;
+        }
+        nullify() {
+            this.body.remove();
+            this.pstatus = PStatus.Null;
+            return this;
+        }
+        dnull() {
+            this.pstatus = PStatus.Visible;
+            this.parent.buildChildren();
             return this;
         }
         // * Mouse Hover Event Modifiers
@@ -567,6 +584,7 @@ define("Hi/ViewController", ["require", "exports", "Hi/View"], function (require
                 throw new Error(`ViewController.navigateTo: ViewController does not have a screen named ${name}`);
             this.binding.innerHTML = '';
             this.binding.appendChild(this.screens[name].body);
+            this.visibleScreen = name;
             return this;
         }
         /**
@@ -596,6 +614,10 @@ define("Hi/ViewController", ["require", "exports", "Hi/View"], function (require
          */
         bind(element = document.body) {
             this.binding = element;
+            return this;
+        }
+        whenResized(handler) {
+            window.addEventListener('resize', ev => handler({ type: 'Resize', view: this.screens[this.visibleScreen], browserEvent: ev }));
             return this;
         }
         /**
@@ -653,8 +675,10 @@ define("Hi/ViewController", ["require", "exports", "Hi/View"], function (require
             const controller = exports.ViewControllerData.controllers.find(currentController => {
                 return Object.prototype.hasOwnProperty.call(currentController.screens, name);
             });
-            if (controller)
+            if (controller) {
                 controller.navigateTo(name);
+                controller.visibleScreen = name;
+            }
             else
                 console.warn(`Could not navigate to ${name}`);
             return controller;
@@ -680,24 +704,48 @@ define("Hi/ViewController", ["require", "exports", "Hi/View"], function (require
 define("Hi/Colors", ["require", "exports", "Hi/ViewController"], function (require, exports, ViewController_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.whichTheme = exports.changeTheme = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
+    exports.getAverageRGB = exports.whichTheme = exports.changeTheme = exports.HumanColorSwatch = exports.rgba = exports.rgb = exports.HColor = exports.RGBAModel = void 0;
     class RGBAModel {
         constructor(r, g, b, a = 1) {
+            if (r < 0)
+                r = 0;
+            else if (r > 255)
+                r = 255;
+            if (g < 0)
+                g = 0;
+            else if (g > 255)
+                g = 255;
+            if (b < 0)
+                b = 0;
+            else if (b > 255)
+                b = 255;
             this.r = r;
             this.g = g;
             this.b = b;
             this.a = a;
         }
         red(r) {
+            if (r < 0)
+                r = 0;
+            else if (r > 255)
+                r = 255;
             this.r = r;
             return this;
         }
         green(g) {
+            if (g < 0)
+                g = 0;
+            else if (g > 255)
+                g = 255;
             this.g = g;
             return this;
         }
         blue(b) {
-            this.b = b;
+            if (b < 0)
+                b = 0;
+            else if (b > 255)
+                b = 255;
+            this.b = b % 256;
             return this;
         }
         alpha(a) {
@@ -795,6 +843,44 @@ define("Hi/Colors", ["require", "exports", "Hi/ViewController"], function (requi
         return colorTheme;
     }
     exports.whichTheme = whichTheme;
+    /**
+     * From: https://stackoverflow.com/questions/2541481/get-average-color-of-image-via-javascript
+     *
+     * @export
+     * @param {any} imgEl
+     * @returns
+     */
+    function getAverageRGB(imgEl) {
+        const blockSize = 5, // only visit every 5 pixels
+        canvas = document.createElement('canvas'), context = canvas.getContext && canvas.getContext('2d'), rgb = new RGBAModel(0, 0, 0);
+        let data, i = -4, count = 0;
+        if (!context) {
+            return rgb;
+        }
+        const height = (canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height);
+        const width = (canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width);
+        context.drawImage(imgEl, 0, 0);
+        try {
+            data = context.getImageData(0, 0, width, height);
+        }
+        catch (e) {
+            /* security error, img on diff domain */
+            return rgb;
+        }
+        const length = data.data.length;
+        while ((i += blockSize * 4) < length) {
+            ++count;
+            rgb.r += data.data[i];
+            rgb.g += data.data[i + 1];
+            rgb.b += data.data[i + 2];
+        }
+        // ~~ used to floor values
+        rgb.r = ~~(rgb.r / count);
+        rgb.g = ~~(rgb.g / count);
+        rgb.b = ~~(rgb.b / count);
+        return rgb;
+    }
+    exports.getAverageRGB = getAverageRGB;
 });
 define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (require, exports, View_2) {
     "use strict";
@@ -814,6 +900,7 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
         constructor(...children) {
             super(...children);
             this.body.style.display = 'flex';
+            this.body.style.boxSizing = 'border-box';
         }
     }
     exports.Stack = Stack;
@@ -854,6 +941,7 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
         constructor(...children) {
             super('div', ...children);
             this.body.style.overflowY = 'scroll';
+            this.body.style.boxSizing = 'border-box';
         }
     }
     exports.ScrollView = ScrollView;
@@ -874,7 +962,19 @@ define("Hi/Components/Stacks", ["require", "exports", "Hi/View"], function (requ
 define("Hi/Components/Basics", ["require", "exports", "Hi/View", "Hi/Types/sizing", "Hi/Colors", "Hi/Types/states"], function (require, exports, View_3, sizing_2, Colors_1, states_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.BlockCode = exports.InlineCode = exports.ClickButton = exports.RadioGroup = exports.RadioButton = exports.Checkbox = exports.Hyperlink = exports.TextContent = void 0;
+    exports.BlockCode = exports.InlineCode = exports.ClickButton = exports.RadioGroup = exports.RadioButton = exports.Checkbox = exports.Hyperlink = exports.TextContent = exports.FontWeight = void 0;
+    var FontWeight;
+    (function (FontWeight) {
+        FontWeight[FontWeight["UltraLight"] = 100] = "UltraLight";
+        FontWeight[FontWeight["Light"] = 200] = "Light";
+        FontWeight[FontWeight["DemiLight"] = 300] = "DemiLight";
+        FontWeight[FontWeight["Regular"] = 400] = "Regular";
+        FontWeight[FontWeight["Medium"] = 500] = "Medium";
+        FontWeight[FontWeight["DemiBold"] = 600] = "DemiBold";
+        FontWeight[FontWeight["Bold"] = 700] = "Bold";
+        FontWeight[FontWeight["Heavy"] = 800] = "Heavy";
+        FontWeight[FontWeight["UltraHeavy"] = 900] = "UltraHeavy";
+    })(FontWeight = exports.FontWeight || (exports.FontWeight = {}));
     class TextContent extends View_3.default {
         constructor(text) {
             super('span');
@@ -887,6 +987,10 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/View", "Hi/Types/sizin
         }
         lineHeight(height) {
             this.body.style.lineHeight = sizing_2.sizing(height);
+            return this;
+        }
+        weight(fontWeight) {
+            this.body.style.fontWeight = `${fontWeight}`;
             return this;
         }
     }
@@ -1036,7 +1140,7 @@ define("Hi/Components/Basics", ["require", "exports", "Hi/View", "Hi/Types/sizin
 define("Hi/Components/Graphics", ["require", "exports", "Hi/Types/states", "Hi/View"], function (require, exports, states_3, View_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ImageContent = exports.Canvas = exports.IonIcon = void 0;
+    exports.ImageContent = exports.Sprite = exports.SpriteGeometryFunction = exports.Canvas = exports.IonIcon = void 0;
     class IonIcon extends View_4.default {
         constructor(name) {
             super('ion-icon');
@@ -1048,6 +1152,60 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/Types/states", "Hi/V
         constructor() {
             super('canvas');
             this.context = this.body.getContext('2d');
+            this.sprites = [];
+        }
+        addSprites(...sprites) {
+            sprites.forEach(sprite => this.sprites.push(sprite));
+            return this;
+        }
+        drawSprites() {
+            this.sprites.forEach(sprite => {
+                console.log('Drawing New Sprite', sprite);
+                const widthFilter = sprite.geometry.find(e => e.func == SpriteGeometryFunction.Width);
+                const heightFilter = sprite.geometry.find(e => e.func == SpriteGeometryFunction.Height);
+                let spriteWidth = (widthFilter ? widthFilter.args[0] : this.body.width);
+                let spriteHeight = (heightFilter ? heightFilter.args[0] : this.body.height);
+                let scaleX = spriteWidth / 100;
+                let scaleY = spriteHeight / 100;
+                let x = sprite.x;
+                let y = sprite.y;
+                sprite.geometry.forEach(geo => {
+                    console.log('Drawing new geometry', geo, 'with scale', scaleX, scaleY);
+                    const args = geo.args || [];
+                    switch (geo.func) {
+                        case SpriteGeometryFunction.Width:
+                            spriteWidth = args[0];
+                            scaleX = spriteWidth / 100;
+                            break;
+                        case SpriteGeometryFunction.Height:
+                            spriteHeight = args[0];
+                            scaleY = spriteHeight / 100;
+                            break;
+                        case SpriteGeometryFunction.Line:
+                            this.line(x + args[0] * scaleX, y + args[1] * scaleY, x + args[2] * scaleX, y + args[3] * scaleY);
+                            break;
+                        case SpriteGeometryFunction.Stroke:
+                            this.stroke();
+                            break;
+                        case SpriteGeometryFunction.Font:
+                            this.font(args[0]);
+                            break;
+                        case SpriteGeometryFunction.FillText:
+                            this.fillText(args[0], x + args[1] * scaleX, y + args[2] * scaleY);
+                            break;
+                        case SpriteGeometryFunction.StrokeText:
+                            this.strokeText(args[0], x + args[1] * scaleX, y + args[2] * scaleY);
+                            break;
+                        case SpriteGeometryFunction.FillStyle:
+                            this.fillStyle(args[0]);
+                            break;
+                        case SpriteGeometryFunction.FillRect:
+                            this.fillRect(x + args[0] * scaleX, y + args[1] * scaleY, args[2] * scaleX, args[3] * scaleY);
+                            break;
+                    }
+                });
+            });
+            return this;
         }
         width(size) {
             this.body.width = size;
@@ -1057,12 +1215,9 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/Types/states", "Hi/V
             this.body.height = size;
             return this;
         }
-        moveTo(x, y) {
-            this.context.moveTo(x, y);
-            return this;
-        }
-        lineTo(x, y) {
-            this.context.lineTo(x, y);
+        line(x1, y1, x2, y2) {
+            this.context.moveTo(x1, y1);
+            this.context.lineTo(x2, y2);
             return this;
         }
         stroke() {
@@ -1085,12 +1240,98 @@ define("Hi/Components/Graphics", ["require", "exports", "Hi/Types/states", "Hi/V
             this.context.fillStyle = style;
             return this;
         }
-        fillRect(x1, y1, x2, y2) {
-            this.context.fillRect(x1, y1, x2, y2);
+        fillRect(x1, y1, width, height) {
+            this.context.fillRect(x1, y1, width, height);
             return this;
         }
     }
     exports.Canvas = Canvas;
+    var SpriteGeometryFunction;
+    (function (SpriteGeometryFunction) {
+        SpriteGeometryFunction[SpriteGeometryFunction["Width"] = 0] = "Width";
+        SpriteGeometryFunction[SpriteGeometryFunction["Height"] = 1] = "Height";
+        SpriteGeometryFunction[SpriteGeometryFunction["Line"] = 2] = "Line";
+        SpriteGeometryFunction[SpriteGeometryFunction["Stroke"] = 3] = "Stroke";
+        SpriteGeometryFunction[SpriteGeometryFunction["Font"] = 4] = "Font";
+        SpriteGeometryFunction[SpriteGeometryFunction["FillText"] = 5] = "FillText";
+        SpriteGeometryFunction[SpriteGeometryFunction["StrokeText"] = 6] = "StrokeText";
+        SpriteGeometryFunction[SpriteGeometryFunction["FillStyle"] = 7] = "FillStyle";
+        SpriteGeometryFunction[SpriteGeometryFunction["FillRect"] = 8] = "FillRect";
+        SpriteGeometryFunction[SpriteGeometryFunction["LoadImage"] = 9] = "LoadImage";
+    })(SpriteGeometryFunction = exports.SpriteGeometryFunction || (exports.SpriteGeometryFunction = {}));
+    class Sprite {
+        constructor() {
+            this.x = 0;
+            this.y = 0;
+            this.geometry = [];
+        }
+        width(size) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.Width,
+                args: [size],
+            });
+            return this;
+        }
+        height(size) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.Height,
+                args: [size],
+            });
+            return this;
+        }
+        line(x1, y1, x2, y2) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.Line,
+                args: [x1, y1, x2, y2],
+            });
+            return this;
+        }
+        stroke() {
+            this.geometry.push({ func: SpriteGeometryFunction.Stroke });
+            return this;
+        }
+        font(fontstr) {
+            this.geometry.push({ func: SpriteGeometryFunction.Font, args: [fontstr] });
+            return this;
+        }
+        fillText(text, x, y) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.FillText,
+                args: [text, x, y],
+            });
+            return this;
+        }
+        strokeText(text, x, y) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.StrokeText,
+                args: [text, x, y],
+            });
+            return this;
+        }
+        fillStyle(style) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.FillStyle,
+                args: [style],
+            });
+            return this;
+        }
+        fillRect(x1, y1, width, height) {
+            this.geometry.push({
+                func: SpriteGeometryFunction.FillRect,
+                args: [x1, y1, width, height],
+            });
+            return this;
+        }
+        setX(x) {
+            this.x = x;
+            return this;
+        }
+        setY(y) {
+            this.y = y;
+            return this;
+        }
+    }
+    exports.Sprite = Sprite;
     class ImageContent extends View_4.default {
         constructor(source, altText) {
             super('img');
@@ -1212,6 +1453,7 @@ define("Hi/Components/Inputs", ["require", "exports", "Hi/Types/sizing", "Hi/Typ
             this.body.style.border = '1px solid silver';
             this.body.style.textAlign = 'left';
             this.body.style.padding = sizing_3.SizingValues.PADDING.xxs;
+            this.body.style.boxSizing = 'border-box';
         }
     }
     exports.TextBox = TextBox;
@@ -1223,9 +1465,15 @@ define("Hi/Components/Overlays", ["require", "exports", "Hi/Colors", "Hi/Compone
     class Overlay extends View_6.default {
         constructor(...children) {
             super('div', ...children);
-            this.addClass('hi-overlay');
-            this.background(Colors_2.HColor('background').alpha(0.25));
-            this.foreground(Colors_2.HColor('foreground'));
+            this.background(Colors_2.HColor('background').alpha(0.25))
+                .foreground(Colors_2.HColor('foreground'))
+                .width('100vw')
+                .height('100vh')
+                .zIndex(100)
+                .fixed()
+                .setTop(0)
+                .setLeft(0)
+                .blur();
             document.body.appendChild(this.body);
         }
     }
@@ -1668,14 +1916,14 @@ define("Hi/Components/DevKit", ["require", "exports", "Hi/Colors", "Hi/Types/sta
                     this.getViewById('toggle-contrast-button')?.foreground(Colors_6.HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray'));
                 if (property == 'dimensions')
                     if (this.viewerSettings.propertyFilters.dimensions)
-                        this.getViewById('component-dimensions').unhide();
+                        this.getViewById('component-dimensions').nullify();
                     else
-                        this.getViewById('component-dimensions').hide();
+                        this.getViewById('component-dimensions').dnull();
                 if (property == 'padding')
                     if (this.viewerSettings.propertyFilters.padding)
-                        this.getViewById('component-padding-wrapper').unhide();
+                        this.getViewById('component-padding-wrapper').nullify();
                     else
-                        this.getViewById('component-padding-wrapper').hide();
+                        this.getViewById('component-padding-wrapper').dnull();
             });
             Preview.enableHover(content, this);
         }

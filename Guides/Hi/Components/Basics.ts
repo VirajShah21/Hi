@@ -4,6 +4,18 @@ import { HISizingValue, sizing, SizingValues } from '../Types/sizing';
 import { HColor } from '../Colors';
 import { StateObject } from '../Types/states';
 
+export enum FontWeight {
+    UltraLight = 100,
+    Light = 200,
+    DemiLight = 300,
+    Regular = 400,
+    Medium = 500,
+    DemiBold = 600,
+    Bold = 700,
+    Heavy = 800,
+    UltraHeavy = 900,
+}
+
 export class TextContent extends View {
     public override body: HTMLSpanElement;
 
@@ -23,6 +35,11 @@ export class TextContent extends View {
 
     lineHeight(height: HISizingValue): this {
         this.body.style.lineHeight = sizing(height);
+        return this;
+    }
+
+    weight(fontWeight: FontWeight): this {
+        this.body.style.fontWeight = `${fontWeight}`;
         return this;
     }
 }

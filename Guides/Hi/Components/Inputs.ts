@@ -118,5 +118,6 @@ export class TextBox extends View {
         this.body.style.border = '1px solid silver';
         this.body.style.textAlign = 'left';
         this.body.style.padding = SizingValues.PADDING.xxs;
+        this.body.style.boxSizing = 'border-box';
     }
 }

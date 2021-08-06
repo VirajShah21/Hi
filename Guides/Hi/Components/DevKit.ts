@@ -63,12 +63,13 @@ export class Preview extends VStack {
                 );
 
             if (property == 'dimensions')
-                if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions').unhide();
-                else this.getViewById('component-dimensions').hide();
+                if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions').nullify();
+                else this.getViewById('component-dimensions').dnull();
 
             if (property == 'padding')
-                if (this.viewerSettings.propertyFilters.padding) this.getViewById('component-padding-wrapper').unhide();
-                else this.getViewById('component-padding-wrapper').hide();
+                if (this.viewerSettings.propertyFilters.padding)
+                    this.getViewById('component-padding-wrapper').nullify();
+                else this.getViewById('component-padding-wrapper').dnull();
         }
     );
 

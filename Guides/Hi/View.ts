@@ -21,6 +21,19 @@ interface ModelData {
 }
 
 /**
+ * Status codes for the parent to use
+ *
+ * @export
+ * @enum {number}
+ */
+export enum PStatus {
+    Visible,
+    Invisible,
+    Destroyed,
+    Null = 0,
+}
+
+/**
  * The base class for all Human Interface views.
  *
  * @export
@@ -32,6 +45,7 @@ export default abstract class View {
     public parent?: View;
     public description?: string;
     public identifier: string;
+    public pstatus: PStatus = PStatus.Visible;
 
     public readonly children: StateProxy<View[]>;
     protected readonly $children: View[] = [];
@@ -149,7 +163,7 @@ export default abstract class View {
             this.body.style.fontSize = SizingValues.FONT[fontClass as HISizingName];
         } else if (typeof fontClass == 'string') {
             this.body.style.font = fontClass;
-        } else if (typeof fontClass == 'number') this.body.style.fontSize = `${fontClass}pt`;
+        } else if (typeof fontClass == 'number') this.body.style.fontSize = sizing(fontClass);
         else if (typeof fontClass == 'object') {
             if (Object.prototype.hasOwnProperty.call(fontClass, 'family'))
                 this.body.style.fontFamily = fontClass.family;
@@ -178,22 +192,6 @@ export default abstract class View {
         return this;
     }
 
-    hide(): this {
-        const original = this.body.style.display;
-
-        this.unhide = () => {
-            this.body.style.display = original;
-            return this;
-        };
-
-        this.body.style.display = 'none';
-        return this;
-    }
-
-    unhide(): this {
-        return this;
-    }
-
     relative(): this {
         this.body.style.position = 'relative';
         return this;
@@ -214,7 +212,7 @@ export default abstract class View {
     buildChildren(): this {
         this.body.innerHTML = '';
         this.$children.forEach(child => {
-            if (child) {
+            if (child && child.pstatus == PStatus.Visible) {
                 child.parent = this;
                 this.body.appendChild(child.body);
             }
@@ -407,9 +405,9 @@ export default abstract class View {
         if (typeof frameHeight == 'string' || typeof frameHeight == 'number')
             this.body.style.height = sizing(frameHeight);
         else {
-            if (frameHeight.min) this.body.style.minWidth = sizing(frameHeight.min);
-            if (frameHeight.max) this.body.style.maxWidth = sizing(frameHeight.max);
-            if (frameHeight.default) this.body.style.width = sizing(frameHeight.default);
+            if (frameHeight.min) this.body.style.minHeight = sizing(frameHeight.min);
+            if (frameHeight.max) this.body.style.maxHeight = sizing(frameHeight.max);
+            if (frameHeight.default) this.body.style.height = sizing(frameHeight.default);
         }
 
         return this;
@@ -454,6 +452,23 @@ export default abstract class View {
 
     setRight(offset: HISizingValue): this {
         this.body.style.right = sizing(offset);
+        return this;
+    }
+
+    opacity(o: number): this {
+        this.body.style.opacity = `${o}`;
+        return this;
+    }
+
+    nullify(): this {
+        this.body.remove();
+        this.pstatus = PStatus.Null;
+        return this;
+    }
+
+    dnull(): this {
+        this.pstatus = PStatus.Visible;
+        this.parent.buildChildren();
         return this;
     }
 

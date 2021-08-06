@@ -14,6 +14,7 @@ export abstract class Stack extends Group {
     constructor(...children: View[]) {
         super(...children);
         this.body.style.display = 'flex';
+        this.body.style.boxSizing = 'border-box';
     }
 }
 
@@ -55,6 +56,7 @@ export class ScrollView extends View {
     constructor(...children: View[]) {
         super('div', ...children);
         this.body.style.overflowY = 'scroll';
+        this.body.style.boxSizing = 'border-box';
     }
 }
 
