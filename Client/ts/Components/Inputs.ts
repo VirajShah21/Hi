@@ -2,6 +2,7 @@ import { HumanEvent } from '../ViewController';
 import { SizingValues } from '../Types/sizing';
 import { StateObject } from '../Types/states';
 import View from '../View';
+import { HColor } from '../Colors';
 
 export default class InputField extends View {
     public override body: HTMLInputElement;
@@ -21,10 +22,12 @@ export default class InputField extends View {
         super('input');
         this.attributes.value = '';
         this.attributes.placeholder = placeholder || '';
-        this.body.style.border = '1px solid silver';
-        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xxs;
-        this.body.style.padding = SizingValues.PADDING.xxs;
         this.body.style.margin = '0';
+        this.body.style.boxSizing = 'border-box';
+        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xs;
+        this.body.style.border = `1px solid ${HColor('gray5')}`;
+        this.body.style.textAlign = 'left';
+        this.body.style.padding = SizingValues.PADDING.xs;
         this.body.style.boxSizing = 'border-box';
         this.body.addEventListener('input', () => {
             this.attributes.value = this.body.value;
@@ -113,11 +116,5 @@ export class TextBox extends View {
         this.body.addEventListener('change', () => {
             this.value = this.body.value;
         });
-        this.value = '';
-        this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xxs;
-        this.body.style.border = '1px solid silver';
-        this.body.style.textAlign = 'left';
-        this.body.style.padding = SizingValues.PADDING.xxs;
-        this.body.style.boxSizing = 'border-box';
     }
 }
