@@ -13,18 +13,9 @@ export function StateObject<T extends Record<string, unknown> | unknown[]>(
     obj: T,
     onChange: (property?: string) => void
 ): StateProxy<T> {
-    if (!onChange)
-        throw new Error(
-            `State object (${JSON.stringify(obj, null, 2)}) must have a handler. Otherwise leave as native object.`
-        );
-
     const handler = {
         get(target: T, property: string, receiver: unknown): unknown {
-            try {
-                return new Proxy((target as Record<string, Record<string, unknown> | unknown[]>)[property], handler);
-            } catch (err) {
-                return Reflect.get(target, property, receiver);
-            }
+            return Reflect.get(target, property, receiver);
         },
         defineProperty(target: T, property: string, descriptor: PropertyDescriptor) {
             const result = Reflect.defineProperty(target, property, descriptor);
@@ -39,4 +30,8 @@ export function StateObject<T extends Record<string, unknown> | unknown[]>(
     };
 
     return new Proxy(obj, handler);
+}
+
+export function CheckoutState<T>(proxy: StateProxy<T>): T {
+    return (proxy as unknown as { $: T }).$;
 }
