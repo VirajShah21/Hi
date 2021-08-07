@@ -14,9 +14,9 @@
         "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {
-            "@Hi": ["./Client"]
+            "@Hi/*": ["./Client/ts/*"]
         }
     },
-    "include": ["./Client/*", "./Guides/*"],
+    "include": ["./**/*.ts"],
     "exclude": ["./node_modules"]
 }

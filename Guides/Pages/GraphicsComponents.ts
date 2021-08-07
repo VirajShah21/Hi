@@ -1,10 +1,10 @@
-import { HColor, RGBAModel } from '../Hi/Colors';
-import { ClickButton, TextContent } from '../Hi/Components/Basics';
-import { Preview } from '../Hi/Components/DevKit';
-import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
-import { AlertOverlay } from '../Hi/Components/Overlays';
-import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { Spacer } from '../Hi/Components/Whitespace';
+import { HColor, RGBAModel } from '@Hi/Colors';
+import { ClickButton, TextContent } from '@Hi/Components/Basics';
+import { Preview } from '@Hi/Components/DevKit';
+import { IonIcon, ImageContent } from '@Hi/Components/Graphics';
+import { AlertOverlay } from '@Hi/Components/Overlays';
+import { Container, HStack, VStack } from '@Hi/Components/Stacks';
+import { Spacer } from '@Hi/Components/Whitespace';
 import { MajorIcon, PrimaryHeading } from './PageComponents';
 
 export default class GraphicsComponent extends Container {

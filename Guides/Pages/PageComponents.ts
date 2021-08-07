@@ -1,8 +1,8 @@
-import { HColor, RGBAModel } from '../Hi/Colors';
-import { TextContent } from '../Hi/Components/Basics';
-import { IonIcon } from '../Hi/Components/Graphics';
-import { HStack } from '../Hi/Components/Stacks';
-import View from '../Hi/View';
+import { HColor, RGBAModel } from '@Hi/Colors';
+import { TextContent } from '@Hi/Components/Basics';
+import { IonIcon } from '@Hi/Components/Graphics';
+import { HStack } from '@Hi/Components/Stacks';
+import View from '@Hi/View';
 
 export class MajorIcon extends IonIcon {
     constructor(name: string) {

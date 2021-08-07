@@ -1,13 +1,13 @@
-import { changeTheme, HColor } from './Hi/Colors';
-import { ClickButton, RadioButton, RadioGroup, TextContent } from './Hi/Components/Basics';
-import { IonIcon } from './Hi/Components/Graphics';
-import { TextField } from './Hi/Components/Inputs';
-import { Overlay } from './Hi/Components/Overlays';
-import { VStack, HStack } from './Hi/Components/Stacks';
-import { Spacer } from './Hi/Components/Whitespace';
-import { StateObject } from './Hi/Types/states';
-import View from './Hi/View';
-import { ViewController } from './Hi/ViewController';
+import { changeTheme, HColor } from '@Hi/Colors';
+import { ClickButton, RadioButton, RadioGroup, TextContent } from '@Hi/Components/Basics';
+import { IonIcon } from '@Hi/Components/Graphics';
+import { TextField } from '@Hi/Components/Inputs';
+import { Overlay } from '@Hi/Components/Overlays';
+import { VStack, HStack } from '@Hi/Components/Stacks';
+import { Spacer } from '@Hi/Components/Whitespace';
+import { StateObject } from '@Hi/Types/states';
+import View from '@Hi/View';
+import { ViewController } from '@Hi/ViewController';
 
 function SmartKeywords(keywords: string[]) {
     const results = [];

@@ -1,8 +1,8 @@
-import { IonIcon, ImageContent } from '../Hi/Components/Graphics';
-import { Container, HStack, VStack } from '../Hi/Components/Stacks';
-import { ClickButton, TextContent } from '../Hi/Components/Basics';
-import { Spacer } from '../Hi/Components/Whitespace';
-import { HColor } from '../Hi/Colors';
+import { IonIcon, ImageContent } from '@Hi/Components/Graphics';
+import { Container, HStack, VStack } from '@Hi/Components/Stacks';
+import { ClickButton, TextContent } from '@Hi/Components/Basics';
+import { Spacer } from '@Hi/Components/Whitespace';
+import { HColor } from '@Hi/Colors';
 import {
     FileTreeItem,
     ImageCaption,

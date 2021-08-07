@@ -1,8 +1,8 @@
-import { Container, HStack, VStack } from '../Hi/Components/Stacks';
+import { Container, HStack, VStack } from '@Hi/Components/Stacks';
 import { MajorIcon, PrimaryHeading, PrimaryText, SecondaryHeading } from './PageComponents';
-import { ClickButton, TextContent } from '../Hi/Components/Basics';
-import { HColor, RGBAModel } from '../Hi/Colors';
-import { Preview } from '../Hi/Components/DevKit';
+import { ClickButton, TextContent } from '@Hi/Components/Basics';
+import { HColor, RGBAModel } from '@Hi/Colors';
+import { Preview } from '@Hi/Components/DevKit';
 
 export default class BasicComponents extends Container {
     constructor() {
