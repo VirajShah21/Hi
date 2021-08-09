@@ -59,9 +59,9 @@ export default class GraphicsComponent extends Container {
                                     .id('like-button')
                             ).whenClicked(ev => {
                                 const likeButton = ev.view.getViewById('like-button');
-                                likeButton.body.setAttribute(
+                                likeButton?.body.setAttribute(
                                     'name',
-                                    likeButton.body.getAttribute('name').indexOf('outline') > 0
+                                    likeButton?.body.getAttribute('name')!.indexOf('outline') > 0
                                         ? 'heart'
                                         : 'heart-outline'
                                 );
@@ -80,12 +80,14 @@ export default class GraphicsComponent extends Container {
                                     .id('bookmark-button')
                             ).whenClicked(ev => {
                                 const bookmarkButton = ev.view.getViewById('bookmark-button');
-                                bookmarkButton.body.setAttribute(
-                                    'name',
-                                    bookmarkButton.body.getAttribute('name').indexOf('outline') > 0
-                                        ? 'bookmark'
-                                        : 'bookmark-outline'
-                                );
+                                if (bookmarkButton) {
+                                    bookmarkButton.body.setAttribute(
+                                        'name',
+                                        bookmarkButton.body.getAttribute('name')!.indexOf('outline') > 0
+                                            ? 'bookmark'
+                                            : 'bookmark-outline'
+                                    );
+                                }
                             }),
                             new ClickButton(
                                 new IonIcon('share-outline')

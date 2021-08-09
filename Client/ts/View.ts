@@ -107,8 +107,7 @@ export default abstract class View {
         this.body.remove();
 
         // Clear all instance variables
-        this.body = null;
-        this.parent = null;
+        this.parent = undefined;
     }
 
     addChildren(...children: View[]): this {
@@ -166,13 +165,13 @@ export default abstract class View {
         } else if (typeof fontClass == 'number') this.body.style.fontSize = sizing(fontClass);
         else if (typeof fontClass == 'object') {
             if (Object.prototype.hasOwnProperty.call(fontClass, 'family'))
-                this.body.style.fontFamily = fontClass.family;
+                this.body.style.fontFamily = fontClass.family!;
             if (
                 Object.prototype.hasOwnProperty.call(fontClass, 'size') &&
                 ['number', 'string'].indexOf(typeof fontClass.size) >= 0
             )
-                this.body.style.fontSize = sizing(fontClass.size);
-            if (Object.prototype.hasOwnProperty.call(fontClass, 'color')) this.foreground(fontClass.color);
+                this.body.style.fontSize = sizing(fontClass.size!);
+            if (Object.prototype.hasOwnProperty.call(fontClass, 'color')) this.foreground(fontClass.color!);
         }
         return this;
     }
@@ -468,7 +467,7 @@ export default abstract class View {
 
     dnull(): this {
         this.pstatus = PStatus.Visible;
-        this.parent.buildChildren();
+        this.parent!.buildChildren();
         return this;
     }
 

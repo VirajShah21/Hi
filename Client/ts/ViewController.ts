@@ -148,16 +148,18 @@ export class ViewController {
      *
      * @memberOf ViewController
      */
-    static navigateTo(name = 'main'): ViewController {
+    static navigateTo(name = 'main'): ViewController | null {
         const controller = ViewControllerData.controllers.find(currentController => {
             return Object.prototype.hasOwnProperty.call(currentController.screens, name);
         });
         if (controller) {
             controller.navigateTo(name);
             controller.visibleScreen = name;
-        } else console.warn(`Could not navigate to ${name}`);
-
-        return controller;
+            return controller;
+        } else {
+            console.warn(`Could not navigate to ${name}`);
+            return null;
+        }
     }
 
     /**

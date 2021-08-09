@@ -27,7 +27,7 @@ export class Canvas extends View implements CanvasContext {
 
     constructor() {
         super('canvas');
-        this.context = this.body.getContext('2d');
+        this.context = this.body.getContext('2d')!;
         this.sprites = [];
     }
 
@@ -42,8 +42,8 @@ export class Canvas extends View implements CanvasContext {
             const widthFilter = sprite.geometry.find(e => e.func == SpriteGeometryFunction.Width);
             const heightFilter = sprite.geometry.find(e => e.func == SpriteGeometryFunction.Height);
 
-            let spriteWidth = (widthFilter ? widthFilter.args[0] : this.body.width) as number;
-            let spriteHeight = (heightFilter ? heightFilter.args[0] : this.body.height) as number;
+            let spriteWidth = (widthFilter ? widthFilter.args![0] : this.body.width) as number;
+            let spriteHeight = (heightFilter ? heightFilter.args![0] : this.body.height) as number;
 
             let scaleX = spriteWidth / 100;
             let scaleY = spriteHeight / 100;

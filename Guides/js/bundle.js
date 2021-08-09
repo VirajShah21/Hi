@@ -377,12 +377,28 @@ class InlineCode extends _View__WEBPACK_IMPORTED_MODULE_0__.default {
         this.body.innerText = text;
         this.body.style.fontFamily = 'monospace';
     }
+    write(text) {
+        this.body.innerText += text;
+        return this;
+    }
+    overwrite(text) {
+        this.body.innerText = text;
+        return this;
+    }
 }
 class BlockCode extends _View__WEBPACK_IMPORTED_MODULE_0__.default {
     constructor(text) {
         super('pre');
         this.body.innerText = text;
         this.body.style.fontFamily = 'monospace';
+    }
+    write(text) {
+        this.body.innerText += text;
+        return this;
+    }
+    overwrite(text) {
+        this.body.innerText = text;
+        return this;
     }
 }
 
@@ -510,7 +526,7 @@ class Preview extends _Stacks__WEBPACK_IMPORTED_MODULE_5__.VStack {
             exampleViewer.dimensions.height = view.body.clientHeight;
             exampleViewer.componentInfo.name = view.constructor.name;
             exampleViewer.componentInfo.id = view.body.id;
-            exampleViewer.componentInfo.description = view.description;
+            exampleViewer.componentInfo.description = view.description || '';
             const computedStyles = window.getComputedStyle(view.body);
             const paddings = [
                 computedStyles.paddingTop,
@@ -814,8 +830,8 @@ class InputField extends _View__WEBPACK_IMPORTED_MODULE_2__.default {
             value: '',
             placeholder: '',
         }, () => {
-            this.body.setAttribute('value', this.attributes.value);
-            this.body.setAttribute('placeholder', this.attributes.placeholder);
+            this.body.value = this.attributes.value; // ! Cannot use setAttribute for assigning input element's value
+            this.body.placeholder = this.attributes.placeholder;
         });
         this.attributes.value = '';
         this.attributes.placeholder = placeholder || '';
@@ -867,7 +883,7 @@ class InputField extends _View__WEBPACK_IMPORTED_MODULE_2__.default {
 }
 class TextField extends InputField {
     constructor(placeholder) {
-        super(placeholder);
+        super(placeholder || '');
         this.body.type = 'text';
         this.addClass('hi-textfield');
     }
@@ -1323,8 +1339,7 @@ class View {
             this.parent.$children.splice(this.parent.children.indexOf(this), 1);
         this.body.remove();
         // Clear all instance variables
-        this.body = null;
-        this.parent = null;
+        this.parent = undefined;
     }
     addChildren(...children) {
         children.forEach(child => {
@@ -1850,10 +1865,12 @@ class ViewController {
         if (controller) {
             controller.navigateTo(name);
             controller.visibleScreen = name;
+            return controller;
         }
-        else
+        else {
             console.warn(`Could not navigate to ${name}`);
-        return controller;
+            return null;
+        }
     }
     /**
      * @static
@@ -2090,7 +2107,7 @@ class GraphicsComponent extends _Hi_Components_Stacks__WEBPACK_IMPORTED_MODULE_5
             .foreground((0,_Hi_Colors__WEBPACK_IMPORTED_MODULE_0__.HColor)('red'))
             .id('like-button')).whenClicked(ev => {
             const likeButton = ev.view.getViewById('like-button');
-            likeButton.body.setAttribute('name', likeButton.body.getAttribute('name').indexOf('outline') > 0
+            likeButton?.body.setAttribute('name', likeButton?.body.getAttribute('name').indexOf('outline') > 0
                 ? 'heart'
                 : 'heart-outline');
         }), new _Hi_Components_Basics__WEBPACK_IMPORTED_MODULE_1__.ClickButton(new _Hi_Components_Graphics__WEBPACK_IMPORTED_MODULE_3__.IonIcon('chatbubble-outline')
@@ -2102,9 +2119,11 @@ class GraphicsComponent extends _Hi_Components_Stacks__WEBPACK_IMPORTED_MODULE_5
             .foreground((0,_Hi_Colors__WEBPACK_IMPORTED_MODULE_0__.HColor)('orange'))
             .id('bookmark-button')).whenClicked(ev => {
             const bookmarkButton = ev.view.getViewById('bookmark-button');
-            bookmarkButton.body.setAttribute('name', bookmarkButton.body.getAttribute('name').indexOf('outline') > 0
-                ? 'bookmark'
-                : 'bookmark-outline');
+            if (bookmarkButton) {
+                bookmarkButton.body.setAttribute('name', bookmarkButton.body.getAttribute('name').indexOf('outline') > 0
+                    ? 'bookmark'
+                    : 'bookmark-outline');
+            }
         }), new _Hi_Components_Basics__WEBPACK_IMPORTED_MODULE_1__.ClickButton(new _Hi_Components_Graphics__WEBPACK_IMPORTED_MODULE_3__.IonIcon('share-outline')
             .describe('Icon Name: share-outline')
             .font('xl')

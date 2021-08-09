@@ -75,7 +75,7 @@ export default class InputField extends View {
 
 export class TextField extends InputField {
     constructor(placeholder?: string) {
-        super(placeholder);
+        super(placeholder || '');
         this.body.type = 'text';
         this.addClass('hi-textfield');
     }

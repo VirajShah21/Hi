@@ -63,13 +63,13 @@ export class Preview extends VStack {
                 );
 
             if (property == 'dimensions')
-                if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions').nullify();
-                else this.getViewById('component-dimensions').dnull();
+                if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions')!.nullify();
+                else this.getViewById('component-dimensions')!.dnull();
 
             if (property == 'padding')
                 if (this.viewerSettings.propertyFilters.padding)
-                    this.getViewById('component-padding-wrapper').nullify();
-                else this.getViewById('component-padding-wrapper').dnull();
+                    this.getViewById('component-padding-wrapper')!.nullify();
+                else this.getViewById('component-padding-wrapper')!.dnull();
         }
     );
 
@@ -174,7 +174,7 @@ export class Preview extends VStack {
             exampleViewer.dimensions.height = view.body.clientHeight;
             exampleViewer.componentInfo.name = view.constructor.name;
             exampleViewer.componentInfo.id = view.body.id;
-            exampleViewer.componentInfo.description = view.description;
+            exampleViewer.componentInfo.description = view.description || '';
             const computedStyles = window.getComputedStyle(view.body);
 
             const paddings = [
