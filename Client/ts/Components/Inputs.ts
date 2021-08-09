@@ -13,8 +13,8 @@ export default class InputField extends View {
             placeholder: '',
         },
         () => {
-            this.body.setAttribute('value', this.attributes.value);
-            this.body.setAttribute('placeholder', this.attributes.placeholder);
+            this.body.value = this.attributes.value; // ! Cannot use setAttribute for assigning input element's value
+            this.body.placeholder = this.attributes.placeholder;
         }
     );
 
