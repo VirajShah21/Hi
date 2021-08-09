@@ -195,6 +195,16 @@ export class InlineCode extends View {
         this.body.innerText = text;
         this.body.style.fontFamily = 'monospace';
     }
+
+    write(text: string): this {
+        this.body.innerText += text;
+        return this;
+    }
+
+    overwrite(text: string): this {
+        this.body.innerText = text;
+        return this;
+    }
 }
 
 export class BlockCode extends View {
@@ -204,5 +214,15 @@ export class BlockCode extends View {
         super('pre');
         this.body.innerText = text;
         this.body.style.fontFamily = 'monospace';
+    }
+
+    write(text: string): this {
+        this.body.innerText += text;
+        return this;
+    }
+
+    overwrite(text: string): this {
+        this.body.innerText = text;
+        return this;
     }
 }
