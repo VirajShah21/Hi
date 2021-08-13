@@ -40,9 +40,7 @@ export class AlertOverlay extends Overlay {
                         })
                         .addClass('hi-alert-overlay-confirm-button')
                 ).padding()
-            )
-                .stretchHeight()
-                .width('50%')
+            ).stretch()
         );
         this.body.style.display = 'flex';
         this.width('100vw').height('100vh').position('fixed').zIndex(100).setTop(0).setLeft(0).blur();
