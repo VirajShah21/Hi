@@ -1,11 +1,14 @@
-import { HColor, rgba } from '../Colors';
-import { StateObject } from '../Types/states';
-import View from '../View';
-import { TextContent, ClickButton, Checkbox } from './Basics';
-import { IonIcon } from './Graphics';
-import { Overlay } from './Overlays';
-import { VStack, HStack } from './Stacks';
-import { Spacer } from './Whitespace';
+import { HColor, rgba } from '@Hi/Colors';
+import { StateObject } from '@Hi/Types/states';
+import View from '@Hi/View';
+import Checkbox from './Checkbox';
+import ClickButton from './ClickButton';
+import HStack from './HStack';
+import IonIcon from './IonIcon';
+import Overlay from './Overlay';
+import Spacer from './Spacer';
+import TextContent from './TextView';
+import VStack from './VStack';
 
 export class Preview extends VStack {
     public readonly dimensions = StateObject(

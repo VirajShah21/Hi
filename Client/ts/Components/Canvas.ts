@@ -1,26 +1,6 @@
-import { StateObject } from '../Types/states';
-import View from '../View';
+import View from '@Hi/View';
 
-export class IonIcon extends View {
-    constructor(name: string) {
-        super('ion-icon');
-        this.body.setAttribute('name', name);
-    }
-}
-
-export interface CanvasContext {
-    width: (size: number) => this;
-    height: (size: number) => this;
-    line: (x1: number, y1: number, x2: number, y2: number) => this;
-    stroke: () => this;
-    font: (fontstr: string) => this;
-    fillText: (text: string, x: number, y: number) => this;
-    strokeText: (text: string, x: number, y: number) => this;
-    fillStyle: (style: string) => this;
-    fillRect: (x1: number, y1: number, width: number, height: number) => this;
-}
-
-export class Canvas extends View implements CanvasContext {
+export default class Canvas extends View implements CanvasContext {
     context: CanvasRenderingContext2D;
     override body: HTMLCanvasElement;
     sprites: Sprite[];
@@ -155,6 +135,18 @@ export class Canvas extends View implements CanvasContext {
     }
 }
 
+export interface CanvasContext {
+    width: (size: number) => this;
+    height: (size: number) => this;
+    line: (x1: number, y1: number, x2: number, y2: number) => this;
+    stroke: () => this;
+    font: (fontstr: string) => this;
+    fillText: (text: string, x: number, y: number) => this;
+    strokeText: (text: string, x: number, y: number) => this;
+    fillStyle: (style: string) => this;
+    fillRect: (x1: number, y1: number, width: number, height: number) => this;
+}
+
 export enum SpriteGeometryFunction {
     Width,
     Height,
@@ -251,25 +243,5 @@ export class Sprite implements CanvasContext {
     setY(y: number): this {
         this.y = y;
         return this;
-    }
-}
-
-export class ImageContent extends View {
-    public override body: HTMLImageElement;
-    public data = StateObject(
-        {
-            source: '',
-            altText: '',
-        },
-        p => {
-            if (p == 'source') this.body.src = this.data.source;
-            else if (p == 'altText') this.body.alt = this.data.altText;
-        }
-    );
-
-    constructor(source: string, altText?: string) {
-        super('img');
-        this.data.source = source;
-        if (altText) this.data.altText = altText;
     }
 }

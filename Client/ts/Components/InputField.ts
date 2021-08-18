@@ -1,8 +1,8 @@
-import { HumanEvent } from '../ViewController';
-import { SizingValues } from '../Types/sizing';
-import { StateObject } from '../Types/states';
-import View from '../View';
-import { HColor } from '../Colors';
+import { HColor } from '@Hi/Colors';
+import { SizingValues } from '@Hi/Types/sizing';
+import { StateObject } from '@Hi/Types/states';
+import View from '@Hi/View';
+import { HumanEvent } from '@Hi/ViewController';
 
 export default class InputField extends View {
     public override body: HTMLInputElement;
@@ -70,51 +70,5 @@ export default class InputField extends View {
     noOutline(): this {
         this.body.style.outline = 'none';
         return this;
-    }
-}
-
-export class TextField extends InputField {
-    constructor(placeholder?: string) {
-        super(placeholder || '');
-        this.body.type = 'text';
-        this.addClass('hi-textfield');
-    }
-}
-
-export class PasswordField extends InputField {
-    constructor() {
-        super('Password');
-        this.body.type = 'password';
-        this.addClass('hi-passwordfield');
-    }
-
-    placeholder(newPlaceholder: string): this {
-        this.body.placeholder = newPlaceholder;
-        return this;
-    }
-}
-
-export class DropdownOption extends View {
-    public value: string;
-    public text: string;
-
-    constructor(text: string, value: string) {
-        super('option');
-        this.value = value;
-        this.text = text;
-        this.addClass('hi-dropdown-option');
-    }
-}
-
-export class TextBox extends View {
-    public override body: HTMLTextAreaElement;
-    public value: string;
-
-    constructor(placeholder: string) {
-        super('textarea');
-        this.body.placeholder = placeholder;
-        this.body.addEventListener('change', () => {
-            this.value = this.body.value;
-        });
     }
 }

@@ -1,6 +1,6 @@
-import View from '../View';
+import View from '@Hi/View';
 
-export class Spacer extends View {
+export default class Spacer extends View {
     constructor() {
         super('div');
         this.body.innerHTML = '&nbsp;';
@@ -8,11 +8,5 @@ export class Spacer extends View {
         this.body.style.width = 'auto';
         this.body.style.height = 'auto';
         this.body.style.fontSize = '1px';
-    }
-}
-
-export class LineBreak extends View {
-    constructor() {
-        super('br');
     }
 }
