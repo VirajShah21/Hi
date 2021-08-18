@@ -56,7 +56,7 @@ export default abstract class View {
         this.children = StateObject(this.$children, () => {
             this.buildChildren();
         });
-        children.forEach((child) => {
+        children.forEach(child => {
             this.$children.push(child);
         });
         this.buildChildren();
@@ -67,7 +67,7 @@ export default abstract class View {
         if (this.$children) {
             for (const child of this.$children) {
                 if (child.getClassList().indexOf(className) >= 0) results.push(child);
-                child.getViewsByClass(className).forEach((view) => {
+                child.getViewsByClass(className).forEach(view => {
                     results.push(view);
                 });
             }
@@ -92,7 +92,7 @@ export default abstract class View {
             }.${this.getClassList().join('.')}`,
             id: this.body.id,
             classList: this.getClassList(),
-            children: this.$children.map((child) => child.getModelData()),
+            children: this.$children.map(child => child.getModelData()),
         };
     }
 
@@ -103,8 +103,7 @@ export default abstract class View {
 
     destroy(): void {
         // Remove from parent
-        if (this.parent && this.parent.$children)
-            this.parent.$children.splice(this.parent.children.indexOf(this), 1);
+        if (this.parent && this.parent.$children) this.parent.$children.splice(this.parent.children.indexOf(this), 1);
         this.body.remove();
 
         // Clear all instance variables
@@ -112,7 +111,7 @@ export default abstract class View {
     }
 
     addChildren(...children: View[]): this {
-        children.forEach((child) => {
+        children.forEach(child => {
             this.children.push(child);
         });
         return this;
@@ -130,12 +129,8 @@ export default abstract class View {
     }
 
     blur(radius = 25): this {
-        (this.body.style as unknown as Record<string, string>).backdropFilter = `blur(${sizing(
-            radius
-        )})`;
-        (
-            this.body.style as unknown as Record<string, string>
-        ).webkitBackdropFilter = `blur(${sizing(radius)})`;
+        (this.body.style as unknown as Record<string, string>).backdropFilter = `blur(${sizing(radius)})`;
+        (this.body.style as unknown as Record<string, string>).webkitBackdropFilter = `blur(${sizing(radius)})`;
         return this;
     }
 
@@ -152,7 +147,7 @@ export default abstract class View {
 
     getClassList(): string[] {
         const classString = this.body.className;
-        return classString.split(' ').filter((className) => {
+        return classString.split(' ').filter(className => {
             return className.trim() != '';
         });
     }
@@ -163,10 +158,7 @@ export default abstract class View {
     }
 
     font(fontClass: string | number | HIFont | HISizingName): this {
-        if (
-            typeof fontClass == 'string' &&
-            Object.prototype.hasOwnProperty.call(SizingValues.FONT, fontClass)
-        ) {
+        if (typeof fontClass == 'string' && Object.prototype.hasOwnProperty.call(SizingValues.FONT, fontClass)) {
             this.body.style.fontSize = SizingValues.FONT[fontClass as HISizingName];
         } else if (typeof fontClass == 'string') {
             this.body.style.font = fontClass;
@@ -179,8 +171,7 @@ export default abstract class View {
                 ['number', 'string'].indexOf(typeof fontClass.size) >= 0
             )
                 this.body.style.fontSize = sizing(fontClass.size!);
-            if (Object.prototype.hasOwnProperty.call(fontClass, 'color'))
-                this.foreground(fontClass.color!);
+            if (Object.prototype.hasOwnProperty.call(fontClass, 'color')) this.foreground(fontClass.color!);
         }
         return this;
     }
@@ -219,7 +210,7 @@ export default abstract class View {
 
     buildChildren(): this {
         this.body.innerHTML = '';
-        this.$children.forEach((child) => {
+        this.$children.forEach(child => {
             if (child && child.pstatus == PStatus.Visible) {
                 child.parent = this;
                 this.body.appendChild(child.body);
@@ -248,8 +239,8 @@ export default abstract class View {
         return this;
     }
 
-    glow(color: string): this {
-        this.body.style.filter = `drop-shadow(0 0px 20px ${color})`;
+    glow(color: RGBAModel, size: HISizingValue = 10): this {
+        this.body.style.filter = `drop-shadow(0 0 ${sizing(size)} ${color.toString()})`;
         return this;
     }
 
@@ -353,8 +344,7 @@ export default abstract class View {
 
     padding(amount?: HIEdgeSizingValue): this {
         if (amount != undefined) {
-            if (typeof amount == 'number' || typeof amount == 'string')
-                this.body.style.padding = sizing(amount);
+            if (typeof amount == 'number' || typeof amount == 'string') this.body.style.padding = sizing(amount);
             else if (typeof amount == 'object') {
                 if (amount.top) this.body.style.paddingTop = sizing(amount.top);
                 if (amount.right) this.body.style.paddingRight = sizing(amount.right);
@@ -367,13 +357,11 @@ export default abstract class View {
 
     margin(amount?: HIEdgeSizingValue): this {
         if (amount != undefined) {
-            if (typeof amount == 'number' || typeof amount == 'string')
-                this.body.style.margin = sizing(amount);
+            if (typeof amount == 'number' || typeof amount == 'string') this.body.style.margin = sizing(amount);
             else if (typeof amount == 'object') {
                 if (amount.top != undefined) this.body.style.marginTop = sizing(amount.top);
                 if (amount.right != undefined) this.body.style.marginRight = sizing(amount.right);
-                if (amount.bottom != undefined)
-                    this.body.style.marginBottom = sizing(amount.bottom);
+                if (amount.bottom != undefined) this.body.style.marginBottom = sizing(amount.bottom);
                 if (amount.left != undefined) this.body.style.marginLeft = sizing(amount.left);
             }
         } else this.body.style.margin = '10px';
@@ -386,10 +374,8 @@ export default abstract class View {
                 this.body.style.borderRadius = sizing(amount);
             } else {
                 if (amount.top) {
-                    if (amount.top.left != undefined)
-                        this.body.style.borderTopLeftRadius = sizing(amount.top.left);
-                    if (amount.top.right != undefined)
-                        this.body.style.borderTopRightRadius = sizing(amount.top.right);
+                    if (amount.top.left != undefined) this.body.style.borderTopLeftRadius = sizing(amount.top.left);
+                    if (amount.top.right != undefined) this.body.style.borderTopRightRadius = sizing(amount.top.right);
                 }
                 if (amount.bottom) {
                     if (amount.bottom.left != undefined)
@@ -404,8 +390,7 @@ export default abstract class View {
     }
 
     width(frameWidth: HISizeBounds): this {
-        if (typeof frameWidth == 'string' || typeof frameWidth == 'number')
-            this.body.style.width = sizing(frameWidth);
+        if (typeof frameWidth == 'string' || typeof frameWidth == 'number') this.body.style.width = sizing(frameWidth);
         else {
             if (frameWidth.min) this.body.style.minWidth = sizing(frameWidth.min);
             if (frameWidth.max) this.body.style.maxWidth = sizing(frameWidth.max);
@@ -489,7 +474,7 @@ export default abstract class View {
     // * Mouse Hover Event Modifiers
 
     whenMouseOver(callback: (ev: HumanEvent) => void): this {
-        this.body.addEventListener('mouseover', (browserEvent) => {
+        this.body.addEventListener('mouseover', browserEvent => {
             callback({
                 view: this,
                 type: 'MouseOver',
@@ -500,7 +485,7 @@ export default abstract class View {
     }
 
     whenMouseOut(callback: (ev: HumanEvent) => void): this {
-        this.body.addEventListener('mouseout', (browserEvent) => {
+        this.body.addEventListener('mouseout', browserEvent => {
             callback({
                 view: this,
                 type: 'MouseOut',
@@ -512,7 +497,7 @@ export default abstract class View {
 
     signal(data: string): void {
         this.handle(data);
-        this.$children.forEach((child) => {
+        this.$children.forEach(child => {
             child.signal(data);
         });
     }
