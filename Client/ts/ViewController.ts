@@ -41,7 +41,9 @@ export class ViewController {
                 `ViewController.navigateTo: Parameter name (1) should be of type string, instead got ${typeof name}`
             );
         if (!Object.prototype.hasOwnProperty.call(this.screens, name))
-            throw new Error(`ViewController.navigateTo: ViewController does not have a screen named ${name}`);
+            throw new Error(
+                `ViewController.navigateTo: ViewController does not have a screen named ${name}`
+            );
         this.binding.innerHTML = '';
         this.binding.appendChild(this.screens[name].body);
         this.visibleScreen = name;
@@ -86,7 +88,7 @@ export class ViewController {
     }
 
     whenResized(handler: (ev: HumanEvent) => void): this {
-        window.addEventListener('resize', ev =>
+        window.addEventListener('resize', (ev) =>
             handler({ type: 'Resize', view: this.screens[this.visibleScreen], browserEvent: ev })
         );
         return this;
@@ -113,7 +115,7 @@ export class ViewController {
      *
      * @memberOf ViewController
      */
-    getController(controllerName: string): ViewController | undefined {
+    public static getController(controllerName: string): ViewController | undefined {
         return ViewControllerData.controllerMap[controllerName];
     }
 
@@ -149,7 +151,7 @@ export class ViewController {
      * @memberOf ViewController
      */
     static navigateTo(name = 'main'): ViewController | null {
-        const controller = ViewControllerData.controllers.find(currentController => {
+        const controller = ViewControllerData.controllers.find((currentController) => {
             return Object.prototype.hasOwnProperty.call(currentController.screens, name);
         });
         if (controller) {
@@ -170,7 +172,7 @@ export class ViewController {
      */
     static allScreens(): Record<string, View> {
         const screens: Record<string, View> = {};
-        ViewControllerData.controllers.forEach(controller => {
+        ViewControllerData.controllers.forEach((controller) => {
             for (const screen in controller.screens) screens[screen] = controller.screens[screen];
         });
         return screens;
