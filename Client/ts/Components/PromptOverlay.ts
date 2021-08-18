@@ -1,9 +1,10 @@
 import ClickButton from './ClickButton';
+import HStack from './HStack';
 import InputField from './InputField';
 import Overlay from './Overlay';
-import { VStack, HStack } from './Container';
 import TextField from './TextField';
 import TextContent from './TextView';
+import VStack from './VStack';
 
 export default class PromptOverlay extends Overlay {
     constructor(prompt: string) {

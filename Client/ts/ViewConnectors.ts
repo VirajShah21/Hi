@@ -1,5 +1,5 @@
-import { ClickButton } from './Components/Basics';
-import InputField from './Components/Inputs';
+import ClickButton from './Components/ClickButton';
+import InputField from './Components/InputField';
 
 export class FormConnector {
     public action: string;

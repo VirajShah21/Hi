@@ -1,10 +1,16 @@
-import { Container, HStack, ScrollView, VStack } from '@Hi/Components/Stacks';
-import { IonIcon, ImageContent } from '@Hi/Components/Graphics';
-import { BlockCode, ClickButton, TextContent } from '@Hi/Components/Basics';
-import { HTMLContent, ImageCaption, MajorIcon, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
-import { HColor, RGBAModel } from '@Hi/Colors';
-import { Spacer } from '@Hi/Components/Whitespace';
+import { RGBAModel, HColor } from '@Hi/Colors';
+import BlockCode from '@Hi/Components/BlockCode';
+import ClickButton from '@Hi/Components/ClickButton';
+import { Container } from '@Hi/Components/Container';
 import { Preview } from '@Hi/Components/DevKit';
+import HStack from '@Hi/Components/HStack';
+import ImageContent from '@Hi/Components/ImageView';
+import IonIcon from '@Hi/Components/IonIcon';
+import { ScrollView } from '@Hi/Components/ScrollView';
+import Spacer from '@Hi/Components/Spacer';
+import TextContent from '@Hi/Components/TextView';
+import VStack from '@Hi/Components/VStack';
+import { HTMLContent, MajorIcon, ImageCaption, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
 
 export class TypeDefinitionDocumentation extends VStack {
     constructor(expansion: string, description: string, examples: string) {

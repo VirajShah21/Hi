@@ -1,6 +1,4 @@
 import { HColor, rgba, RGBAModel, whichTheme } from '@Hi/Colors';
-import { HIFullScreenView, HStack, VStack, ScrollView } from '@Hi/Components/Stacks';
-import { TextContent } from '@Hi/Components/Basics';
 import Sidebar from './Sidebar';
 import GettingStarted from './Pages/GettingStarted';
 import SizingTypes from './Pages/SizingTypes';
@@ -8,6 +6,11 @@ import BasicComponents from './Pages/BasicComponents';
 import GraphicsComponent from './Pages/GraphicsComponents';
 import View from '@Hi/View';
 import { ViewController } from '@Hi/ViewController';
+import HIFullScreenView from '@Hi/Components/HIFullScreenView';
+import HStack from '@Hi/Components/HStack';
+import { ScrollView } from '@Hi/Components/ScrollView';
+import TextContent from '@Hi/Components/TextView';
+import VStack from '@Hi/Components/VStack';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({

@@ -1,8 +1,9 @@
 import { HColor } from '@Hi/Colors';
 import ClickButton from './ClickButton';
+import HStack from './HStack';
 import Overlay from './Overlay';
-import { VStack, HStack } from './Container';
 import TextContent from './TextView';
+import VStack from './VStack';
 
 export default class AlertOverlay extends Overlay {
     constructor(message: string) {

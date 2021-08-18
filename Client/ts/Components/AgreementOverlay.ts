@@ -1,9 +1,11 @@
 import View from '@Hi/View';
 import ClickButton from './ClickButton';
+import HStack from './HStack';
 import IonIcon from './IonIcon';
 import Overlay from './Overlay';
-import { VStack, ScrollView, HStack } from './Container';
+import { ScrollView } from './ScrollView';
 import TextContent from './TextView';
+import VStack from './VStack';
 
 export default class AgreementOverlay extends Overlay {
     constructor(title: string, icon: string, ...agreementContents: View[]) {

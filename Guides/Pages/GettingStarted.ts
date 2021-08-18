@@ -1,8 +1,12 @@
-import { IonIcon, ImageContent } from '@Hi/Components/Graphics';
-import { Container, HStack, VStack } from '@Hi/Components/Stacks';
-import { ClickButton, TextContent } from '@Hi/Components/Basics';
-import { Spacer } from '@Hi/Components/Whitespace';
 import { HColor } from '@Hi/Colors';
+import ClickButton from '@Hi/Components/ClickButton';
+import { Container } from '@Hi/Components/Container';
+import HStack from '@Hi/Components/HStack';
+import ImageContent from '@Hi/Components/ImageView';
+import IonIcon from '@Hi/Components/IonIcon';
+import Spacer from '@Hi/Components/Spacer';
+import TextContent from '@Hi/Components/TextView';
+import VStack from '@Hi/Components/VStack';
 import {
     FileTreeItem,
     ImageCaption,
