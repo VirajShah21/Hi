@@ -154,7 +154,7 @@ let colorTheme: 'light' | 'dark' = (() => {
 
 export function changeTheme(theme: 'light' | 'dark'): void {
     colorTheme = theme;
-    ViewControllerData.controllers.forEach((controller) => controller.signal('color'));
+    ViewControllerData.controllers.forEach(controller => controller.signal('color'));
     localStorage.setItem('hi://theme', colorTheme);
 }
 
@@ -169,7 +169,7 @@ export function whichTheme(): 'light' | 'dark' {
  * @param {any} imgEl
  * @returns
  */
-export function getAverageRGB(imgEl: HTMLImageElement) {
+export function getAverageRGB(imgEl: HTMLImageElement): RGBAModel {
     const blockSize = 5, // only visit every 5 pixels
         canvas = document.createElement('canvas'),
         context = canvas.getContext && canvas.getContext('2d'),

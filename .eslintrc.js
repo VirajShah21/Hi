@@ -4,7 +4,7 @@ module.exports = {
     plugins: ['@typescript-eslint'],
     extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
     rules: {
-        '@typescript-eslint/no-non-null-assertion': false,
+        '@typescript-eslint/no-non-null-assertion': 'off',
     },
     ignorePatterns: ['*.js', 'Guides/Hi/**/*', 'Client/build/**/*'],
 };

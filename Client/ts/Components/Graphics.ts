@@ -48,8 +48,8 @@ export class Canvas extends View implements CanvasContext {
             let scaleX = spriteWidth / 100;
             let scaleY = spriteHeight / 100;
 
-            let x = sprite.x;
-            let y = sprite.y;
+            const x = sprite.x;
+            const y = sprite.y;
 
             sprite.geometry.forEach(geo => {
                 console.log('Drawing new geometry', geo, 'with scale', scaleX, scaleY);
@@ -170,8 +170,8 @@ export enum SpriteGeometryFunction {
 
 export class Sprite implements CanvasContext {
     public geometry: { func: SpriteGeometryFunction; args?: unknown[] }[];
-    public x: number = 0;
-    public y: number = 0;
+    public x = 0;
+    public y = 0;
 
     constructor() {
         this.geometry = [];
@@ -201,7 +201,7 @@ export class Sprite implements CanvasContext {
         return this;
     }
 
-    stroke() {
+    stroke(): this {
         this.geometry.push({ func: SpriteGeometryFunction.Stroke });
         return this;
     }

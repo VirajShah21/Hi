@@ -1,4 +1,4 @@
-import { HColor, rgba } from '../Colors';
+import { HColor } from '../Colors';
 import { ClickButton, TextContent } from './Basics';
 import InputField, { TextField } from './Inputs';
 import { VStack, HStack, ScrollView } from './Stacks';
@@ -43,26 +43,16 @@ export class AlertOverlay extends Overlay {
             ).stretch()
         );
         this.body.style.display = 'flex';
-        this.width('100vw')
-            .height('100vh')
-            .position('fixed')
-            .zIndex(100)
-            .setTop(0)
-            .setLeft(0)
-            .blur();
+        this.width('100vw').height('100vh').position('fixed').zIndex(100).setTop(0).setLeft(0).blur();
     }
 
     whenConfirmed(callback: () => void): this {
-        (this.getViewsByClass('hi-alert-overlay-confirm-button')[0] as ClickButton).whenClicked(
-            callback
-        );
+        (this.getViewsByClass('hi-alert-overlay-confirm-button')[0] as ClickButton).whenClicked(callback);
         return this;
     }
 
     whenCancelled(callback: () => void): this {
-        (this.getViewsByClass('hi-alert-overlay-cancel-button')[0] as ClickButton).whenClicked(
-            callback
-        );
+        (this.getViewsByClass('hi-alert-overlay-cancel-button')[0] as ClickButton).whenClicked(callback);
         return this;
     }
 }
@@ -90,20 +80,14 @@ export class PromptOverlay extends Overlay {
     }
 
     whenConfirmed(callback: (response: string) => void): this {
-        (this.getViewsByClass('hi-prompt-overlay-confirm-button')[0] as ClickButton).whenClicked(
-            () => {
-                callback(
-                    (this.getViewsByClass('hi-prompt-input')[0] as InputField).attributes.value
-                );
-            }
-        );
+        (this.getViewsByClass('hi-prompt-overlay-confirm-button')[0] as ClickButton).whenClicked(() => {
+            callback((this.getViewsByClass('hi-prompt-input')[0] as InputField).attributes.value);
+        });
         return this;
     }
 
     whenCancelled(callback: () => void): this {
-        (this.getViewsByClass('hi-prompt-overlay-cancel-button')[0] as ClickButton).whenClicked(
-            callback
-        );
+        (this.getViewsByClass('hi-prompt-overlay-cancel-button')[0] as ClickButton).whenClicked(callback);
         return this;
     }
 }
@@ -132,16 +116,12 @@ export class AgreementOverlay extends Overlay {
     }
 
     whenConfirmed(callback: () => void): this {
-        (this.getViewsByClass('hi-agreement-overlay-confirm-button')[0] as ClickButton).whenClicked(
-            callback
-        );
+        (this.getViewsByClass('hi-agreement-overlay-confirm-button')[0] as ClickButton).whenClicked(callback);
         return this;
     }
 
     whenCancelled(callback: () => void): this {
-        (this.getViewsByClass('hi-agreement-overlay-cancel-button')[0] as ClickButton).whenClicked(
-            callback
-        );
+        (this.getViewsByClass('hi-agreement-overlay-cancel-button')[0] as ClickButton).whenClicked(callback);
         return this;
     }
 }
