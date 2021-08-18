@@ -45,13 +45,13 @@ export const SizingValues = {
     },
 
     FONT: {
-        xxs: sizing(3),
-        xs: sizing(6),
-        sm: sizing(9),
-        md: sizing(12),
-        lg: sizing(15),
-        xl: sizing(18),
-        xxl: sizing(21),
+        xxs: sizing(5),
+        xs: sizing(10),
+        sm: sizing(12),
+        md: sizing(15),
+        lg: sizing(18),
+        xl: sizing(25),
+        xxl: sizing(30),
     },
 };
 
