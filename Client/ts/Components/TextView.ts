@@ -2,7 +2,7 @@ import { HISizingValue, sizing } from '@Hi/Types/sizing';
 import { StateObject } from '@Hi/Types/states';
 import View from '@Hi/View';
 
-export default class TextContent extends View {
+export default class TextView extends View {
     public override body: HTMLSpanElement;
 
     public readonly text = StateObject(
