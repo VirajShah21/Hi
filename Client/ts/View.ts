@@ -459,18 +459,6 @@ export default abstract class View {
         return this;
     }
 
-    nullify(): this {
-        this.body.remove();
-        this.pstatus = PStatus.Null;
-        return this;
-    }
-
-    dnull(): this {
-        this.pstatus = PStatus.Visible;
-        this.parent!.buildChildren();
-        return this;
-    }
-
     // * Mouse Hover Event Modifiers
 
     whenMouseOver(callback: (ev: HumanEvent) => void): this {
