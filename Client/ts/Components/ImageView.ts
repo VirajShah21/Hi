@@ -1,7 +1,7 @@
 import { StateObject } from '@Hi/Types/states';
 import View from '@Hi/View';
 
-export default class ImageContent extends View {
+export default class ImageView extends View {
     public override body: HTMLImageElement;
     public data = StateObject(
         {
