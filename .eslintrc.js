@@ -5,6 +5,7 @@ module.exports = {
     extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
     rules: {
         '@typescript-eslint/no-non-null-assertion': 'off',
+        'max-classes-per-file': ['error', 1],
     },
     ignorePatterns: ['*.js', 'Guides/Hi/**/*', 'Client/build/**/*'],
 };
