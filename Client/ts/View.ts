@@ -8,6 +8,7 @@ import {
     SizingValues,
     HISizingName,
     sizing,
+    edgeSizing,
 } from './Types/sizing';
 import { StateObject, StateProxy } from './Types/states';
 import { HIFont, HIBorderProperties } from './Types/styles';
@@ -344,35 +345,30 @@ export default abstract class View {
 
     padding(amount?: HIEdgeSizingValue): this {
         if (amount != undefined) {
-            if (typeof amount == 'number' || typeof amount == 'string') this.body.style.padding = sizing(amount);
-            else if (typeof amount == 'object') {
-                if (amount.top) this.body.style.paddingTop = sizing(amount.top);
-                if (amount.right) this.body.style.paddingRight = sizing(amount.right);
-                if (amount.bottom) this.body.style.paddingBottom = sizing(amount.bottom);
-                if (amount.left) this.body.style.paddingLeft = sizing(amount.left);
-            }
+            const mapping = edgeSizing(amount);
+            if (mapping.top) this.body.style.paddingTop = sizing(mapping.top);
+            if (mapping.right) this.body.style.paddingRight = sizing(mapping.right);
+            if (mapping.bottom) this.body.style.paddingBottom = sizing(mapping.bottom);
+            if (mapping.left) this.body.style.paddingLeft = sizing(mapping.left);
         } else this.body.style.padding = '10px';
         return this;
     }
 
     margin(amount?: HIEdgeSizingValue): this {
         if (amount != undefined) {
-            if (typeof amount == 'number' || typeof amount == 'string') this.body.style.margin = sizing(amount);
-            else if (typeof amount == 'object') {
-                if (amount.top != undefined) this.body.style.marginTop = sizing(amount.top);
-                if (amount.right != undefined) this.body.style.marginRight = sizing(amount.right);
-                if (amount.bottom != undefined) this.body.style.marginBottom = sizing(amount.bottom);
-                if (amount.left != undefined) this.body.style.marginLeft = sizing(amount.left);
-            }
+            const mapping = edgeSizing(amount);
+            if (mapping.top != undefined) this.body.style.marginTop = sizing(mapping.top);
+            if (mapping.right != undefined) this.body.style.marginRight = sizing(mapping.right);
+            if (mapping.bottom != undefined) this.body.style.marginBottom = sizing(mapping.bottom);
+            if (mapping.left != undefined) this.body.style.marginLeft = sizing(mapping.left);
         } else this.body.style.margin = '10px';
         return this;
     }
 
     rounded(amount?: HICornerSizingValue): this {
         if (amount != undefined) {
-            if (typeof amount === 'string' || typeof amount === 'number') {
-                this.body.style.borderRadius = sizing(amount);
-            } else {
+            if (typeof amount === 'string' || typeof amount === 'number') this.body.style.borderRadius = sizing(amount);
+            else {
                 if (amount.top) {
                     if (amount.top.left != undefined) this.body.style.borderTopLeftRadius = sizing(amount.top.left);
                     if (amount.top.right != undefined) this.body.style.borderTopRightRadius = sizing(amount.top.right);
@@ -462,32 +458,30 @@ export default abstract class View {
     // * Mouse Hover Event Modifiers
 
     whenMouseOver(callback: (ev: HumanEvent) => void): this {
-        this.body.addEventListener('mouseover', browserEvent => {
+        this.body.addEventListener('mouseover', browserEvent =>
             callback({
                 view: this,
                 type: 'MouseOver',
                 browserEvent,
-            });
-        });
+            })
+        );
         return this;
     }
 
     whenMouseOut(callback: (ev: HumanEvent) => void): this {
-        this.body.addEventListener('mouseout', browserEvent => {
+        this.body.addEventListener('mouseout', browserEvent =>
             callback({
                 view: this,
                 type: 'MouseOut',
                 browserEvent,
-            });
-        });
+            })
+        );
         return this;
     }
 
     signal(data: string): void {
         this.handle(data);
-        this.$children.forEach(child => {
-            child.signal(data);
-        });
+        this.$children.forEach(child => child.signal(data));
     }
 
     handle(data: string): void {
