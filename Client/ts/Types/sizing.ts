@@ -59,3 +59,23 @@ export function sizing(size: HISizingValue): string {
     if (typeof size == 'number') return `${size}px`;
     return size;
 }
+
+export function edgeSizing(size: HIEdgeSizingValue): {
+    top?: HISizingValue;
+    right?: HISizingValue;
+    bottom?: HISizingValue;
+    left?: HISizingValue;
+} {
+    if (typeof size == 'string' || typeof size == 'number')
+        return { top: sizing(size), right: sizing(size), bottom: sizing(size), left: sizing(size) };
+    else {
+        const obj: { top?: HISizingValue; right?: HISizingValue; bottom?: HISizingValue; left?: HISizingValue } = {};
+
+        if (size.top) obj.top = sizing(size.top);
+        if (size.right) obj.right = sizing(size.right);
+        if (size.bottom) obj.bottom = sizing(size.bottom);
+        if (size.left) obj.left = sizing(size.left);
+
+        return obj;
+    }
+}
