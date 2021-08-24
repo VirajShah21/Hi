@@ -3,10 +3,11 @@ import ClickButton from '@Hi/Components/ClickButton';
 import HStack from '@Hi/Components/HStack';
 import IonIcon from '@Hi/Components/IonIcon';
 import Overlay from '@Hi/Components/Overlay';
-import RadioButton, { RadioGroup } from '@Hi/Components/RadioButton';
+import RadioButton from '@Hi/Components/RadioButton';
+import RadioGroup from '@Hi/Components/RadioGroup';
 import Spacer from '@Hi/Components/Spacer';
 import TextField from '@Hi/Components/TextField';
-import TextContent from '@Hi/Components/TextView';
+import TextView from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
 import { StateObject } from '@Hi/Types/states';
 import View from '@Hi/View';
@@ -129,7 +130,7 @@ class SearchField extends TextField {
 
 function MenuButton(iconName: string, title: string, navigateTo: string) {
     return new ClickButton(
-        new HStack(new IonIcon(iconName).font({ size: 25 }), new TextContent(title).padding(), new Spacer())
+        new HStack(new IonIcon(iconName).font({ size: 25 }), new TextView(title).padding(), new Spacer())
     )
         .stretchWidth()
         .padding(5)
@@ -143,7 +144,7 @@ function MenuButton(iconName: string, title: string, navigateTo: string) {
         })
         .whenClicked(ev => {
             ViewController.navigateTo(navigateTo);
-            (ev.view.root().getViewById('title') as TextContent).text.value = title;
+            (ev.view.root().getViewById('title') as TextView).text.value = title;
         });
 }
 
@@ -151,7 +152,7 @@ function SettingsButton() {
     return new ClickButton(
         new HStack(
             new IonIcon('settings-outline').font({ size: 25 }),
-            new TextContent('Preferences').padding(),
+            new TextView('Preferences').padding(),
             new Spacer()
         )
     )
@@ -195,7 +196,7 @@ class SettingsOverlay extends Overlay {
     constructor() {
         super(
             new VStack(
-                new TextContent('Color Mode').font('xl'),
+                new TextView('Color Mode').font('xl'),
                 new HStack(
                     new HStack(
                         new RadioButton()
@@ -204,7 +205,7 @@ class SettingsOverlay extends Overlay {
                             .whenClicked(() => {
                                 this.settings.color = 'light';
                             }),
-                        new TextContent('Light')
+                        new TextView('Light')
                     ).padding(),
                     new HStack(
                         new RadioButton()
@@ -213,12 +214,12 @@ class SettingsOverlay extends Overlay {
                             .whenClicked(() => {
                                 this.settings.color = 'dark';
                             }),
-                        new TextContent('Dark')
+                        new TextView('Dark')
                     ).padding()
                 ).stretchWidth(),
                 new HStack(
                     new ClickButton(
-                        new VStack(new IonIcon('close-circle-outline'), new TextContent('Close').font('sm'))
+                        new VStack(new IonIcon('close-circle-outline'), new TextView('Close').font('sm'))
                     ).whenClicked(() => {
                         this.destroy();
                     })

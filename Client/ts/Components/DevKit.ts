@@ -1,231 +1,180 @@
-// import { HColor, rgba } from '@Hi/Colors';
-// import { StateObject } from '@Hi/Types/states';
-// import View from '@Hi/View';
-// import Checkbox from './Checkbox';
-// import ClickButton from './ClickButton';
-// import HStack from './HStack';
-// import IonIcon from './IonIcon';
-// import Overlay from './Overlay';
-// import Spacer from './Spacer';
-// import TextContent from './TextView';
-// import VStack from './VStack';
+import { HColor, rgba } from '@Hi/Colors';
+import { StateObject } from '@Hi/Types/states';
+import View from '@Hi/View';
+import Checkbox from './Checkbox';
+import ClickButton from './ClickButton';
+import HStack from './HStack';
+import IonIcon from './IonIcon';
+import Overlay from './Overlay';
+import Spacer from './Spacer';
+import TextContent from './TextView';
+import VStack from './VStack';
 
 // ! Fix all errors with null/dnull and implement a workaround
-// export class Preview extends VStack {
-//     public readonly dimensions = StateObject(
-//         {
-//             width: 0,
-//             height: 0,
-//             padding: '',
-//         },
-//         property => {
-//             if (property == 'width' || property == 'height')
-//                 (this.getViewById(`component-${property}`) as TextContent).text.value =
-//                     (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
-//             else if (property == 'padding')
-//                 (this.getViewById('component-padding') as TextContent).text.value = this.dimensions.padding || '•';
-//         }
-//     );
+export class Preview extends VStack {
+    public readonly dimensions = StateObject(
+        {
+            width: 0,
+            height: 0,
+            padding: '',
+        },
+        property => {
+            if (property == 'width' || property == 'height')
+                (this.getViewById(`component-${property}`) as TextContent).text.value =
+                    (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
+            else if (property == 'padding')
+                (this.getViewById('component-padding') as TextContent).text.value = this.dimensions.padding || '•';
+        }
+    );
 
-//     public readonly componentInfo = StateObject(
-//         {
-//             name: '',
-//             id: '',
-//             description: '',
-//             padding: '',
-//             margin: '',
-//         },
-//         property => {
-//             switch (property) {
-//                 case 'name':
-//                     (this.getViewById('component-name') as TextContent).text.value = this.componentInfo.name || '•';
-//                     break;
-//                 case 'id':
-//                     (this.getViewById('component-id') as TextContent).text.value = this.componentInfo.id || '•';
-//                     break;
-//                 case 'description':
-//                     (this.getViewById('component-description') as TextContent).text.value =
-//                         this.componentInfo.description || '•';
-//                     break;
-//             }
-//         }
-//     );
+    public readonly componentInfo = StateObject(
+        {
+            name: '',
+            id: '',
+            description: '',
+            padding: '',
+            margin: '',
+        },
+        property => {
+            switch (property) {
+                case 'name':
+                    (this.getViewById('component-name') as TextContent).text.value = this.componentInfo.name || '•';
+                    break;
+                case 'id':
+                    (this.getViewById('component-id') as TextContent).text.value = this.componentInfo.id || '•';
+                    break;
+                case 'description':
+                    (this.getViewById('component-description') as TextContent).text.value =
+                        this.componentInfo.description || '•';
+                    break;
+            }
+        }
+    );
 
-//     public readonly viewerSettings = StateObject(
-//         {
-//             contrastToggle: false,
-//             propertyFilters: {
-//                 dimensions: true,
-//                 padding: true,
-//                 description: true,
-//             },
-//         },
-//         property => {
-//             if (property == 'contrastToggle')
-//                 this.getViewById('toggle-contrast-button')?.foreground(
-//                     HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray')
-//                 );
+    public readonly viewerSettings = StateObject(
+        {
+            contrastToggle: false,
+        },
+        property => {
+            if (property == 'contrastToggle')
+                this.getViewById('toggle-contrast-button')?.foreground(
+                    HColor(this.viewerSettings.contrastToggle ? 'green' : 'gray')
+                );
+        }
+    );
 
-//             if (property == 'dimensions')
-//                 if (this.viewerSettings.propertyFilters.dimensions) this.getViewById('component-dimensions')!.nullify();
-//                 else this.getViewById('component-dimensions')!.dnull();
+    constructor(content: View) {
+        super(
+            new HStack(
+                Preview.OptionButton('toggle-contrast-button', 'contrast-outline').whenClicked(() => {
+                    this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
+                })
+            )
+                .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
+                .background(HColor('gray5'))
+                .addClass('preview-options'),
 
-//             if (property == 'padding')
-//                 if (this.viewerSettings.propertyFilters.padding)
-//                     this.getViewById('component-padding-wrapper')!.nullify();
-//                 else this.getViewById('component-padding-wrapper')!.dnull();
-//         }
-//     );
+            new VStack(content)
+                .border({ size: 4, style: 'dashed', color: HColor('gray5') })
+                .borderTop({ style: 'solid' })
+                .addClass('preview-canvas'),
 
-//     constructor(content: View) {
-//         super(
-//             new HStack(
-//                 Preview.OptionButton('toggle-contrast-button', 'contrast-outline').whenClicked(() => {
-//                     this.viewerSettings.contrastToggle = !this.viewerSettings.contrastToggle;
-//                 }),
-//                 Preview.OptionButton('filter-properties-button', 'filter-circle-outline').whenClicked(() => {
-//                     const overlay: Overlay = new Overlay(
-//                         new VStack(
-//                             new VStack(
-//                                 new HStack(
-//                                     new Checkbox()
-//                                         .padding(5)
-//                                         .setChecked(this.viewerSettings.propertyFilters.dimensions)
-//                                         .whenClicked(() => {
-//                                             this.viewerSettings.propertyFilters.dimensions =
-//                                                 !this.viewerSettings.propertyFilters.dimensions;
-//                                         }),
-//                                     new TextContent('Dimensions')
-//                                 ),
-//                                 new HStack(
-//                                     new Checkbox()
-//                                         .padding(5)
-//                                         .setChecked(this.viewerSettings.propertyFilters.padding)
-//                                         .whenClicked(() => {
-//                                             this.viewerSettings.propertyFilters.padding =
-//                                                 !this.viewerSettings.propertyFilters.padding;
-//                                         }),
-//                                     new TextContent('Padding')
-//                                 ),
-//                                 new HStack(new Checkbox().padding(5), new TextContent('Description'))
-//                             )
-//                                 .alignStart()
-//                                 .textStart(),
+            new VStack(
+                new HStack(
+                    new Spacer(),
+                    new HStack(
+                        Preview.dimensionSub('width').padding(),
+                        new TextContent(' by '),
+                        Preview.dimensionSub('height').padding()
+                    ).id('component-dimensions'),
+                    new Spacer(),
+                    new VStack(
+                        new TextContent('•').id('component-padding').font('lg'),
+                        new TextContent('Padding').font('sm').foreground(HColor('gray'))
+                    )
+                        .padding()
+                        .id('component-padding-wrapper'),
+                    new Spacer()
+                ),
+                new HStack(
+                    new VStack(
+                        new TextContent('•').id('component-name').font('lg'),
+                        new TextContent('Component').font('sm').foreground(HColor('gray'))
+                    ).padding(),
+                    new VStack(
+                        new TextContent('•').id('component-id').font('lg'),
+                        new TextContent('ID').font('sm').foreground(HColor('gray'))
+                    ).padding()
+                ),
+                new TextContent('Description').font('sm').foreground(HColor('gray')),
+                new TextContent('•').id('component-description')
+            ).padding()
+        );
 
-//                             new HStack(
-//                                 new ClickButton(new IonIcon('close-circle-outline').font('lg'))
-//                                     .margin({ top: 50 })
-//                                     .whenClicked(() => overlay.destroy())
-//                             )
-//                         )
-//                     );
-//                 })
-//             )
-//                 .rounded({ top: { left: 10, right: 10 }, bottom: { left: 0, right: 0 } })
-//                 .background(HColor('gray5'))
-//                 .addClass('preview-options'),
+        Preview.enableHover(content, this);
+    }
 
-//             new VStack(content)
-//                 .border({ size: 4, style: 'dashed', color: HColor('gray5') })
-//                 .borderTop({ style: 'solid' })
-//                 .addClass('preview-canvas'),
+    override handle(data: string): void {
+        if (data == 'color') {
+            this.getViewsByClass('preview-canvas').forEach(canvas => canvas.border({ color: HColor('gray5') }));
+            this.getViewsByClass('preview-options').forEach(wrapper => wrapper.background(HColor('gray5')));
+        }
+    }
 
-//             new VStack(
-//                 new HStack(
-//                     new Spacer(),
-//                     new HStack(
-//                         Preview.dimensionSub('width').padding(),
-//                         new TextContent(' by '),
-//                         Preview.dimensionSub('height').padding()
-//                     ).id('component-dimensions'),
-//                     new Spacer(),
-//                     new VStack(
-//                         new TextContent('•').id('component-padding').font('lg'),
-//                         new TextContent('Padding').font('sm').foreground(HColor('gray'))
-//                     )
-//                         .padding()
-//                         .id('component-padding-wrapper'),
-//                     new Spacer()
-//                 ),
-//                 new HStack(
-//                     new VStack(
-//                         new TextContent('•').id('component-name').font('lg'),
-//                         new TextContent('Component').font('sm').foreground(HColor('gray'))
-//                     ).padding(),
-//                     new VStack(
-//                         new TextContent('•').id('component-id').font('lg'),
-//                         new TextContent('ID').font('sm').foreground(HColor('gray'))
-//                     ).padding()
-//                 ),
-//                 new TextContent('Description').font('sm').foreground(HColor('gray')),
-//                 new TextContent('•').id('component-description')
-//             ).padding()
-//         );
+    static enableHover(view: View, exampleViewer: Preview): void {
+        view.whenMouseOver(ev => {
+            exampleViewer.dimensions.width = view.body.clientWidth;
+            exampleViewer.dimensions.height = view.body.clientHeight;
+            exampleViewer.componentInfo.name = view.constructor.name;
+            exampleViewer.componentInfo.id = view.body.id;
+            exampleViewer.componentInfo.description = view.description || '';
+            const computedStyles = window.getComputedStyle(view.body);
 
-//         Preview.enableHover(content, this);
-//     }
+            const paddings = [
+                computedStyles.paddingTop,
+                computedStyles.paddingRight,
+                computedStyles.paddingBottom,
+                computedStyles.paddingLeft,
+            ];
 
-//     override handle(data: string): void {
-//         if (data == 'color') {
-//             this.getViewsByClass('preview-canvas').forEach(canvas => canvas.border({ color: HColor('gray5') }));
-//             this.getViewsByClass('preview-options').forEach(wrapper => wrapper.background(HColor('gray5')));
-//         }
-//     }
+            if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
+                exampleViewer.dimensions.padding = paddings[0];
+            else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
+                exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
+            else exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
 
-//     static enableHover(view: View, exampleViewer: Preview): void {
-//         view.whenMouseOver(ev => {
-//             exampleViewer.dimensions.width = view.body.clientWidth;
-//             exampleViewer.dimensions.height = view.body.clientHeight;
-//             exampleViewer.componentInfo.name = view.constructor.name;
-//             exampleViewer.componentInfo.id = view.body.id;
-//             exampleViewer.componentInfo.description = view.description || '';
-//             const computedStyles = window.getComputedStyle(view.body);
+            if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(50%)';
 
-//             const paddings = [
-//                 computedStyles.paddingTop,
-//                 computedStyles.paddingRight,
-//                 computedStyles.paddingBottom,
-//                 computedStyles.paddingLeft,
-//             ];
+            ev.browserEvent.stopPropagation();
+        }).whenMouseOut(() => {
+            if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(100%)';
+        });
 
-//             if (paddings[0] == paddings[1] && paddings[1] == paddings[2] && paddings[2] == paddings[3])
-//                 exampleViewer.dimensions.padding = paddings[0];
-//             else if (paddings[0] == paddings[2] && paddings[1] == paddings[3])
-//                 exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]}`;
-//             else exampleViewer.dimensions.padding = `${paddings[0]} ${paddings[1]} ${paddings[2]} ${paddings[3]}`;
+        view.forChild(child => {
+            this.enableHover(child, exampleViewer);
+        });
+    }
 
-//             if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(50%)';
+    static dimensionSub(axis: 'width' | 'height'): VStack {
+        return new VStack(
+            new TextContent('•').id(`component-${axis}`).font('lg'),
+            new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
+        );
+    }
 
-//             ev.browserEvent.stopPropagation();
-//         }).whenMouseOut(() => {
-//             if (exampleViewer.viewerSettings.contrastToggle) view.body.style.filter = 'brightness(100%)';
-//         });
-
-//         view.forChild(child => {
-//             this.enableHover(child, exampleViewer);
-//         });
-//     }
-
-//     static dimensionSub(axis: 'width' | 'height'): VStack {
-//         return new VStack(
-//             new TextContent('•').id(`component-${axis}`).font('lg'),
-//             new TextContent(axis == 'width' ? 'Width' : 'Height').font('sm').foreground(HColor('gray'))
-//         );
-//     }
-
-//     static OptionButton(id: string, icon: string): ClickButton {
-//         return new ClickButton(new IonIcon(icon).font('lg').foreground(HColor('gray')).id(id))
-//             .padding({
-//                 top: 0,
-//                 bottom: 0,
-//                 left: 5,
-//                 right: 5,
-//             })
-//             .whenMouseOver(ev => {
-//                 ev.view.background(rgba(0, 0, 0, 0.1));
-//             })
-//             .whenMouseOut(ev => {
-//                 ev.view.background('none');
-//             });
-//     }
-// }
+    static OptionButton(id: string, icon: string): ClickButton {
+        return new ClickButton(new IonIcon(icon).font('lg').foreground(HColor('gray')).id(id))
+            .padding({
+                top: 0,
+                bottom: 0,
+                left: 5,
+                right: 5,
+            })
+            .whenMouseOver(ev => {
+                ev.view.background(rgba(0, 0, 0, 0.1));
+            })
+            .whenMouseOut(ev => {
+                ev.view.background('none');
+            });
+    }
+}
