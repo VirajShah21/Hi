@@ -35,7 +35,7 @@ export enum PStatus {
 }
 
 /**
- * The base class for all Human Interface views.
+ * The base class for all Human Interface views and components.
  *
  * @export
  * @abstract
@@ -63,6 +63,12 @@ export default abstract class View {
         this.buildChildren();
     }
 
+    /**
+     * Retrieves a list of all child Views with the specified class name.
+     *
+     * @param className The classname of all the views to query.
+     * @returns An array of Views with a matching classname.
+     */
     getViewsByClass(className: string): View[] {
         const results = [];
         if (this.$children) {
@@ -76,6 +82,14 @@ export default abstract class View {
         return results;
     }
 
+    /**
+     * Retrieve the first child View with a specified ID.
+     *
+     * @param {string} id The ID of the View to query.
+     * @returns {(View | null)} A View, if one with the corresponding ID is found. Null otherwise.
+     *
+     * @memberOf View
+     */
     getViewById(id: string): View | null {
         for (const child of this.$children) {
             if (child.identifier == id) return child;
@@ -85,6 +99,13 @@ export default abstract class View {
         return null;
     }
 
+    /**
+     * Retrieve the raw data of the DOM structure of this View.
+     *
+     * @returns {ModelData} The ModelData object associated with this View.
+     *
+     * @memberOf View
+     */
     getModelData(): ModelData {
         return {
             viewName: this.constructor.name,
@@ -97,11 +118,25 @@ export default abstract class View {
         };
     }
 
+    /**
+     * Describes a View. The description is not displayed, but rather used internally or to store data.
+     *
+     * @param {string} description The description of to assign to this View.
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     describe(description: string): this {
         this.description = description;
         return this;
     }
 
+    /**
+     * Destroys this View. The View will be completely destroyed and cannot be rebuilt.
+     *
+     *
+     * @memberOf View
+     */
     destroy(): void {
         // Remove from parent
         if (this.parent && this.parent.$children) this.parent.$children.splice(this.parent.children.indexOf(this), 1);
@@ -111,6 +146,14 @@ export default abstract class View {
         this.parent = undefined;
     }
 
+    /**
+     * Adds a list of children after all the children of this View.
+     *
+     * @param {...View[]} children The children to add.
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     addChildren(...children: View[]): this {
         children.forEach(child => {
             this.children.push(child);
@@ -118,34 +161,80 @@ export default abstract class View {
         return this;
     }
 
+    /**
+     * Assigns a background image to a View via url
+     *
+     * @param {string} url The URL of the image to display as the background image.
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     backgroundImage(url: string): this {
         this.body.style.background = `url(${url})`;
         this.body.style.backgroundSize = 'cover';
         return this;
     }
 
+    /**
+     * Assigns the background color of a View
+     *
+     * @param {(RGBAModel | 'none')} color The RGB color of the image, or 'none' for a transparent background.
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     background(color: RGBAModel | 'none'): this {
         this.body.style.background = color.toString();
         return this;
     }
 
+    /**
+     * Blurs the background of a View.
+     *
+     * @param {number} [radius=25] The blur radius to apply.
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     blur(radius = 25): this {
         (this.body.style as unknown as Record<string, string>).backdropFilter = `blur(${sizing(radius)})`;
         (this.body.style as unknown as Record<string, string>).webkitBackdropFilter = `blur(${sizing(radius)})`;
         return this;
     }
 
+    /**
+     * Makes all text bold.
+     *
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     bold(): this {
         this.body.style.fontWeight = 'bolder';
         return this;
     }
 
+    /**
+     * Adds a class to the class list of a View. This is also applied to the HTMLElement
+     *
+     * @param {string} classname The classname (or multiple classnames delimited by spaces).
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     addClass(classname: string): this {
         this.body.className += ` ${classname}`;
         this.body.className = this.body.className.trim();
         return this;
     }
 
+    /**
+     * Retrieves a list of the classnames assigned to this View.
+     *
+     * @returns {string[]} An array of classname strings.
+     *
+     * @memberOf View
+     */
     getClassList(): string[] {
         const classString = this.body.className;
         return classString.split(' ').filter(className => {
@@ -153,11 +242,29 @@ export default abstract class View {
         });
     }
 
+    /**
+     * Fixes a View in place. Scroll events will not affect the physical location of the View relative to the top-left corner of the window.
+     * For titlebars (and similar), a z-index should also be assigned to the View.
+     *
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     fixed(): this {
         this.body.style.position = 'fixed';
         return this;
     }
 
+    /**
+     * Add font details to a View.
+     *
+     * @param {(string | number | HIFont | HISizingName)} fontClass The font data to provide to View's styling.
+     * If a sizing value is provided ("xxs" to "xxl") then the sizing value is used.
+     * All other strings are assigned to the styles font property (ex: "Arial" or "15px Arial")
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     font(fontClass: string | number | HIFont | HISizingName): this {
         if (typeof fontClass == 'string' && Object.prototype.hasOwnProperty.call(SizingValues.FONT, fontClass)) {
             this.body.style.fontSize = SizingValues.FONT[fontClass as HISizingName];
@@ -177,6 +284,15 @@ export default abstract class View {
         return this;
     }
 
+    /**
+     * Set a foreground color for the current View. This is used font setting font-color,
+     * icon color and border colors.
+     *
+     * @param {RGBAModel} color The color to assign to the foreground.
+     * @returns {this}
+     *
+     * @memberOf View
+     */
     foreground(color: RGBAModel): this {
         this.body.style.color = color.toString();
         return this;
