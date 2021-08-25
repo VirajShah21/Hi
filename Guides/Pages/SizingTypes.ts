@@ -1,54 +1,14 @@
-import { RGBAModel, HColor } from '@Hi/Colors';
-import BlockCode from '@Hi/Components/BlockCode';
+import { HColor, RGBAModel } from '@Hi/Colors';
 import ClickButton from '@Hi/Components/ClickButton';
 import { Container } from '@Hi/Components/Container';
 import { Preview } from '@Hi/Components/DevKit';
 import HStack from '@Hi/Components/HStack';
-import ImageContent from '@Hi/Components/ImageView';
-import IonIcon from '@Hi/Components/IonIcon';
-import { ScrollView } from '@Hi/Components/ScrollView';
-import Spacer from '@Hi/Components/Spacer';
-import TextContent from '@Hi/Components/TextView';
+import ImageView from '@Hi/Components/ImageView';
+import TextView from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
-import {
-    HTMLContent,
-    MajorIcon,
-    ImageCaption,
-    PrimaryHeading,
-    PrimaryText,
-    SubtleText,
-} from './Components/FileTreeItem';
-
-export class TypeDefinitionDocumentation extends VStack {
-    constructor(expansion: string, description: string, examples: string) {
-        super(
-            new HStack(
-                new IonIcon('code-working-outline').font('lg').padding(),
-                new TextContent('Type Definition').padding().width(200).textStart(),
-                new BlockCode(expansion).padding().margin(0).textStart(),
-                new Spacer()
-            )
-                .stretchWidth()
-                .alignStart(),
-            new HStack(
-                new IonIcon('information-outline').font('lg').padding(),
-                new TextContent('Description').padding().width(200).textStart(),
-                new HTMLContent('span', description).textStart().margin(0).padding().width(400),
-                new Spacer()
-            )
-                .stretchWidth()
-                .alignStart(),
-            new HStack(
-                new IonIcon('code-slash-outline').font('lg').padding(),
-                new TextContent('Example').padding().width(200).textStart(),
-                new ScrollView(new BlockCode(examples).textStart().margin(0).padding().width(400)),
-                new Spacer()
-            )
-                .stretchWidth()
-                .alignStart()
-        );
-    }
-}
+import { ImageCaption, PrimaryHeading, PrimaryText, SubtleText } from './Components/DisplayText';
+import MajorIcon from './Components/MajorIcon';
+import { TypeDefinitionDocumentation } from './Components/TypeDefinitionDocumentation';
 
 export default class SizingTypes extends Container {
     constructor() {
@@ -56,7 +16,7 @@ export default class SizingTypes extends Container {
             new VStack(
                 new VStack(
                     new MajorIcon('cube-outline').padding().rounded().blur(),
-                    new TextContent('Sizing Type Definitions')
+                    new TextView('Sizing Type Definitions')
                         .blur()
                         .padding()
                         .rounded()
@@ -70,20 +30,20 @@ export default class SizingTypes extends Container {
                     .stretch()
                     .padding({ bottom: 50 })
                     .foreground(RGBAModel.WHITE),
-                new ImageCaption('Photo by Jeremy Zero'),
+                ImageCaption('Photo by Jeremy Zero'),
 
-                new PrimaryHeading('Type Definitions Overview'),
+                PrimaryHeading('Type Definitions Overview'),
 
-                new PrimaryText(
+                PrimaryText(
                     'For ease of use and IntelliSense optimization, type definitions have been provided for sizing metrics. Each type allows for different kinds of input.'
                 ),
-                new SubtleText(
+                SubtleText(
                     'Type definitions are used strictly for TypeScript prior to compilation. They are not implementations of new data structures.'
                 ),
 
                 new HStack(
-                    new ImageContent('https://image.flaticon.com/icons/png/512/4053/4053768.png').height(50),
-                    new PrimaryHeading('HISizingValue').margin(0).padding({ left: 10 })
+                    new ImageView('https://image.flaticon.com/icons/png/512/4053/4053768.png').height(50),
+                    PrimaryHeading('HISizingValue').margin(0).padding({ left: 10 })
                 ).margin({ top: 25 }),
 
                 new TypeDefinitionDocumentation(
@@ -94,7 +54,7 @@ const imageHeight: HISizingValue = '7em';
 const buttonWidth: HISizingValue = 'calc(50vw - 10px)'
 
 new ClickButton(
-    new ImageContent('assets/bird.png')
+    new ImageView('assets/bird.png')
         .width(imageWidth)
         .height(imageHeight)
 ).width(buttonWidth);
@@ -106,7 +66,7 @@ new ClickButton(
 
                 new Preview(
                     new ClickButton(
-                        new ImageContent(
+                        new ImageView(
                             'https://images.unsplash.com/photo-1579723985163-28f30af7093b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
                             'Image of an African Gray Parrot'
                         )
@@ -116,8 +76,8 @@ new ClickButton(
                 ),
 
                 new HStack(
-                    new ImageContent('https://image.flaticon.com/icons/png/512/2000/2000792.png').height(50),
-                    new PrimaryHeading('HISizeBounds').margin(0).padding({ left: 10 })
+                    new ImageView('https://image.flaticon.com/icons/png/512/2000/2000792.png').height(50),
+                    PrimaryHeading('HISizeBounds').margin(0).padding({ left: 10 })
                 ).margin({ top: 25 }),
 
                 new TypeDefinitionDocumentation(
@@ -154,7 +114,7 @@ new ClickButton(
 
                 new Preview(
                     new HStack(
-                        new VStack(new TextContent('Left Panel'))
+                        new VStack(new TextView('Left Panel'))
                             .width({
                                 min: 100,
                                 default: 200,
@@ -162,15 +122,13 @@ new ClickButton(
                             })
                             .background(HColor('red')),
 
-                        new VStack(new TextContent('Right Panel'))
-                            .width({ min: 300, max: 500 })
-                            .background(HColor('blue'))
+                        new VStack(new TextView('Right Panel')).width({ min: 300, max: 500 }).background(HColor('blue'))
                     )
                 ).width({ max: '100%' }),
 
                 new HStack(
-                    new ImageContent('https://image.flaticon.com/icons/png/512/204/204599.png').height(50),
-                    new PrimaryHeading('HIEdgeSizingValue').margin(0).padding({ left: 10 })
+                    new ImageView('https://image.flaticon.com/icons/png/512/204/204599.png').height(50),
+                    PrimaryHeading('HIEdgeSizingValue').margin(0).padding({ left: 10 })
                 ).margin({ top: 25 }),
 
                 new TypeDefinitionDocumentation(
@@ -197,7 +155,7 @@ new ClickButton(
                     .rounded(),
 
                 new Preview(
-                    new HStack(new TextContent('Hello World').background(RGBAModel.WHITE).padding(5))
+                    new HStack(new TextView('Hello World').background(RGBAModel.WHITE).padding(5))
                         .background(RGBAModel.BLACK)
                         .padding({
                             top: 10,
