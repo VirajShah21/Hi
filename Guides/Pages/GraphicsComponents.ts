@@ -9,7 +9,8 @@ import IonIcon from '@Hi/Components/IonIcon';
 import Spacer from '@Hi/Components/Spacer';
 import TextContent from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
-import { MajorIcon, PrimaryHeading } from './Components/FileTreeItem';
+import { PrimaryHeading } from './Components/DisplayText';
+import MajorIcon from './Components/MajorIcon';
 
 export default class GraphicsComponent extends Container {
     constructor() {
@@ -24,7 +25,7 @@ export default class GraphicsComponent extends Container {
                     .foreground(RGBAModel.WHITE)
                     .padding(),
 
-                new PrimaryHeading('Icons'),
+                PrimaryHeading('Icons'),
 
                 new Preview(
                     new VStack(
@@ -45,7 +46,7 @@ export default class GraphicsComponent extends Container {
                         .padding(25)
                 ).margin({ top: 25 }),
 
-                new PrimaryHeading('Instagram Component?'),
+                PrimaryHeading('Instagram Component?'),
 
                 new Preview(
                     new VStack(
