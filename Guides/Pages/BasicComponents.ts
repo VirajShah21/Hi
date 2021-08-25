@@ -5,7 +5,8 @@ import { Preview } from '@Hi/Components/DevKit';
 import HStack from '@Hi/Components/HStack';
 import TextContent from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
-import { MajorIcon, PrimaryHeading, PrimaryText, SecondaryHeading } from './PageComponents';
+import { PrimaryHeading, PrimaryText, SecondaryHeading } from './Components/DisplayText';
+import MajorIcon from './Components/MajorIcon';
 
 export default class BasicComponents extends Container {
     constructor() {
@@ -19,29 +20,29 @@ export default class BasicComponents extends Container {
                     .stretch()
                     .padding({ bottom: 50 }),
 
-                new PrimaryHeading('Overview'),
+                PrimaryHeading('Overview'),
 
-                new PrimaryText(
+                PrimaryText(
                     'The basic components are used quite often during webapp development. These components include buttons and simple text elements. They are highly configurable just like any View, but they work right out of the box.'
                 ),
 
-                new PrimaryHeading('Text Component'),
+                PrimaryHeading('Text Component'),
 
-                new PrimaryText(
+                PrimaryText(
                     'The Text components is very important for application development. It is responsible for rendering all strings of text within your app.'
                 ),
 
                 new Preview(new TextContent('Designed in Philadelphia.')).margin({ top: 25 }),
 
-                new PrimaryHeading('Button Components'),
+                PrimaryHeading('Button Components'),
 
-                new PrimaryText('Buttons allow for interactivity.'),
+                PrimaryText('Buttons allow for interactivity.'),
 
                 new Preview(new ClickButton(new TextContent('Designed in Philadelphia.'))).margin({ top: 25 }),
 
-                new PrimaryText('Common Modifiers'),
+                PrimaryText('Common Modifiers'),
 
-                new SecondaryHeading('Padding'),
+                SecondaryHeading('Padding'),
 
                 new Preview(
                     new HStack(
@@ -54,7 +55,7 @@ export default class BasicComponents extends Container {
                     ).padding(50)
                 ).margin({ top: 25 }),
 
-                new SecondaryHeading('Background/Foreground'),
+                SecondaryHeading('Background/Foreground'),
 
                 new Preview(
                     new VStack(
@@ -64,7 +65,7 @@ export default class BasicComponents extends Container {
                     ).padding(20)
                 ).margin({ top: 25 }),
 
-                new SecondaryHeading('Roundedness'),
+                SecondaryHeading('Roundedness'),
 
                 new Preview(
                     new VStack(

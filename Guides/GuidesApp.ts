@@ -8,9 +8,9 @@ import View from '@Hi/View';
 import { ViewController } from '@Hi/ViewController';
 import HIFullScreenView from '@Hi/Components/HIFullScreenView';
 import HStack from '@Hi/Components/HStack';
-import { ScrollView } from '@Hi/Components/ScrollView';
-import TextContent from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
+import MessageViewer from './MessageViewer';
+import Titlebar from './Titlebar';
 
 export default class GuidesApp extends HIFullScreenView {
     public portfolioViewerController = new ViewController({
@@ -53,36 +53,5 @@ export default class GuidesApp extends HIFullScreenView {
 
         for (const screenName in this.portfolioViewerController.screens)
             this.portfolioViewerController.screens[screenName].signal(data);
-    }
-}
-
-class Titlebar extends HStack {
-    constructor() {
-        super(new TextContent('Title').id('title'));
-        this.width({
-            min: 'calc(100vw - 300px)',
-            default: 'calc(100vw - 300px)',
-            max: 'calc(100vw - 300px)',
-        })
-            .padding(20)
-            .borderBottom({
-                size: 1,
-                style: 'solid',
-                color: HColor('gray5'),
-            })
-            .position('fixed')
-            .background(HColor('background').alpha(0.25))
-            .blur(25)
-            .zIndex(10);
-    }
-
-    override handle(data: string): void {
-        if (data == 'color') this.border({ color: HColor('gray5') });
-    }
-}
-
-class MessageViewer extends ScrollView {
-    constructor() {
-        super(new VStack(new TextContent('Select a menu item').foreground(HColor('gray'))).stretch());
     }
 }

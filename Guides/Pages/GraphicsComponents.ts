@@ -9,7 +9,7 @@ import IonIcon from '@Hi/Components/IonIcon';
 import Spacer from '@Hi/Components/Spacer';
 import TextContent from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
-import { MajorIcon, PrimaryHeading } from './PageComponents';
+import { MajorIcon, PrimaryHeading } from './Components/FileTreeItem';
 
 export default class GraphicsComponent extends Container {
     constructor() {

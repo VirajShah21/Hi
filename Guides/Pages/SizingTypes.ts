@@ -10,7 +10,14 @@ import { ScrollView } from '@Hi/Components/ScrollView';
 import Spacer from '@Hi/Components/Spacer';
 import TextContent from '@Hi/Components/TextView';
 import VStack from '@Hi/Components/VStack';
-import { HTMLContent, MajorIcon, ImageCaption, PrimaryHeading, PrimaryText, SubtleText } from './PageComponents';
+import {
+    HTMLContent,
+    MajorIcon,
+    ImageCaption,
+    PrimaryHeading,
+    PrimaryText,
+    SubtleText,
+} from './Components/FileTreeItem';
 
 export class TypeDefinitionDocumentation extends VStack {
     constructor(expansion: string, description: string, examples: string) {
