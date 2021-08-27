@@ -7,21 +7,21 @@ import { HumanEvent } from '@Hi/ViewController';
 export default class InputField extends View {
     public override body: HTMLInputElement;
 
-    public readonly attributes = StateObject(
+    public readonly model = StateObject(
         {
             value: '',
             placeholder: '',
         },
         () => {
-            this.body.value = this.attributes.value; // ! Cannot use setAttribute for assigning input element's value
-            this.body.placeholder = this.attributes.placeholder;
+            this.body.value = this.model.value; // ! Cannot use setAttribute for assigning input element's value
+            this.body.placeholder = this.model.placeholder;
         }
     );
 
     constructor(placeholder: string) {
         super('input');
-        this.attributes.value = '';
-        this.attributes.placeholder = placeholder || '';
+        this.model.value = '';
+        this.model.placeholder = placeholder || '';
         this.body.style.margin = '0';
         this.body.style.boxSizing = 'border-box';
         this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xs;
@@ -30,7 +30,7 @@ export default class InputField extends View {
         this.body.style.padding = SizingValues.PADDING.xs;
         this.body.style.boxSizing = 'border-box';
         this.body.addEventListener('input', () => {
-            this.attributes.value = this.body.value;
+            this.model.value = this.body.value;
         });
     }
 
