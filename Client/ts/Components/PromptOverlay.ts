@@ -30,7 +30,7 @@ export default class PromptOverlay extends Overlay {
 
     whenConfirmed(callback: (response: string) => void): this {
         (this.getViewsByClass('hi-prompt-overlay-confirm-button')[0] as ClickButton).whenClicked(() => {
-            callback((this.getViewsByClass('hi-prompt-input')[0] as InputField).attributes.value);
+            callback((this.getViewsByClass('hi-prompt-input')[0] as InputField).model.value);
         });
         return this;
     }

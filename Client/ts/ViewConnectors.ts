@@ -32,7 +32,7 @@ export class FormConnector {
     post(callback: (response: Record<string, unknown>) => void): void {
         const body: Record<string, string> = {};
 
-        for (const key in this.inputViews) body[key] = this.inputViews[key].attributes.value;
+        for (const key in this.inputViews) body[key] = this.inputViews[key].model.value;
 
         fetch(this.action, {
             method: 'POST',

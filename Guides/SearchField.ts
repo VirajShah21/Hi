@@ -11,7 +11,7 @@ export default class SearchField extends TextField {
             .margin({ bottom: 20 })
             .whenChanged(ev => {
                 const target = ev.view.parent?.getViewById('menu-items-list') as View;
-                const query = (ev.view as TextField).attributes.value.trim().toLowerCase();
+                const query = (ev.view as TextField).model.value.trim().toLowerCase();
                 target.removeAllChildren();
                 target.addChildren(
                     ...Sidebar.menuItems
