@@ -31,7 +31,3 @@ export function StateObject<T extends Record<string, unknown> | unknown[]>(
 
     return new Proxy(obj, handler);
 }
-
-export function CheckoutState<T>(proxy: StateProxy<T>): T {
-    return (proxy as unknown as { $: T }).$;
-}

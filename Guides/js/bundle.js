@@ -1053,8 +1053,7 @@ function edgeSizing(size) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "StateObject": () => (/* binding */ StateObject),
-/* harmony export */   "CheckoutState": () => (/* binding */ CheckoutState)
+/* harmony export */   "StateObject": () => (/* binding */ StateObject)
 /* harmony export */ });
 /**
  * Constructs a proxy object for a state object.
@@ -1082,9 +1081,6 @@ function StateObject(obj, onChange) {
         },
     };
     return new Proxy(obj, handler);
-}
-function CheckoutState(proxy) {
-    return proxy.$;
 }
 
 
@@ -1396,10 +1392,22 @@ class View {
         });
         return this;
     }
-    root() {
-        if (this.parent)
-            return this.parent.root();
-        return this;
+    root(stopAtView) {
+        let root = this.parent;
+        if (root == undefined)
+            return this;
+        if (stopAtView) {
+            while (root.parent != undefined) {
+                if (stopAtView(root))
+                    return root;
+                else
+                    root = root.parent;
+            }
+        }
+        else
+            while (root.parent != undefined)
+                root = root.parent;
+        return root;
     }
     title(text) {
         this.body.title = text;
@@ -1419,6 +1427,22 @@ class View {
     }
     zIndex(index) {
         this.body.style.zIndex = `${index}`;
+        return this;
+    }
+    resizable(axis) {
+        if (!axis)
+            this.body.style.resize = 'both';
+        else
+            switch (axis) {
+                case 'h':
+                    this.body.style.resize = 'horizontal';
+                    break;
+                case 'v':
+                    this.body.style.resize = 'vertical';
+                    break;
+                default:
+                    this.body.style.resize = axis;
+            }
         return this;
     }
     // * Alignment
