@@ -1,3 +1,5 @@
 Client/build
 .DS_STORE
 node_modules
+Guides/js/bundle.js
+Guides/js/bundle.map.js
