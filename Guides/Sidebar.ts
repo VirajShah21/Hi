@@ -105,7 +105,7 @@ function MenuButton(iconName: string, title: string, navigateTo: string) {
         })
         .whenClicked(ev => {
             ViewController.navigateTo(navigateTo);
-            (ev.view.root().getViewById('title') as TextView).text.value = title;
+            (ev.view.root().getViewById('title') as TextView).model.text = title;
         });
 }
 

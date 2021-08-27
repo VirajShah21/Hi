@@ -5,18 +5,18 @@ import View from '@Hi/View';
 export default class TextView extends View {
     public override body: HTMLSpanElement;
 
-    public readonly text = StateObject(
+    public readonly model = StateObject(
         {
-            value: '',
+            text: '',
         },
         () => {
-            this.body.textContent = this.text.value;
+            this.body.textContent = this.model.text;
         }
     );
 
     constructor(text: string) {
         super('span');
-        this.text.value = text;
+        this.model.text = text;
     }
 
     lineHeight(height: HISizingValue): this {

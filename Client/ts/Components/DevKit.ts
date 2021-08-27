@@ -20,10 +20,10 @@ export class Preview extends VStack {
         },
         property => {
             if (property == 'width' || property == 'height')
-                (this.getViewById(`component-${property}`) as TextContent).text.value =
+                (this.getViewById(`component-${property}`) as TextContent).model.text =
                     (property == 'width' ? this.dimensions.width : this.dimensions.height) + '';
             else if (property == 'padding')
-                (this.getViewById('component-padding') as TextContent).text.value = this.dimensions.padding || '•';
+                (this.getViewById('component-padding') as TextContent).model.text = this.dimensions.padding || '•';
         }
     );
 
@@ -38,13 +38,13 @@ export class Preview extends VStack {
         property => {
             switch (property) {
                 case 'name':
-                    (this.getViewById('component-name') as TextContent).text.value = this.componentInfo.name || '•';
+                    (this.getViewById('component-name') as TextContent).model.text = this.componentInfo.name || '•';
                     break;
                 case 'id':
-                    (this.getViewById('component-id') as TextContent).text.value = this.componentInfo.id || '•';
+                    (this.getViewById('component-id') as TextContent).model.text = this.componentInfo.id || '•';
                     break;
                 case 'description':
-                    (this.getViewById('component-description') as TextContent).text.value =
+                    (this.getViewById('component-description') as TextContent).model.text =
                         this.componentInfo.description || '•';
                     break;
             }
