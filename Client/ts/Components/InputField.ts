@@ -2,7 +2,7 @@ import { HColor } from '@Hi/Colors';
 import { SizingValues } from '@Hi/Types/sizing';
 import { StateObject } from '@Hi/Types/states';
 import View from '@Hi/View';
-import { HumanEvent } from '@Hi/ViewController';
+import { HumanEvent, HumanKeyPressEvent } from '@Hi/ViewController';
 
 export default class InputField extends View {
     public override body: HTMLInputElement;
@@ -32,6 +32,9 @@ export default class InputField extends View {
         this.body.addEventListener('input', () => {
             this.model.value = this.body.value;
         });
+        this.background(HColor('background'))
+            .foreground(HColor('foreground'))
+            .noOutline();
     }
 
     whenFocused(callback: (event: HumanEvent) => void): this {
@@ -62,6 +65,18 @@ export default class InputField extends View {
                 view: this,
                 type: 'Change',
                 browserEvent,
+            });
+        });
+        return this;
+    }
+
+    whenKeyPressed(callback: (event: HumanKeyPressEvent) => void): this {
+        this.body.addEventListener('keypress', browserEvent => {
+            callback({
+                view: this,
+                type: 'KeyPress',
+                browserEvent,
+                key: browserEvent.key,
             });
         });
         return this;
