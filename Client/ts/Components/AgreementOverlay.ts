@@ -3,7 +3,7 @@ import ClickButton from './ClickButton';
 import HStack from './HStack';
 import IonIcon from './IonIcon';
 import Overlay from './Overlay';
-import { ScrollView } from './ScrollView';
+import ScrollView from './ScrollView';
 import TextContent from './TextView';
 import VStack from './VStack';
 
@@ -24,16 +24,16 @@ export default class AgreementOverlay extends Overlay {
                         .whenClicked(() => {
                             this.destroy();
                         })
-                        .addClass('hi-agreement-overlay-confirm-button')
-                )
-            )
+                        .addClass('hi-agreement-overlay-confirm-button'),
+                ),
+            ),
         );
     }
 
     whenConfirmed(callback: () => void): this {
         (
             this.getViewsByClass(
-                'hi-agreement-overlay-confirm-button'
+                'hi-agreement-overlay-confirm-button',
             )[0] as ClickButton
         ).whenClicked(callback);
         return this;
@@ -42,7 +42,7 @@ export default class AgreementOverlay extends Overlay {
     whenCancelled(callback: () => void): this {
         (
             this.getViewsByClass(
-                'hi-agreement-overlay-cancel-button'
+                'hi-agreement-overlay-cancel-button',
             )[0] as ClickButton
         ).whenClicked(callback);
         return this;
