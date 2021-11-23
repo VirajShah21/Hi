@@ -1,27 +1,15 @@
 import { HColor } from '@Hi/Colors';
+import HumanEvent, { HumanKeyPressEvent } from '@Hi/Types/HumanEvent';
 import { SizingValues } from '@Hi/Types/sizing';
-import { StateObject } from '@Hi/Types/states';
 import View from '@Hi/View';
-import { HumanEvent, HumanKeyPressEvent } from '@Hi/ViewController';
 
 export default class InputField extends View {
-    public override body: HTMLInputElement;
+    private whenChangedListeners: ((ev: Event) => void)[] = [];
 
-    public readonly model = StateObject(
-        {
-            value: '',
-            placeholder: '',
-        },
-        () => {
-            this.body.value = this.model.value; // ! Cannot use setAttribute for assigning input element's value
-            this.body.placeholder = this.model.placeholder;
-        }
-    );
+    public override body: HTMLInputElement;
 
     constructor(placeholder: string) {
         super('input');
-        this.model.value = '';
-        this.model.placeholder = placeholder || '';
         this.body.style.margin = '0';
         this.body.style.boxSizing = 'border-box';
         this.body.style.borderRadius = SizingValues.BORDER_RADIUS.xs;
@@ -29,9 +17,7 @@ export default class InputField extends View {
         this.body.style.textAlign = 'left';
         this.body.style.padding = SizingValues.PADDING.xs;
         this.body.style.boxSizing = 'border-box';
-        this.body.addEventListener('input', () => {
-            this.model.value = this.body.value;
-        });
+        this.body.placeholder = placeholder;
         this.background(HColor('background'))
             .foreground(HColor('foreground'))
             .noOutline();
@@ -60,13 +46,15 @@ export default class InputField extends View {
     }
 
     whenChanged(callback: (event: HumanEvent) => void): this {
-        this.body.addEventListener('input', browserEvent => {
+        const listener = (browserEvent: Event) => {
             callback({
                 view: this,
                 type: 'Change',
                 browserEvent,
             });
-        });
+        };
+        this.body.addEventListener('input', listener);
+        this.whenChangedListeners.push(listener);
         return this;
     }
 
@@ -85,5 +73,34 @@ export default class InputField extends View {
     noOutline(): this {
         this.body.style.outline = 'none';
         return this;
+    }
+
+    public select(): this {
+        this.body.select();
+        return this;
+    }
+
+    public selectWhenFocused(): this {
+        this.body.addEventListener('focusin', () => this.body.select());
+        return this;
+    }
+
+    public get value(): string {
+        return this.body.value;
+    }
+
+    public set value(newValue: string) {
+        this.body.value = newValue;
+        this.whenChangedListeners.forEach(listener =>
+            listener({} as unknown as Event),
+        );
+    }
+
+    public get placeholder(): string {
+        return this.body.placeholder;
+    }
+
+    public set placeholder(newPlaceholder: string) {
+        this.body.placeholder = newPlaceholder;
     }
 }

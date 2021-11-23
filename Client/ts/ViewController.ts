@@ -1,3 +1,4 @@
+import HumanEvent from './Types/HumanEvent';
 import View from './View';
 
 export const ViewControllerData = {
@@ -12,14 +13,16 @@ export const ViewControllerData = {
  * @class ViewController
  */
 export class ViewController {
-    public screens: Record<string, View>;
     public binding: HTMLElement;
-    public visibleScreen: string;
 
-    constructor(screens: Record<string, View>) {
-        this.screens = screens;
+    private activeViewIndex = -1;
+
+    private viewHistory: View[] = [];
+
+    constructor(name: string) {
         ViewControllerData.controllers.push(this);
         document.body.style.margin = '0';
+        ViewControllerData.controllerMap[name] = this;
     }
 
     /**
@@ -34,58 +37,31 @@ export class ViewController {
      *
      * @memberOf ViewController
      */
-    navigateTo(name = 'main', delay = 0): this {
-        if (typeof name != 'string')
-            throw new Error(
-                `ViewController.navigateTo: Parameter name (1) should be of type string, instead got ${typeof name}`,
-            );
-        if (!Object.prototype.hasOwnProperty.call(this.screens, name))
-            throw new Error(
-                `ViewController.navigateTo: ViewController does not have a screen named ${name}`,
-            );
-
-        const screen = this.screens[name];
-
+    navigateTo(view: View, delay = 0): this {
+        const oldView = this.activeView;
+        this.viewHistory.push(view);
+        this.activeViewIndex = this.viewHistory.length - 1;
         window.setTimeout(() => {
             this.binding.innerHTML = '';
-
-            if (screen) this.binding.appendChild(screen.body);
-            else
-                this.binding.append(
-                    `Error: No such screen "${name}" on this ViewController"`,
-                );
+            this.binding.appendChild(view.body);
+            view.signal('hi:buildin');
         }, delay);
-
-        this.screens[this.visibleScreen]?.signal('hi:buildout');
-        screen?.signal('hi:buildin');
-        this.visibleScreen = name;
-
+        if (oldView) oldView.signal('hi:buildout');
         return this;
     }
 
-    /**
-     * Adds a screen to the navigator wrapper.
-     *
-     * @param {string} name The name of the new screen.
-     * @param {View} screen The view which the screen is attached to.
-     * @returns {this}
-     *
-     * @memberOf ViewController
-     */
-    addNavigator(name: string, screen: View): this {
-        if (typeof name != 'string')
-            throw new Error(
-                `ViewController.addNavigator: Parameter name (1) should be of type string, instead got ${typeof name}`,
+    navigateBack(delay = 0): this {
+        const oldView = this.activeView;
+        this.activeViewIndex -= 1;
+        this.viewHistory.pop();
+        window.setTimeout(() => {
+            this.binding.innerHTML = '';
+            this.binding.appendChild(
+                this.viewHistory[this.activeViewIndex]!.body,
             );
-        if (!(screen instanceof View))
-            throw new Error(
-                `ViewController.addNavigator: Parameter screen (2) should be of type View, instead got ${typeof screen}.\nValue: ${
-                    typeof screen == 'object'
-                        ? JSON.stringify(screen, null, 4)
-                        : screen
-                }`,
-            );
-        this.screens[name] = screen;
+            this.viewHistory[this.activeViewIndex]!.signal('hi:buildin');
+        }, delay);
+        if (oldView) oldView.signal('hi:buildout');
         return this;
     }
 
@@ -114,24 +90,15 @@ export class ViewController {
         window.addEventListener('resize', ev =>
             handler({
                 type: 'Resize',
-                view: this.screens[this.visibleScreen] as View,
+                view: this.viewHistory[this.activeViewIndex]!,
                 browserEvent: ev,
             }),
         );
         return this;
     }
 
-    /**
-     * Maps this controller to a specified name in the ViewController registry.
-     *
-     * @param {string} controllerName The name of this controller in the registry.
-     * @returns {this}
-     *
-     * @memberOf ViewController
-     */
-    mapTo(controllerName: string): this {
-        ViewControllerData.controllerMap[controllerName] = this;
-        return this;
+    findViewById(id: string): View | null {
+        return this.viewHistory[this.activeViewIndex]!.findViewById(id);
     }
 
     /**
@@ -139,7 +106,8 @@ export class ViewController {
      *
      * @static
      * @param {string} controllerName The name of the controller to query.
-     * @returns {(ViewController | undefined)} The requested ViewController. If a controller with the name is not specified, then this method will return undefined.
+     * @returns {(ViewController | undefined)} The requested ViewController.
+     * If a controller with the name is not specified, then this method will return undefined.
      *
      * @memberOf ViewController
      */
@@ -156,76 +124,43 @@ export class ViewController {
      *
      * @memberOf ViewController
      */
-    signal(data: string): void {
-        for (const screen in this.screens)
-            (this.screens[screen] as View).signal(data);
-    }
-
-    /**
-     * Automatically navigates to the first found screen with the specified name on any ViewController.
-     *
-     * @static
-     * @param {string} [name='main'] The screen name to navigate to.
-     * @param {string} [delay=0] The amount of time to wait before switching
-     * the View. This is especially helpful when using build out transitions.
-     * The units are in milliseconds (1000 ms = 1 s). Default value is 0.
-     * @returns {(ViewController | null)} The requested ViewController. If no controller is found, then null is returned.
-     *
-     * @memberOf ViewController
-     */
-    static navigateTo(name = 'main', delay = 0): ViewController | null {
-        const controller = ViewControllerData.controllers.find(
-            currentController => {
-                return Object.prototype.hasOwnProperty.call(
-                    currentController.screens,
-                    name,
-                );
-            },
+    public static signalAll(data: string, ...args: unknown[]): void {
+        Object.values(ViewControllerData.controllers).forEach(controller =>
+            controller.signal(data, ...args),
         );
-        if (controller) {
-            controller.navigateTo(name, delay);
-            controller.visibleScreen = name;
-            return controller;
-        } else {
-            console.warn(`Could not navigate to ${name}`);
-            return null;
-        }
     }
 
-    /**
-     * Puts all screens into a single contained object.
-     *
-     * @static
-     * @returns {Record<string, View>} An object mapping screen names to the screen.
-     *
-     * @memberOf ViewController
-     */
-    static allScreens(): Record<string, View> {
-        const screens: Record<string, View> = {};
-        ViewControllerData.controllers.forEach(controller => {
-            for (const screen in controller.screens) {
-                screens[screen] = controller.screens[screen] as View;
-            }
-        });
-        return screens;
+    public signal(data: string, ...args: unknown[]): void {
+        this.viewHistory.forEach(view => view.signal(data, ...args));
+    }
+
+    public signalActive(data: string, ...args: unknown[]): void {
+        this.viewHistory[this.activeViewIndex]!.signal(data, ...args);
+    }
+
+    public signalInactive(data: string, ...args: unknown[]): void {
+        this.viewHistory
+            .filter(view => view !== this.viewHistory[this.activeViewIndex])
+            .forEach(view => view.signal(data, ...args));
+    }
+
+    public get activeView(): View | null {
+        if (
+            this.activeViewIndex >= 0 &&
+            this.activeViewIndex < this.viewHistory.length
+        ) {
+            return this.viewHistory[this.activeViewIndex]!;
+        }
+        return null;
     }
 }
 
 /**
- * An object holding the details of a triggered event
- *
- * @export
- * @interface HumanEvent
+ * Exposes `ViewController.signalAll()` method to browser's global scope.
+ * This method is used because it is TypeScript compliant.
+ * The method is exposed as `signal()`.
  */
-export interface HumanEvent {
-    view: View;
-    type: string;
-    browserEvent: Event;
-}
-
-export interface HumanKeyPressEvent {
-    view: View;
-    type: 'KeyPress';
-    browserEvent: Event;
-    key: string;
-}
+Object.defineProperty(window, 'signal', {
+    value: ViewController.signalAll,
+    writable: false,
+});
