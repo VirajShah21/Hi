@@ -1,7 +1,7 @@
 import View from '@Hi/View';
 import HumanEvent from '@Hi/Types/HumanEvent';
 
-export default class Checkbox extends View {
+export default class Checkbox extends View<HTMLUnknownElement> {
     private checkedFlag: boolean;
 
     private icons: {
@@ -28,7 +28,7 @@ export default class Checkbox extends View {
         return this.checked;
     }
 
-    whenClicked(callback: (ev: HumanEvent) => void): this {
+    whenClicked(callback: (ev: HumanEvent<this>) => void): this {
         this.body.addEventListener('click', (browserEvent: Event) => {
             callback({
                 type: 'Click',

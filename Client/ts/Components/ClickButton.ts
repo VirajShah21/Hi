@@ -4,10 +4,8 @@ import { SizingValues } from '@Hi/Types/sizing';
 import View from '@Hi/View';
 import Group from './Group';
 
-export default class ClickButton extends Group {
-    public override body: HTMLButtonElement;
-
-    constructor(...children: View[]) {
+export default class ClickButton extends Group<HTMLButtonElement> {
+    constructor(...children: View<HTMLElement>[]) {
         super('button', ...children);
         this.body.style.border = 'none';
         this.body.style.color = HColor('blue').toString();
@@ -17,7 +15,7 @@ export default class ClickButton extends Group {
         this.body.style.display = 'flex';
     }
 
-    whenClicked(callback: (ev: HumanEvent) => void): this {
+    whenClicked(callback: (ev: HumanEvent<this>) => void): this {
         this.body.addEventListener('click', browserEvent => {
             callback({
                 type: 'Click',
@@ -30,6 +28,16 @@ export default class ClickButton extends Group {
 
     noOutline(): this {
         this.body.style.outline = 'none';
+        return this;
+    }
+
+    disable(): this {
+        this.body.disabled = true;
+        return this;
+    }
+
+    public enable(): this {
+        this.body.disabled = false;
         return this;
     }
 }

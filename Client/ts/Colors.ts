@@ -1,27 +1,6 @@
 import HumanColorSwatch from './HumanColorSwatch';
 import RGBAModel from './RGBAModel';
-
-export type HumanColorName =
-    | 'blue'
-    | 'brown'
-    | 'cyan'
-    | 'green'
-    | 'indigo'
-    | 'mint'
-    | 'orange'
-    | 'pink'
-    | 'purple'
-    | 'red'
-    | 'teal'
-    | 'yellow'
-    | 'gray'
-    | 'gray2'
-    | 'gray3'
-    | 'gray4'
-    | 'gray5'
-    | 'gray6'
-    | 'foreground'
-    | 'background';
+import { HumanColorName } from './Types/colors';
 
 let colorTheme: 'light' | 'dark' = (() => {
     const tmp = localStorage.getItem('hi://theme');
@@ -38,9 +17,9 @@ let colorTheme: 'light' | 'dark' = (() => {
  */
 export function HColor(color: HumanColorName): RGBAModel {
     if (colorTheme === 'light') {
-        return RGBAModel.copy(HumanColorSwatch.light![color]!);
+        return RGBAModel.copy(HumanColorSwatch.light[color]);
     }
-    return RGBAModel.copy(HumanColorSwatch.dark![color]!);
+    return RGBAModel.copy(HumanColorSwatch.dark[color]);
 }
 
 /**

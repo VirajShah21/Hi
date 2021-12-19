@@ -1,7 +1,7 @@
 import HumanEvent from '@Hi/Types/HumanEvent';
 import View from '@Hi/View';
 
-export default class RadioButton extends View {
+export default class RadioButton extends View<HTMLUnknownElement> {
     private selectedFlag = false;
 
     constructor() {
@@ -26,7 +26,7 @@ export default class RadioButton extends View {
         return this;
     }
 
-    whenClicked(callback: (ev: HumanEvent) => void): this {
+    whenClicked(callback: (ev: HumanEvent<this>) => void): this {
         this.body.addEventListener('click', (browserEvent: Event) => {
             callback({
                 type: 'Click',
